@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pictlord | Kustomisasi Profesional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="images/pictlord logo.png" />
+    <link rel="apple-touch-icon" href="images/pictlord logo.png">
+    <style>
+        :root {
+            --light-bg: #e0e5ec; --light-text: #555; --light-shadow-dark: #a3b1c6; --light-shadow-light: #ffffff;
+            --light-accent: #0D9488; --light-inset-shadow-dark: rgba(163, 177, 198, 0.6); --light-inset-shadow-light: rgba(255, 255, 255, 1);
+        }
+        .dark-mode {
+            --light-bg: #2d343c; --light-text: #e0e5ec; --light-shadow-dark: #242a30; --light-shadow-light: #363e48;
+            --light-accent: #20c997; --light-inset-shadow-dark: rgba(36, 42, 48, 0.6); --light-inset-shadow-light: rgba(54, 62, 72, 1);
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalFadeInUp { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 62.5%; scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--light-bg); color: var(--light-text);
+            transition: background-color 0.3s ease, color 0.3s ease; min-height: 100vh;
+            padding: 20px; overflow-y: auto;
+        }
+
+        #main-header {
+            width: 95%; max-width: 1100px; margin: 0 auto 2rem; padding: 8px; display: flex;
+            justify-content: space-between; align-items: center; background-color: rgba(56, 64, 72, 0.7);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 50px;
+            animation: fadeInUp 0.5s ease-out; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1); position: sticky; top: 15px; z-index: 1000;
+        }
+        .side-logo {
+            font-size: 2.3rem; font-weight: 600; color: #e0e5ec; text-decoration: none; padding-left: 15px;
+        }
+        .side-logo span { color: #20c997; }
+        #theme-toggle {
+            width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; background-color: #2d343c; color: #e0e5ec;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        #theme-toggle:active { transform: scale(0.95); }
+        #theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; }
+        #sun-icon { display: block; }
+        #moon-icon { display: none; }
+        .dark-mode #sun-icon { display: none; }
+        .dark-mode #moon-icon { display: block; }
+        body:not(.dark-mode) #main-header {
+            background-color: rgba(240, 242, 245, 0.75); border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body:not(.dark-mode) .side-logo { color: #333; }
+        body:not(.dark-mode) #theme-toggle { background-color: #e4e6eb; color: #333; }
+
+        .page-container {
+            display: flex; gap: 3rem; width: 100%; max-width: 1200px; margin: auto;
+        }
+        .canvas-area {
+            flex: 1; display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 2rem; animation: fadeInUp 0.5s ease-out 0.1s; animation-fill-mode: both;
+            min-height: 1px;
+        }
+        #canvas-wrapper {
+            position: relative; width: 100%; max-width: 480px; aspect-ratio: 2/3;
+            box-shadow: 10px 10px 20px var(--light-shadow-dark), -10px -10px 20px var(--light-shadow-light);
+            border-radius: 15px; background-color: var(--light-shadow-dark); overflow: hidden;
+        }
+        #photo-canvas, #frame-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 15px;
+        }
+        #frame-canvas { z-index: 10; pointer-events: none; }
+
+        .controls-panel {
+            flex-basis: 380px; background-color: var(--light-bg); padding: 2.5rem; border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--light-shadow-dark), -10px -10px 20px var(--light-shadow-light);
+            animation: fadeInUp 0.5s ease-out 0.2s; animation-fill-mode: both;
+            max-height: calc(100vh - 140px); overflow-y: auto;
+        }
+        .options-label {
+            font-size: 1.8rem; font-weight: 600; text-align: center; margin-bottom: 2rem;
+        }
+        #scrollToCanvasBtn {
+            display: none; /* Hanya tampil di mobile */
+            width: 100%;
+            margin-bottom: 2.5rem;
+            padding: 10px;
+            font-size: 1.4rem;
+            border-radius: 15px;
+        }
+        .frame-selection-container {
+            display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem;
+        }
+        .frame-thumbnail {
+            width: 60px; height: 90px; border: 3px solid transparent; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s ease-in-out; background-color: var(--light-shadow-dark);
+            background-size: cover; background-position: center;
+            box-shadow: 3px 3px 6px var(--light-shadow-dark), -3px -3px 6px var(--light-shadow-light);
+        }
+        .frame-thumbnail.active {
+            border-color: var(--light-accent); transform: scale(1.08); box-shadow: 0 0 10px var(--light-accent);
+        }
+
+        .final-actions-container {
+            display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; padding-top: 2rem;
+            border-top: 1px solid var(--light-shadow-dark);
+        }
+        .neumorphic-btn {
+            border: none; background: var(--light-bg); color: var(--light-text); font-family: 'Poppins', sans-serif;
+            font-weight: 500; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 25px; border-radius: 30px; font-size: 1.5rem;
+        }
+        .neumorphic-btn:hover {
+            color: var(--light-accent); transform: translateY(-2px);
+            box-shadow: 8px 8px 15px var(--light-shadow-dark), -8px -8px 15px var(--light-shadow-light);
+        }
+        .neumorphic-btn:active {
+            box-shadow: inset 5px 5px 10px var(--light-inset-shadow-dark), inset -5px -5px 10px var(--light-inset-shadow-light);
+            color: var(--light-accent); transform: scale(0.98);
+        }
+        #downloadCopyBtn { background: var(--light-accent); color: white; }
+
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px) saturate(120%);
+            -webkit-backdrop-filter: blur(10px) saturate(120%);
+            opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+        }
+        .modal.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%;
+        }
+        .modal.show .modal-content { animation: modalFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        #modalImagePreview {
+            max-width: 100%; max-height: 85vh; width: auto; height: auto; display: block; margin: auto;
+            border-radius: 15px; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .modal-close-btn {
+            position: absolute; top: -10px; right: -10px; color: white; background-color: #333;
+            width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 22px; font-weight: bold; transition: 0.3s; cursor: pointer; z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+        .modal-close-btn:hover { transform: scale(1.1); background-color: var(--light-accent); }
+
+        .qr-modal-content {
+            background: var(--light-bg); border-radius: 24px; max-width: 380px; padding: 30px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .qr-icon {
+            width: 60px; height: 60px; border-radius: 50%; background: var(--light-accent); color: white;
+            display: flex; justify-content: center; align-items: center; font-size: 30px; margin-bottom: 20px;
+        }
+        .qr-title { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+        .qr-subtitle { font-size: 1.5rem; max-width: 280px; line-height: 1.5; margin-bottom: 25px; opacity: 0.8; }
+        #qrCodePopupContainer {
+            padding: 15px; background: white; border-radius: 16px; min-height: 180px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .qr-actions { display: flex; gap: 15px; margin-top: 25px; width: 100%; }
+
+        @media only screen and (max-width: 900px) {
+            .page-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .canvas-area {
+                width: 100%;
+                padding-top: 0;
+                margin-bottom: 3rem;
+            }
+            #scrollToCanvasBtn {
+                display: flex; /* Tampilkan tombol di mobile */
+            }
+            .controls-panel {
+                flex-basis: auto;
+                width: 100%;
+                max-width: 550px;
+                max-height: none;
+            }
+        }
+        @media only screen and (max-width: 540px) {
+            html { font-size: 58%; }
+            body { padding: 10px; }
+            #main-header { top: 10px; width: 98%; }
+            .controls-panel { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header">
+        <a href="#" class="side-logo">pict<span>lord</span></a>
+        <div class="header-buttons">
+            <button id="theme-toggle" class="neumorphic-btn" style="padding:0; width: 40px; height: 40px; border-radius: 50%;">
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+<main class="page-container">
+    <div class="canvas-area" id="canvas-area-target">
+        <div id="canvas-wrapper">
+            <canvas id="photo-canvas"></canvas>
+            <canvas id="frame-canvas"></canvas>
+        </div>
+    </div>
+
+    <aside class="controls-panel">
+        <button id="scrollToCanvasBtn" class="neumorphic-btn">
+            <i class="fas fa-arrow-up"></i> Lihat Kanvas
+        </button>
+        <h2 class="options-label">Pilih Bingkai & Atur Foto Anda</h2>
+        <div id="frame-selection" class="frame-selection-container">
+            </div>
+
+        <div class="final-actions-container">
+            <button class="neumorphic-btn" id="customBack"> <i class="fas fa-undo"></i> Retake </button>
+            <button class="neumorphic-btn" id="previewBtn"> <i class="fas fa-eye"></i> Preview </button>
+            <button class="neumorphic-btn" id="shareBtn"> <i class="fas fa-share-alt"></i> Share </button>
+            <button class="neumorphic-btn" id="downloadCopyBtn"> <i class="fas fa-qrcode"></i> Get QR </button>
+        </div>
+    </aside>
+</main>
+
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn">&times;</span>
+        <img id="modalImagePreview" src="" alt="Image Preview">
+    </div>
+</div>
+
+<div id="qrModal" class="modal">
+    <div class="modal-content qr-modal-content">
+         <span class="modal-close-btn qr-close-btn">&times;</span>
+         <div class="qr-icon"><i class="fas fa-qrcode"></i></div>
+        <h2 class="qr-title">Scan to Download</h2>
+        <p class="qr-subtitle">Buka kamera ponsel Anda dan pindai kode di bawah ini.</p>
+        <div id="qrCodePopupContainer" style="padding: 15px; background: white; border-radius: 16px; min-height: 180px; display: flex; justify-content: center; align-items: center;"></div>
+        <div id="qrTimer" style="margin-top: 20px; font-size: 1.4rem;"></div>
+        <div class="qr-actions">
+            <button id="downloadFromModalBtn" class="neumorphic-btn" style="flex: 1;"><i class="fas fa-download"></i> Download</button>
+            <button id="copyLinkBtn" class="neumorphic-btn" style="flex: 1;"><i class="fas fa-copy"></i> Copy Link</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('theme-toggle');
+    const applyTheme = (theme) => {
+        document.body.classList.toggle('dark-mode', theme === 'dark');
+    };
+    themeToggle.addEventListener('click', () => {
+        const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+
+    const photoCanvas = document.getElementById('photo-canvas');
+    const frameCanvas = document.getElementById('frame-canvas');
+    const pCtx = photoCanvas.getContext('2d');
+    const fCtx = frameCanvas.getContext('2d');
+    const canvasWrapper = document.getElementById('canvas-wrapper');
+    const frameSelectionContainer = document.getElementById('frame-selection');
+    const downloadBtn = document.getElementById('downloadCopyBtn');
+    const scrollToCanvasBtn = document.getElementById('scrollToCanvasBtn');
+    const canvasAreaTarget = document.getElementById('canvas-area-target');
+
+    const state = {
+        images: [], frames: [], poseCount: 4, activeFrameSrc: null,
+        activeImageIndex: -1, isDragging: false, isResizing: false,
+        activeHandle: null, dragStart: { x: 0, y: 0 },
+    };
+
+    function initialize() {
+        loadFrameOptions();
+        addEventListeners();
+    }
+
+    function setupCanvasDimensions(width, height) {
+        photoCanvas.width = frameCanvas.width = width;
+        photoCanvas.height = frameCanvas.height = height;
+        canvasWrapper.style.aspectRatio = width / height;
+    }
+
+    function loadDataFromSession() {
+        const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
+        const storedPoseCount = parseInt(sessionStorage.getItem('poseCount'), 10);
+
+        if (!storedImages || !storedPoseCount) {
+            canvasWrapper.innerHTML = '<p style="color:red; text-align:center; padding: 20px;">Error: Data sesi tidak ditemukan. Silakan kembali dan coba lagi.</p>';
+            return;
+        }
+
+        state.poseCount = storedPoseCount;
+        const imagePromises = storedImages.map(src => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+            });
+        });
+
+        Promise.all(imagePromises).then(loadedImages => {
+            state.images = distributePhotos(loadedImages, photoCanvas.width, photoCanvas.height);
+            redrawPhotos();
+        });
+    }
+
+    function distributePhotos(loadedImages, canvasWidth, canvasHeight) {
+        const imageObjects = [];
+        const count = loadedImages.length;
+        const cols = (count === 6 || count === 4) ? 2 : 1;
+        const rows = Math.ceil(count / cols);
+        const boxWidth = canvasWidth / cols;
+        const boxHeight = canvasHeight / rows;
+        const padding = 20;
+
+        for (let i = 0; i < count; i++) {
+            const img = loadedImages[i];
+            const row = Math.floor(i / cols);
+            const col = i % cols;
+            const scaleX = (boxWidth - padding * 2) / img.width;
+            const scaleY = (boxHeight - padding * 2) / img.height;
+            const initialScale = Math.min(scaleX, scaleY);
+            imageObjects.push({
+                element: img, x: col * boxWidth + boxWidth / 2,
+                y: row * boxHeight + boxHeight / 2, scale: initialScale,
+                width: img.width, height: img.height
+            });
+        }
+        return imageObjects;
+    }
+
+    function loadFrameOptions() {
+        state.poseCount = parseInt(sessionStorage.getItem('poseCount'), 10) || 4;
+        const frameDir = `bingkai/pose${state.poseCount}/`;
+
+        for (let i = 1; i <= 3; i++) {
+            const frameSrc = `${frameDir}pose${state.poseCount}-${i}.png`;
+            state.frames.push(frameSrc);
+
+            const thumb = document.createElement('div');
+            thumb.classList.add('frame-thumbnail');
+            thumb.style.backgroundImage = `url(${frameSrc})`;
+            thumb.dataset.src = frameSrc;
+
+            if (i === 1) {
+                const firstFrameImg = new Image();
+                firstFrameImg.src = frameSrc;
+                firstFrameImg.onload = () => {
+                    setupCanvasDimensions(firstFrameImg.naturalWidth, firstFrameImg.naturalHeight);
+                    loadDataFromSession();
+                    thumb.classList.add('active');
+                    state.activeFrameSrc = frameSrc;
+                    drawFrame(frameSrc);
+                };
+                firstFrameImg.onerror = () => {
+                    console.error(`Gagal memuat bingkai utama: ${frameSrc}`);
+                    setupCanvasDimensions(800, 1200);
+                    loadDataFromSession();
+                }
+            }
+            thumb.addEventListener('click', () => {
+                document.querySelectorAll('.frame-thumbnail').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+                state.activeFrameSrc = frameSrc;
+                drawFrame(frameSrc);
+            });
+            frameSelectionContainer.appendChild(thumb);
+        }
+    }
+
+    function redrawPhotos() {
+        pCtx.clearRect(0, 0, photoCanvas.width, photoCanvas.height);
+        state.images.forEach((imgObj, index) => {
+            pCtx.save();
+            pCtx.translate(imgObj.x, imgObj.y);
+            pCtx.scale(imgObj.scale, imgObj.scale);
+            pCtx.drawImage(imgObj.element, -imgObj.width / 2, -imgObj.height / 2);
+            pCtx.restore();
+            if (index === state.activeImageIndex) {
+                drawHandles(imgObj);
+            }
+        });
+    }
+
+    function getHandlePositions(imgObj) {
+        const halfW = (imgObj.width * imgObj.scale) / 2;
+        const halfH = (imgObj.height * imgObj.scale) / 2;
+        return {
+            topLeft: { x: imgObj.x - halfW, y: imgObj.y - halfH },
+            topRight: { x: imgObj.x + halfW, y: imgObj.y - halfH },
+            bottomLeft: { x: imgObj.x - halfW, y: imgObj.y + halfH },
+            bottomRight: { x: imgObj.x + halfW, y: imgObj.y + halfH },
+        };
+    }
+
+    function drawHandles(imgObj) {
+        const handles = getHandlePositions(imgObj);
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--light-accent');
+        pCtx.fillStyle = accentColor.trim();
+        pCtx.strokeStyle = 'white';
+        pCtx.lineWidth = 3;
+        const handleSize = 16; 
+
+        for (const key in handles) {
+            const pos = handles[key];
+            pCtx.beginPath();
+            pCtx.rect(pos.x - handleSize / 2, pos.y - handleSize / 2, handleSize, handleSize);
+            pCtx.fill();
+            pCtx.stroke();
+        }
+    }
+
+    function drawFrame(src) {
+        const frameImg = new Image();
+        frameImg.src = src;
+        frameImg.onload = () => {
+            fCtx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+            fCtx.drawImage(frameImg, 0, 0, frameCanvas.width, frameCanvas.height);
+        };
+    }
+
+    function addEventListeners() {
+        // ... (event listeners lainnya tetap sama) ...
+        scrollToCanvasBtn.addEventListener('click', () => {
+            canvasAreaTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        photoCanvas.addEventListener('mousedown', onMouseDown);
+        photoCanvas.addEventListener('mousemove', onMouseMove);
+        photoCanvas.addEventListener('mouseup', onMouseUp);
+        photoCanvas.addEventListener('mouseleave', onMouseUp);
+        photoCanvas.addEventListener('wheel', onWheelScroll, { passive: false });
+        photoCanvas.addEventListener('touchstart', onMouseDown, { passive: false });
+        photoCanvas.addEventListener('touchmove', onMouseMove, { passive: false });
+        photoCanvas.addEventListener('touchend', onMouseUp);
+        downloadBtn.addEventListener('click', showQrCode);
+    }
+
+    function getMousePos(canvas, evt) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = evt.clientX ?? evt.touches[0].clientX;
+        const clientY = evt.clientY ?? evt.touches[0].clientY;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+    }
+
+    function onMouseDown(e) {
+        e.preventDefault();
+        const pos = getMousePos(photoCanvas, e);
+        state.isDragging = false; state.isResizing = false;
+
+        if (state.activeImageIndex !== -1) {
+            const activeImg = state.images[state.activeImageIndex];
+            const handles = getHandlePositions(activeImg);
+            const handleSize = 16;
+            for (const key in handles) {
+                const handlePos = handles[key];
+                if (pos.x >= handlePos.x - handleSize && pos.x <= handlePos.x + handleSize &&
+                    pos.y >= handlePos.y - handleSize && pos.y <= handlePos.y + handleSize) {
+                    state.isResizing = true; state.activeHandle = key;
+                    redrawPhotos(); return;
+                }
+            }
+        }
+        for (let i = state.images.length - 1; i >= 0; i--) {
+            const img = state.images[i];
+            const halfW = (img.width * img.scale) / 2;
+            const halfH = (img.height * img.scale) / 2;
+            if (pos.x >= img.x - halfW && pos.x <= img.x + halfW &&
+                pos.y >= img.y - halfH && pos.y <= img.y + halfH) {
+                const clickedImage = state.images.splice(i, 1)[0];
+                state.images.push(clickedImage);
+                state.activeImageIndex = state.images.length - 1;
+                state.isDragging = true;
+                state.dragStart.x = pos.x - clickedImage.x;
+                state.dragStart.y = pos.y - clickedImage.y;
+                redrawPhotos(); return;
+            }
+        }
+        state.activeImageIndex = -1;
+        redrawPhotos();
+    }
+
+    function onMouseMove(e) {
+        if (!state.isDragging && !state.isResizing) return;
+        e.preventDefault();
+        const pos = getMousePos(photoCanvas, e);
+
+        if (state.isDragging && state.activeImageIndex !== -1) {
+            const activeImg = state.images[state.activeImageIndex];
+            activeImg.x = pos.x - state.dragStart.x;
+            activeImg.y = pos.y - state.dragStart.y;
+            redrawPhotos();
+        } else if (state.isResizing && state.activeImageIndex !== -1) {
+            const img = state.images[state.activeImageIndex];
+            const handle = state.activeHandle;
+            const aspect = img.width / img.height;
+            const handles = getHandlePositions(img);
+            let anchorX, anchorY, newWidth, newHeight, newScale;
+
+            if (handle.includes('bottom')) { anchorY = handles.topLeft.y; } else { anchorY = handles.bottomLeft.y; }
+            if (handle.includes('Right')) { anchorX = handles.topLeft.x; } else { anchorX = handles.topRight.x; }
+
+            newWidth = Math.abs(pos.x - anchorX);
+            newHeight = Math.abs(pos.y - anchorY);
+
+            if (newWidth / newHeight > aspect) { newWidth = newHeight * aspect; } else { newHeight = newWidth / aspect; }
+            newScale = newWidth / img.width;
+
+            if (newScale > 0.05 && newScale < 5) {
+                img.scale = newScale;
+                const newHalfW = newWidth / 2;
+                const newHalfH = newHeight / 2;
+                if (handle.includes('bottom')) { img.y = anchorY + newHalfH; } else { img.y = anchorY - newHalfH; }
+                if (handle.includes('Right')) { img.x = anchorX + newHalfW; } else { img.x = anchorX - newHalfW; }
+            }
+            redrawPhotos();
+        }
+    }
+
+    function onMouseUp() {
+        state.isDragging = false; state.isResizing = false; state.activeHandle = null;
+    }
+
+    function onWheelScroll(e) {
+        e.preventDefault();
+        const pos = getMousePos(photoCanvas, e);
+        let targetImageIndex = -1;
+        for (let i = state.images.length - 1; i >= 0; i--) {
+            const img = state.images[i];
+            const halfW = (img.width * img.scale) / 2;
+            const halfH = (img.height * img.scale) / 2;
+            if (pos.x >= img.x - halfW && pos.x <= img.x + halfW &&
+                pos.y >= img.y - halfH && pos.y <= img.y + halfH) {
+                targetImageIndex = i; break;
+            }
+        }
+        if (targetImageIndex !== -1) {
+            const img = state.images[targetImageIndex];
+            const zoom = 1 + (e.deltaY < 0 ? 1 : -1) * 0.05;
+            const newScale = img.scale * zoom;
+            img.scale = Math.max(0.05, Math.min(newScale, 4.0));
+            redrawPhotos();
+        }
+    }
+
+    const previewModal = document.getElementById('previewModal');
+    const qrModal = document.getElementById('qrModal');
+    const previewBtn = document.getElementById('previewBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const customBackBtn = document.getElementById('customBack');
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+        authDomain: "project-xlord.firebaseapp.com",
+        databaseURL: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "project-xlord",
+        storageBucket: "project-xlord.appspot.com",
+        messagingSenderId: "847461816867",
+        appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
+        measurementId: "G-344KX3B197"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const database = firebase.database();
+    let currentQrLink = '', currentImageData = '', qrTimerInterval = null;
+
+    function getFinalImageB64() {
+        if (state.activeImageIndex !== -1) {
+            state.activeImageIndex = -1;
+            redrawPhotos();
+        }
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = photoCanvas.width;
+        finalCanvas.height = photoCanvas.height;
+        const finalCtx = finalCanvas.getContext('2d');
+        finalCtx.drawImage(photoCanvas, 0, 0);
+        finalCtx.drawImage(frameCanvas, 0, 0);
+        return finalCanvas.toDataURL('image/png', 1.0);
+    }
+
+    function showModal(modal) {
+        modal.style.display = 'block';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+    function hideModal(modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            if (modal.id === 'qrModal' && qrTimerInterval) {
+                clearInterval(qrTimerInterval);
+            }
+        }, 400);
+    }
+
+    previewBtn.addEventListener('click', () => {
+        document.getElementById('modalImagePreview').src = getFinalImageB64();
+        showModal(previewModal);
+    });
+
+    document.querySelectorAll('.modal-close-btn').forEach(btn => {
+        btn.addEventListener('click', () => hideModal(btn.closest('.modal')));
+    });
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('modal')) {
+             hideModal(event.target);
+        }
+    });
+
+    customBackBtn.addEventListener('click', () => {
+        window.history.back();
+    });
+
+    function generateShortId(length) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) { result += chars.charAt(Math.floor(Math.random() * chars.length)); }
+        return result;
+    }
+
+    async function generateTemporaryLink(base64ImageData) {
+        const expirationTime = Date.now() + (5 * 60 * 1000);
+        const dataToStore = { imageData: base64ImageData, expiresAt: expirationTime };
+        const shortId = generateShortId(6);
+        await database.ref('images/' + shortId).set(dataToStore);
+        return `${window.location.origin}/hasil?id=${shortId}`;
+    }
+
+    async function showQrCode() {
+        showModal(qrModal);
+        const qrCodeContainer = document.getElementById('qrCodePopupContainer');
+        qrCodeContainer.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 4rem;"></i>';
+        if (qrTimerInterval) clearInterval(qrTimerInterval);
+
+        try {
+            currentImageData = getFinalImageB64();
+            currentQrLink = await generateTemporaryLink(currentImageData);
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentQrLink)}`;
+            qrCodeContainer.innerHTML = `<img src="${qrApiUrl}" alt="Scan to download">`;
+
+            document.getElementById('copyLinkBtn').onclick = () => {
+                navigator.clipboard.writeText(currentQrLink).then(() => alert('Link disalin!'));
+            };
+            document.getElementById('downloadFromModalBtn').onclick = () => {
+                const link = document.createElement('a');
+                link.download = `pictlord-profesional-${Date.now()}.png`;
+                link.href = currentImageData;
+                link.click();
+            };
+        } catch (error) {
+            console.error(error);
+            qrCodeContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong>';
+        }
+    }
+
+    shareBtn.addEventListener('click', () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Pictlord Photobooth',
+                text: 'bingung nyari? photobooth online free dimana dan kapan aja tenang pictlord 📸solusinya 😎',
+                url: window.location.origin,
+            })
+            .then(() => console.log('Berhasil berbagi'))
+            .catch((error) => console.log('Gagal berbagi:', error));
+        } else {
+            alert('Fitur Share tidak didukung di browser ini.');
+        }
+    });
+    
+    initialize();
+});
+</script>
+</body>
+</html>

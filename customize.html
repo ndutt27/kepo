@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kreasikan foto photobooth online Anda. Pilih dari puluhan bingkai, warna, dan stiker untuk menciptakan strip foto unik milikmu.">
+    <meta name="keywords" content="photobooth, customize foto, edit foto, online photobooth, tiktok photobooth, picapica, digibooth, pictlord, firebase, qr code, web share">
+    <title>Pictlord | Customize Foto Kamu</title>
+
+    <meta property="og:title" content="Pictlord | Photobooth Online Gratis">
+    <meta property="og:description" content="Ambil foto instan bergaya photobooth online. Kustomisasi dengan bingkai, stiker, dan unduh foto berkualitas tinggi secara instan.">
+    <meta property="og:image" content="https://pict.xlord.web.id/assets/home-mockup.png">
+    <meta property="og:url" content="https://pict.xlord.web.id/customize">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pictlord | Photobooth Online Gratis">
+    <meta name="twitter:description" content="Ambil foto instan bergaya photobooth online. Kustomisasi dengan bingkai, stiker, dan unduh foto berkualitas tinggi secara instan.">
+    <meta name="twitter:image" content="https://pict.xlord.web.id/assets/home-mockup.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Customize Foto Kamu | Pictlord",
+          "description": "Kreasikan dan edit foto photobooth Anda dengan berbagai pilihan bingkai, warna, dan stiker.",
+          "url": "https://pict.xlord.web.id/customize",
+          "isPartOf": {
+            "@type": "WebSite",
+            "url": "https://pict.xlord.web.id",
+            "name": "Pictlord"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Beranda",
+              "item": "https://pict.xlord.web.id"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Customize Foto",
+              "item": "https://pict.xlord.web.id/customize"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <link rel="canonical" href="https://pict.xlord.web.id/customize">
+    <link rel="icon" href="images/pictlord logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- Root Variables & Theme --- */
+        :root {
+            --light-bg: #e0e5ec;
+            --light-text: #555;
+            --light-shadow-dark: #a3b1c6;
+            --light-shadow-light: #ffffff;
+            --light-accent: #E28585;
+            --light-inset-shadow-dark: rgba(163, 177, 198, 0.6);
+            --light-inset-shadow-light: rgba(255, 255, 255, 1);
+        }
+
+        .dark-mode {
+            --light-bg: #2d343c;
+            --light-text: #e0e5ec;
+            --light-shadow-dark: #242a30;
+            --light-shadow-light: #363e48;
+            --light-accent: #ff85a1;
+            --light-inset-shadow-dark: rgba(36, 42, 48, 0.6);
+            --light-inset-shadow-light: rgba(54, 62, 72, 1);
+        }
+
+        /* --- Base & Animations --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalFadeInUp { /* Animasi Modal Baru */
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 62.5%; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Header / Navbar --- */
+        #main-header {
+            width: 95%;
+            max-width: 1100px;
+            margin: 0 auto 2rem;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(56, 64, 72, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 50px;
+            animation: fadeInUp 0.5s ease-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+        }
+
+        .side-logo {
+            font-size: 2.3rem;
+            font-weight: 600;
+            color: #e0e5ec;
+            text-decoration: none;
+            padding-left: 15px;
+        }
+
+        .side-logo span { color: #20c997; }
+
+        #theme-toggle {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: none; cursor: pointer; display: flex;
+            justify-content: center; align-items: center;
+            background-color: #2d343c; color: #e0e5ec;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        #theme-toggle:active { transform: scale(0.95); }
+        #theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; }
+        #sun-icon { display: block; }
+        #moon-icon { display: none; }
+        .dark-mode #sun-icon { display: none; }
+        .dark-mode #moon-icon { display: block; }
+
+        body:not(.dark-mode) #main-header {
+            background-color: rgba(240, 242, 245, 0.75);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body:not(.dark-mode) .side-logo { color: #333; }
+        body:not(.dark-mode) #theme-toggle { background-color: #e4e6eb; color: #333; }
+
+        /* --- Main Layout --- */
+        #main-section { width: 100%; max-width: 1200px; }
+        .customize-container {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+        }
+        .photo-preview-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 2rem;
+            animation: fadeInUp 0.5s ease-out 0.1s;
+            animation-fill-mode: both;
+        }
+        #photoPreview canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 10px 10px 20px var(--light-shadow-dark), -10px -10px 20px var(--light-shadow-light);
+        }
+
+        /* --- Controls Panel Sidebar --- */
+        .controls-panel {
+            flex-basis: 400px;
+            background-color: var(--light-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--light-shadow-dark), -10px -10px 20px var(--light-shadow-light);
+            animation: fadeInUp 0.5s ease-out 0.2s;
+            animation-fill-mode: both;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .controls-panel h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .options-label {
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* --- Neumorphic Buttons & Controls (MODERNIZED) --- */
+        .neumorphic-btn {
+            border: none; background: var(--light-bg); color: var(--light-text);
+            font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); /* Transisi lebih halus */
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px;
+            position: relative; /* Diperlukan untuk Tooltip */
+        }
+        .neumorphic-btn:hover {
+            color: var(--light-accent);
+            transform: translateY(-2px); /* Efek tombol terangkat */
+            box-shadow: 8px 8px 15px var(--light-shadow-dark), -8px -8px 15px var(--light-shadow-light); /* Shadow lebih menonjol */
+        }
+        .neumorphic-btn:active, .neumorphic-btn.active {
+            box-shadow: inset 5px 5px 10px var(--light-inset-shadow-dark), inset -5px -5px 10px var(--light-inset-shadow-light);
+            color: var(--light-accent);
+            transform: scale(0.98) translateY(0); /* Kembali ke posisi semula saat ditekan */
+        }
+        .neumorphic-btn[disabled] {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+        }
+
+        .custom-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .buttonFrames, .buttonBgFrames, .buttonShapes, .buttonStickers {
+            width: 40px; height: 40px; border-radius: 50%;
+        }
+        .buttonBgFrames { background-size: cover; background-position: center; }
+        .btnShapeSize, .stickerIconSize { width: 22px; height: 22px; }
+        
+        /* --- Tooltip Styling --- */
+        .neumorphic-btn .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Posisikan di atas tombol */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            font-size: 1.2rem;
+            pointer-events: none; /* Agar tidak mengganggu klik */
+        }
+
+        .neumorphic-btn:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px); /* Efek muncul dari bawah */
+        }
+        .dark-mode .neumorphic-btn .tooltip-text {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        /* --- Specific Controls Styling --- */
+        #colorPickerBtn { background: conic-gradient(red, orange, yellow, green, cyan, blue, violet, red); }
+        #pinkBtnFrame { background-color: #FFC2D1; }
+        #blueBtnFrame { background-color: #CAF0F8; }
+        #yellowBtnFrame { background-color: #FFF8A5; }
+        #matchaBtnFrame { background-color: #90a955; }
+        #purpleBtnFrame { background-color: #c19ee0; }
+        #brownBtnFrame { background-color: #DDBEA9; }
+        #redBtnFrame { background-color: #780000; }
+        #whiteBtnFrame { background-color: #FFFFFF; border: 1px solid #ccc; }
+        #blackBtnFrame { background-color: #000000; }
+        #pinkGlitter { background-image: url(assets/frame-backgrounds/pink-glitter.jpg); background-size: cover; }
+        #pinkPlaid { background-image: url(assets/frame-backgrounds/pink-plaid.jpg); }
+        #bluePlaid { background-image: url(assets/frame-backgrounds/blue-plaid.jpg); background-size: cover; }
+        #black-cq { background-image: url(assets/frame-backgrounds/black-couqutte.jpg); background-size: 200%; }
+        #white-cq { background-image: url(assets/frame-backgrounds/white-couquette.jpg); background-size: 200%; }
+        #pinkLeather { background-image: url(assets/frame-backgrounds/pink-diamond-leather.jpg); background-size: 200%; }
+        #brownKnittedFrame { background-image: url(assets/frame-backgrounds/brown-knitted.jpg); background-size: cover; }
+        #hotPinkKnittedFrame { background-image: url(assets/frame-backgrounds/hot-pink-knitted.jpg); background-size: cover; }
+        #redKnittedFrame { background-image: url(assets/frame-backgrounds/red-knitted.jpg); background-size: cover; }
+        #pinkKnittedFrame { background-image: url(assets/frame-backgrounds/pink-knitted.jpg); background-size: cover; }
+        #redStripesFrame { background-image: url(assets/frame-backgrounds/red-stripes.jpg); background-size: 190%; }
+        #greenStripesFrame { background-image: url(assets/frame-backgrounds/green-stripes.jpg); background-size: 190%; }
+        #blueStripesFrame { background-image: url(assets/frame-backgrounds/blue-stripes.jpg); background-size: 190%; }
+        #vsPinkFrame { background-image: url(assets/frame-backgrounds/vs-pink.jpg); background-size: cover; }
+        #vsYellowFrame { background-image: url(assets/frame-backgrounds/vs-yellow.jpg); background-size: cover; }
+        #blueYellowSquares { background-image: url(assets/frame-backgrounds/blue-yellow-squares.jpg); background-size: cover; }
+        #blueWhiteSquares { background-image: url(assets/frame-backgrounds/blue-white-squares.jpg); background-size: cover; }
+        #brownLeopard { background-image: url(assets/frame-backgrounds/brown-leopard.jpg); background-size: cover; }
+        #cowPrint { background-image: url(assets/frame-backgrounds/cow-print.jpg); background-size: cover; }
+        #redLeather { background-image: url(assets/frame-backgrounds/red-leather.jpg); background-size: cover; }
+        #pinkGumamela { background-image: url(assets/frame-backgrounds/pink-gumamela.jpg); background-size: 150%; }
+        #pinkLiliesFrame { background-image: url(assets/frame-backgrounds/pink-lilies.jpg); background-size: cover; }
+        #whiteKnitted { background-image: url(assets/frame-backgrounds/white-knitted-cloth.jpg); background-size: cover; }
+        #ribbonSweaterFrame { background-image: url(assets/frame-backgrounds/ribbon-sweater.jpg); background-size: cover; }
+        #ribbonDenim { background-image: url(assets/frame-backgrounds/ribbon-denim.jpg); background-size: 120%; }
+        #blackPinkRibbon { background-image: url(assets/frame-backgrounds/black-pink-ribbon.jpg); background-size: cover; }
+        #fourLockers { background-image: url(assets/frame-backgrounds/4-lockers.jpg); background-size: cover; }
+        #gridPaperFrame { background-image: url(assets/frame-backgrounds/grid-paper.jpg); background-size: 200%; }
+        #crumpledPaper { background-image: url(assets/frame-backgrounds/crumpled-paper.jpg); background-size: 190%; }
+        #roughTextureFrame { background-image: url(assets/frame-backgrounds/rough-texture.jpg); background-size: 190%; }
+        #blueBackdrop { background-image: url(assets/frame-backgrounds/blue-backdrop.jpg); background-size: 190%; }
+        #greenHills { background-image: url(assets/frame-backgrounds/green-hills.jpg); background-size: 190%; }
+        #sandShells { background-image: url(assets/frame-backgrounds/sand-shells.jpg); background-size: 190%; }
+        #waterBeach { background-image: url(assets/frame-backgrounds/water.jpg); background-size: 190%; }
+        #cocoTrees { background-image: url(assets/frame-backgrounds/coco-trees.jpg); background-size: 190%; }
+        #stardustFrame { background-image: url(assets/frame-backgrounds/stardust.jpg); background-size: 200%; }
+        #roseCardFrame { background-image: url(assets/frame-backgrounds/rose-card.jpg); background-size: cover; }
+        #princessVintageFrame { background-image: url(assets/frame-backgrounds/princess-vintage.jpg); background-size: cover; }
+        #redRosesPaintFrame { background-image: url(assets/frame-backgrounds/red-roses-paint.jpg); background-size: 190%; }
+        #grayTrashFrame { background-image: url(assets/frame-backgrounds/gray-trash.jpg); background-size: 190%; }
+        #blackTrashFrame { background-image: url(assets/frame-backgrounds/black-trash.jpg); background-size: 190%; }
+        #whiteTrashFrame { background-image: url(assets/frame-backgrounds/white-trash.jpg); background-size: 180%; }
+        #partyDrapeFrame { background-image: url(assets/frame-backgrounds/party-drape.jpg); background-size: cover; }
+        #partyDotsFrame { background-image: url(assets/frame-backgrounds/party-dots.jpg); background-size: 210%; }
+        #blingDenimFrame { background-image: url(assets/frame-backgrounds/bling-denim.jpg); background-size: 210%; }
+
+        /* --- Logo and Date Checkbox --- */
+        .logo-container { display: flex; gap: 10px; }
+        .logoCustomBtn { padding: 8px 15px; border-radius: 20px; font-size: 1.4rem; }
+
+        .date-overlay {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .date-option { display: flex; align-items: center; gap: 8px; }
+        .date-option label { font-size: 1.4rem; cursor: pointer; }
+        .date-option input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none;
+            width: 20px; height: 20px;
+            background: var(--light-bg); border-radius: 5px;
+            box-shadow: inset 2px 2px 5px var(--light-inset-shadow-dark), inset -2px -2px 5px var(--light-inset-shadow-light);
+            cursor: pointer; position: relative;
+        }
+        .date-option input[type="checkbox"]:checked {
+            background-color: var(--light-accent);
+        }
+        .date-option input[type="checkbox"]:checked::before {
+            content: '✔';
+            font-size: 14px;
+            color: white;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- FINAL ACTION BUTTONS --- */
+        .final-actions-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .download-action-container {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-actions-container button, .download-action-container button {
+            padding: 12px;
+            font-size: 1.5rem;
+            border-radius: 25px;
+        }
+        .final-actions-container button .fas, .download-action-container button .fas {
+            margin-right: 8px;
+        }
+
+        #downloadCopyBtn {
+             width: 100%;
+             background: var(--light-accent); color: white;
+             box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+        }
+        #downloadCopyBtn:hover {
+             background-color: #c46767;
+        }
+
+        /* --- MODAL STYLING (MODERNIZED) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            /* Efek baru */
+            background-color: rgba(0, 0, 0, 0.3); /* Gelapnya sedikit dikurangi */
+            backdrop-filter: blur(10px) saturate(120%); /* Blur lebih kuat & saturasi warna latar */
+            -webkit-backdrop-filter: blur(10px) saturate(120%);
+            opacity: 0; /* Mulai dari transparan untuk animasi fade-in */
+            transition: opacity 0.4s ease; /* Transisi untuk fade-in */
+            pointer-events: none; /* Cegah interaksi saat hidden */
+        }
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto; /* Izinkan interaksi saat tampil */
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+        }
+        .modal.show .modal-content {
+            animation: modalFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        #modalImagePreview {
+            max-width: 100%;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: auto;
+            border-radius: 15px;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Tambah shadow agar lebih menonjol */
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            color: white;
+            background-color: #333;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+        .modal-close-btn:hover, .modal-close-btn:focus { 
+            transform: scale(1.1);
+            background-color: var(--light-accent);
+        }
+        
+        /* --- QR Code Modal Styling --- */
+        .qr-modal-content {
+            background: var(--light-bg);
+            border-radius: 24px;
+            max-width: 380px;
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--light-shadow-light);
+        }
+        .qr-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--light-accent);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+            box-shadow: inset 3px 3px 7px rgba(0,0,0,0.2), 0px 5px 10px rgba(0,0,0,0.1);
+        }
+        .qr-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--light-text);
+        }
+        .qr-subtitle {
+            font-size: 1.5rem;
+            max-width: 280px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            color: var(--light-text);
+            opacity: 0.8;
+        }
+        #qrCodePopupContainer {
+            padding: 15px;
+            background: white;
+            border-radius: 16px;
+            margin-top: 10px;
+            min-height: 180px;
+            min-width: 180px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        #qrCodePopupContainer .spinner {
+            font-size: 40px;
+            color: var(--light-accent);
+        }
+        #qrCodePopupContainer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(100deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 80%);
+            animation: shimmer 2.5s infinite linear;
+        }
+
+        #qrTimer {
+            margin-top: 20px;
+            font-size: 1.4rem;
+            color: var(--light-text);
+            opacity: 0.8;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .qr-actions-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .qr-actions-container .neumorphic-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 1.4rem;
+        }
+
+        #copyLinkBtn {
+            margin-top: 0;
+            background: transparent;
+            border: 2px solid var(--light-shadow-dark);
+            color: var(--light-text);
+        }
+        #copyLinkBtn:hover {
+            border-color: var(--light-accent);
+            color: var(--light-accent);
+        }
+
+        #downloadDirectBtn {
+            background-color: var(--light-accent);
+            color: white;
+            border: 2px solid var(--light-accent);
+        }
+
+        #downloadDirectBtn:hover {
+            background-color: #c46767;
+            border-color: #c46767;
+            color: white;
+        }
+
+        /* --- Logo Grid & Color Picker --- */
+        .logo-options-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 15px;
+        }
+        .color-picker-container { display: flex; align-items: center; gap: 10px; }
+        .color-picker-label { font-size: 1.4rem; }
+        input[type="color"] {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            width: 40px; height: 40px;
+            border: none; border-radius: 50%;
+            cursor: pointer; background-color: transparent;
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+        input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
+
+        /* --- Responsive Design --- */
+        @media only screen and (max-width: 900px) {
+            .customize-container { flex-direction: column; align-items: center; }
+            .controls-panel { flex-basis: auto; width: 100%; max-width: 500px; max-height: none; }
+            #photoPreview canvas { max-width: 80%; }
+        }
+        @media only screen and (max-width: 540px) {
+            html { font-size: 55%; }
+            body { padding: 10px; }
+            #main-header { top: 10px; }
+            .controls-panel { padding: 15px; }
+            #photoPreview canvas { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header">
+        <a href="#" class="side-logo">pict<span>lord</span></a>
+        <div class="header-buttons">
+            <button id="theme-toggle" class="neumorphic-btn">
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <main id="main-section">
+        <div class="customize-container">
+            <div class="photo-preview-area" id="photoPreview">
+                </div>
+
+            <aside class="controls-panel">
+                <h1>Customize Your Photo</h1>
+
+                <div class="control-group">
+                    <h3 class="options-label">Frame Color</h3>
+                    <div class="custom-buttons-container">
+                        <button id="colorPickerBtn" class="neumorphic-btn buttonFrames"></button>
+                        <button id="pinkBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="blueBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="yellowBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="matchaBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="purpleBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="brownBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="redBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="whiteBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="blackBtnFrame" class="neumorphic-btn buttonFrames"></button>
+                        <button id="pinkGlitter" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="pinkPlaid" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="bluePlaid" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="black-cq" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="white-cq" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="pinkLeather" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="brownKnittedFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="hotPinkKnittedFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="redKnittedFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="pinkKnittedFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="redStripesFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="greenStripesFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blueStripesFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="vsPinkFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="vsYellowFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blueYellowSquares" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blueWhiteSquares" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="brownLeopard" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="cowPrint" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="redLeather" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="pinkGumamela" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="pinkLiliesFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="whiteKnitted" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="ribbonSweaterFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="ribbonDenim" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blackPinkRibbon" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="fourLockers" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="gridPaperFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="crumpledPaper" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="roughTextureFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blueBackdrop" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="greenHills" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="sandShells" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="waterBeach" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="cocoTrees" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="stardustFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="roseCardFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="princessVintageFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="redRosesPaintFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="grayTrashFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blackTrashFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="whiteTrashFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="partyDrapeFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="partyDotsFrame" class="neumorphic-btn buttonBgFrames"></button>
+                        <button id="blingDenimFrame" class="neumorphic-btn buttonBgFrames"></button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3 class="options-label">Photo Shape</h3>
+                    <div class="custom-buttons-container">
+                        <button id="noneFrameShape" class="neumorphic-btn buttonShapes">
+                            <img src="assets/frame-shapes/noneShape.png" alt="None" class="btnShapeSize">
+                            <span class="tooltip-text">Tanpa Bentuk</span>
+                        </button>
+                        <button id="softFrameShape" class="neumorphic-btn buttonShapes">
+                            <img src="assets/frame-shapes/squareShape.png" alt="Soft Edge Frame" class="btnShapeSize">
+                            <span class="tooltip-text">Kotak</span>
+                        </button>
+                        <button id="circleFrameShape" class="neumorphic-btn buttonShapes">
+                            <img src="assets/frame-shapes/circleShape.png" alt="Circle Frame" class="btnShapeSize">
+                            <span class="tooltip-text">Lingkaran</span>
+                        </button>
+                        <button id="heartFrameShape" class="neumorphic-btn buttonShapes">
+                            <img src="assets/frame-shapes/heartShape.png" alt="Heart Frame" class="btnShapeSize">
+                            <span class="tooltip-text">Hati</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3 class="options-label">Stickers</h3>
+                    <div class="custom-buttons-container">
+                        <button id="noneSticker" class="neumorphic-btn buttonStickers"><img src="assets/frame-shapes/noneShape.png" alt="None" class="stickerIconSize"><span class="tooltip-text">Tanpa Stiker</span></button>
+                        <button id="bunnySticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/bunny1.png" alt="Bunny" class="stickerIconSize"/></button>
+                        <button id="luckySticker" class="neumorphic-btn buttonStickers new-sticker"><img src="assets/stickers/lucky1.png" alt="Lucky" class="stickerIconSize"/></button>
+                        <button id="kissSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/kiss1.png" alt="Kiss" class="stickerIconSize"/></button>
+                        <button id="sweetSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/sweet1.png" alt="Sweet" class="stickerIconSize"/></button>
+                        <button id="ribbonSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/ribbon1.png" alt="Ribbon" class="stickerIconSize"/></button>
+                        <button id="sparkleSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/sparkle2.png" alt="Sparkle" class="stickerIconSize"/></button>
+                        <button id="pearlSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/pearl2.png" alt="Pearl" class="stickerIconSize"/></button>
+                        <button id="softSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/soft5.png" alt="Soft" class="stickerIconSize"/></button>
+                        <button id="confettiSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/confetti/confetti.png" alt="Confetti" class="stickerIconSize"/></button>
+                        <button id="ribbonCoquetteSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/ribboncq4.png" alt="Ribbon Coquette" class="stickerIconSize"/></button>
+                        <button id="blueRibbonCoquetteSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/blueRibbon2.png" alt="Blue Ribbon" class="stickerIconSize"/></button>
+                        <button id="blackStarSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/blackStar5.png" alt="Black Star" class="stickerIconSize"/></button>
+                        <button id="yellowChickenSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/yellowChicken1.png" alt="Yellow Chicken" class="stickerIconSize"/></button>
+                        <button id="brownBearSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/brownyBear6.png" alt="Brown Bear" class="stickerIconSize"/></button>
+                        <button id="lotsHeartSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/lotsHeart8.png" alt="Heart" class="stickerIconSize"/></button>
+                        <button id="tabbyCatSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/tabbyCat6.png" alt="Tabby Cat" class="stickerIconSize"/></button>
+                        <button id="ballerinaCappuccinoSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/ballerinaCappuccino/balerinaCappuccino3.png" alt="Cat" class="stickerIconSize"/></button>
+                        <button id="doggyWhiteSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/doggyWhite/doggyWhite1.png" alt="Dog" class="stickerIconSize"/></button>
+                        <button id="sakuraBlossomSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/sakuraBlossom/sakuraBlossom6.png" alt="Sakura" class="stickerIconSize"/></button>
+                        <button id="myGirlsSticker" class="neumorphic-btn buttonStickers"><img src="assets/stickers/myGirls/myGirls12.png" alt="Girls" class="stickerIconSize"/></button>
+                        <button id="classicSticker" class="neumorphic-btn buttonStickers classicStickers"><img src="assets/stickers/classic1.png" alt="Classic" class="stickerIconSize"/></button>
+                        <button id="classicBSticker" class="neumorphic-btn buttonStickers classicStickers"><img src="assets/stickers/classic4.png" alt="Classic B" class="stickerIconSize"/></button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3 class="options-label">Logo</h3>
+                    <div class="logo-options-grid">
+                        <div class="logo-container">
+                            <button id="engLogo" class="neumorphic-btn logoCustomBtn active">ENG</button>
+                            <button id="korLogo" class="neumorphic-btn logoCustomBtn">KOR</button>
+                            <button id="cnLogo" class="neumorphic-btn logoCustomBtn">CN</button>
+                        </div>
+                        <div class="color-picker-container">
+                            <label for="logoColorPicker" class="color-picker-label">Color:</label>
+                            <input type="color" id="logoColorPicker" value="#E28585">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                     <h3 class="options-label">Date Overlay</h3>
+                     <div class="date-overlay">
+                         <div class="date-option">
+                             <input type="checkbox" id="dateCheckbox">
+                             <label for="dateCheckbox">Add Date</label>
+                         </div>
+                         <div class="date-option">
+                             <input type="checkbox" id="dateTimeCheckbox">
+                             <label for="dateTimeCheckbox">Add Time</label>
+                         </div>
+                     </div>
+                </div>
+
+                <div class="final-actions-container">
+                    <button class="neumorphic-btn" id="customBack">
+                        <i class="fas fa-undo"></i> Retake
+                    </button>
+                    <button class="neumorphic-btn" id="previewBtn">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                    <button class="neumorphic-btn" id="shareBtn">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                </div>
+
+                <div class="download-action-container">
+                    <button class="neumorphic-btn" id="downloadCopyBtn">
+                        <i class="fas fa-qrcode"></i> Get QR / Download
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <img id="modalImagePreview" src="" alt="Image Preview">
+        </div>
+    </div>
+
+    <div id="qrModal" class="modal">
+        <div class="modal-content qr-modal-content">
+             <span class="modal-close-btn qr-close-btn">&times;</span>
+             <div class="qr-icon">
+                <i class="fas fa-qrcode"></i>
+             </div>
+            <h2 class="qr-title">Scan to Download</h2>
+            <p class="qr-subtitle">Buka kamera ponsel Anda dan pindai kode di bawah ini.</p>
+            <div id="qrCodePopupContainer">
+                </div>
+
+            <div id="qrTimer" class="qr-timer-text"></div>
+            
+            <div class="qr-actions-container">
+                <button id="downloadDirectBtn" class="neumorphic-btn">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button id="copyLinkBtn" class="neumorphic-btn">
+                    <i class="fas fa-copy"></i> Copy Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-picker@2.12.1/dist/vanilla-picker.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script src="customize.js"></script>
+    <script src="canvas.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        // !!! PENTING: GANTI DENGAN KONFIGURASI PROYEK FIREBASE ANDA SENDIRI !!!
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+            authDomain: "project-xlord.firebaseapp.com",
+            databaseURL: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "project-xlord",
+            storageBucket: "project-xlord.appspot.com",
+            messagingSenderId: "847461816867",
+            appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
+            measurementId: "G-344KX3B197"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Variabel State ---
+            let currentQrLink = ''; 
+            let currentImageData = null; 
+            let qrTimerInterval = null;
+            
+            const finalCanvasContainer = document.getElementById('photoPreview');
+            const modalImagePreview = document.getElementById('modalImagePreview');
+            const previewModal = document.getElementById('previewModal');
+            const qrModal = document.getElementById('qrModal');
+
+            // =========================================================================
+            // FUNGSI PEMBARUAN CANVAS TERPUSAT
+            // =========================================================================
+            async function updateCanvasPreview() {
+                // Asumsi fungsi `drawFinalImage` ada di file canvas.js atau customize.js
+                if (typeof drawFinalImage === 'function') {
+                    await drawFinalImage();
+                } else {
+                    console.warn('Fungsi `drawFinalImage()` tidak ditemukan.');
+                    return;
+                }
+
+                const finalCanvas = finalCanvasContainer.querySelector('canvas');
+                if (!finalCanvas) return;
+
+                // Perbarui modal preview jika sedang terbuka
+                if (previewModal.classList.contains('show')) {
+                    modalImagePreview.src = finalCanvas.toDataURL('image/png', 1.0);
+                }
+            }
+
+
+            // =========================================================================
+            // EVENT LISTENERS
+            // =========================================================================
+            
+            // 1. Theme Manager
+            const themeToggle = document.getElementById('theme-toggle');
+            const applyTheme = (theme) => {
+                document.body.classList.toggle('dark-mode', theme === 'dark');
+                updateCanvasPreview(); 
+            };
+            themeToggle.addEventListener('click', () => {
+                const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+
+
+            // 2. Event Listener Terpusat untuk semua tombol kustomisasi
+            const controlsPanel = document.querySelector('.controls-panel');
+            controlsPanel.addEventListener('click', (e) => {
+                const target = e.target;
+                // Cek jika yang diklik adalah tombol atau checkbox, tapi BUKAN tombol Share
+                if ((target.closest('.neumorphic-btn') && !target.closest('#shareBtn')) || target.type === 'checkbox') {
+                    const button = target.closest('button');
+                    if(button) {
+                        const container = button.parentElement;
+                        const isStickerGroup = container.previousElementSibling?.textContent === 'Stickers';
+
+                        if (isStickerGroup) {
+                            if (button.id === 'noneSticker') {
+                                container.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                                button.classList.add('active');
+                            } else {
+                                document.getElementById('noneSticker')?.classList.remove('active');
+                                button.classList.toggle('active');
+                            }
+                        } else if (container.classList.contains('custom-buttons-container') || container.classList.contains('logo-container')) {
+                            container.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                        }
+                    }
+                    updateCanvasPreview();
+                }
+            });
+
+            // Event listener khusus untuk color picker
+            const logoColorPicker = document.getElementById('logoColorPicker');
+            if (logoColorPicker) {
+                logoColorPicker.addEventListener('input', updateCanvasPreview);
+                logoColorPicker.addEventListener('change', updateCanvasPreview);
+            }
+            
+
+            // =========================================================================
+            // LOGIKA MODAL (PREVIEW & QR)
+            // =========================================================================
+            function showModal(modal) {
+                modal.style.display = 'block';
+                setTimeout(() => modal.classList.add('show'), 10);
+            }
+
+            function hideModal(modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    if (modal.id === 'qrModal' && qrTimerInterval) {
+                        clearInterval(qrTimerInterval);
+                        qrTimerElement.style.display = 'none';
+                    }
+                }, 400);
+            }
+            
+            // --- Tombol & Event untuk Modal Preview ---
+            const previewBtn = document.getElementById('previewBtn');
+            if(previewBtn) {
+                previewBtn.addEventListener('click', () => {
+                    const finalCanvas = finalCanvasContainer.querySelector('canvas');
+                    if (finalCanvas) {
+                        modalImagePreview.src = finalCanvas.toDataURL('image/png', 1.0);
+                        showModal(previewModal);
+                    } else { 
+                        alert('Gambar belum selesai dibuat. Mohon tunggu sebentar.'); 
+                    }
+                });
+            }
+            
+            // --- Tombol & Event untuk Modal QR ---
+            const downloadBtn = document.getElementById('downloadCopyBtn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', async () => {
+                    const finalCanvas = finalCanvasContainer.querySelector('canvas');
+                    if (!finalCanvas) {
+                        alert('Silakan buat gambar terlebih dahulu!');
+                        return;
+                    }
+                    
+                    showModal(qrModal);
+                    const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
+                    const copyLinkBtn = document.getElementById('copyLinkBtn');
+                    const downloadDirectBtn = document.getElementById('downloadDirectBtn');
+                    
+                    qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
+                    copyLinkBtn.disabled = true;
+                    downloadDirectBtn.disabled = true;
+                    if (qrTimerInterval) clearInterval(qrTimerInterval);
+
+                    try {
+                        const imageData = finalCanvas.toDataURL('image/png', 1.0);
+                        currentImageData = imageData;
+                        
+                        const link = document.createElement('a');
+                        link.download = `pictlord-${Date.now()}.png`;
+                        link.href = imageData;
+                        link.click();
+                        
+                        currentQrLink = await generateTemporaryLink(imageData);
+                        const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
+                        qrCodePopupContainer.innerHTML = `<img src="${qrApiUrl}" alt="Scan to download">`;
+                        
+                        copyLinkBtn.disabled = false;
+                        downloadDirectBtn.disabled = false;
+                        startQrTimer(299);
+                    } catch (error) {
+                        console.error('Gagal membuat link Firebase atau QR Code:', error);
+                        qrCodePopupContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong>';
+                    }
+                });
+            }
+
+            // --- Event penutup modal ---
+            document.querySelectorAll('.modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    hideModal(btn.closest('.modal'));
+                });
+            });
+            
+            window.addEventListener('click', (event) => {
+                if (event.target.classList.contains('modal')) {
+                     hideModal(event.target);
+                }
+            });
+
+
+            // --- Fungsi & Event untuk QR Code ---
+            const qrTimerElement = document.getElementById('qrTimer');
+            function startQrTimer(durationInSeconds) {
+                let timer = durationInSeconds;
+                qrTimerElement.style.display = 'block';
+                const updateTimer = () => {
+                    if (timer < 0) {
+                        clearInterval(qrTimerInterval);
+                        qrTimerElement.textContent = "Link telah kadaluarsa.";
+                        document.getElementById('copyLinkBtn').disabled = true;
+                        document.getElementById('downloadDirectBtn').disabled = true;
+                        return;
+                    }
+                    const minutes = Math.floor(timer / 60);
+                    let seconds = timer % 60;
+                    seconds = seconds < 10 ? '0' + seconds : seconds;
+                    qrTimerElement.innerHTML = `Link kamu kadaluarsa dalam <strong>${minutes}:${seconds}</strong>`;
+                    timer--;
+                };
+                updateTimer();
+                qrTimerInterval = setInterval(updateTimer, 1000);
+            }
+
+            function generateShortId(length) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            async function generateTemporaryLink(base64ImageData) {
+                const expirationTime = Date.now() + (5 * 60 * 1000);
+                const dataToStore = { imageData: base64ImageData, expiresAt: expirationTime };
+                const shortId = generateShortId(5);
+                await database.ref('images/' + shortId).set(dataToStore);
+                return `${window.location.origin}/hasil?id=${shortId}`;
+            }
+
+            document.getElementById('downloadDirectBtn')?.addEventListener('click', () => {
+                if (currentImageData) {
+                    const link = document.createElement('a');
+                    link.download = `pictlord-direct-${Date.now()}.png`;
+                    link.href = currentImageData;
+                    link.click();
+                } else {
+                    alert('Data gambar tidak ditemukan. Coba lagi.');
+                }
+            });
+
+            document.getElementById('copyLinkBtn')?.addEventListener('click', () => {
+                const copyBtn = document.getElementById('copyLinkBtn');
+                if (currentQrLink && !copyBtn.disabled) {
+                    navigator.clipboard.writeText(currentQrLink).then(() => {
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        setTimeout(() => { copyBtn.innerHTML = originalText; }, 2000);
+                    }).catch(err => {
+                        console.error('Gagal menyalin link: ', err);
+                        alert('Gagal menyalin link.');
+                    });
+                }
+            });
+            
+            // --- Tombol Retake ---
+            document.getElementById('customBack')?.addEventListener('click', () => {
+                window.history.back();
+            });
+
+            // const shareBtn = document.getElementById('shareBtn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', async () => {
+                    const finalCanvas = finalCanvasContainer.querySelector('canvas');
+                    if (!finalCanvas) {
+                        alert('Gambar belum siap untuk dibagikan. Mohon tunggu sebentar.');
+                        return;
+                    }
+                    
+                    // Tambahkan loading state pada tombol
+                    const originalBtnHTML = shareBtn.innerHTML;
+                    shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
+                    shareBtn.disabled = true;
+
+                    try {
+                        const imageData = finalCanvas.toDataURL('image/png', 1.0);
+                        // Gunakan fungsi yang sudah ada untuk membuat link sementara
+                        const shareUrl = await generateTemporaryLink(imageData);
+
+                        const shareData = {
+                            title: 'Pictlord Photobooth',
+                            text: 'bingung nyari? photobooth online free dimana dan kapan aja tenang pictlord 📸solusinya 😎',
+                            url: window.location.origin // Menggunakan URL domain utama situs
+};
+
+                        if (navigator.share) {
+                             await navigator.share(shareData);
+                             console.log('Link berhasil dibagikan!');
+                        } else {
+                            alert('Browser Anda tidak mendukung fitur berbagi. Silakan gunakan tombol "Get QR / Download".');
+                        }
+
+                    } catch (err) {
+                        console.error('Error saat berbagi:', err);
+                        // Cek jika error karena pengguna membatalkan dialog share
+                        if (err.name !== 'AbortError') {
+                            alert(`Gagal membuat link untuk dibagikan. Silakan coba lagi.`);
+                        }
+                    } finally {
+                        // Kembalikan tombol ke state semula
+                        shareBtn.innerHTML = originalBtnHTML;
+                        shareBtn.disabled = false;
+                    }
+                });
+            }
+            // // =========================================================================
+            // RENDER AWAL
+            // =========================================================================
+            setTimeout(updateCanvasPreview, 100);
+        });
+    </script>
+</body>
+</html>
