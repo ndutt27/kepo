@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id" data-theme="white">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -192,7 +192,8 @@
         .post-timestamp { font-size: 1.3rem; color: var(--text-light); }
         .post-content { color: var(--text-light); font-size: 1.5rem; margin-bottom: 2rem; white-space: pre-wrap; word-wrap: break-word; }
         .post-image-container { margin-bottom: 2rem; border-radius: var(--border-radius-inner); overflow: hidden; }
-        .post-image { display: block; width: 100%; height: auto; max-height: 500px; object-fit: cover; }
+        .post-image { display: block; width: 100%; height: auto; max-height: 500px; object-fit: cover; cursor: pointer; transition: opacity 0.3s ease; }
+        .post-image:hover { opacity: 0.85; }
         .post-actions { display: flex; align-items: center; gap: 1rem; border-top: 1px solid var(--shadow-dark); padding-top: 1.5rem; }
         .post-action-btn { background: none; border: none; color: var(--text-light); cursor: pointer; display: flex; align-items: center; gap: 0.8rem; font-size: 1.4rem; padding: 0.5rem 1rem; border-radius: var(--border-radius-inner); transition: var(--transition-smooth); }
         .post-action-btn:hover { background-color: var(--shadow-dark); color: var(--text-color); }
@@ -282,6 +283,36 @@
         [data-theme="light"] .theme-toggle-btn i.fa-moon { display: none; }
         [data-theme="light"] .theme-toggle-btn i.fa-sun { display: block; }
         .theme-toggle-btn-mobile-wrapper { display: none; }
+        
+        /* Image Viewer Modal Styles */
+        #image-viewer-modal .modal-content-image-viewer {
+            background: none;
+            box-shadow: none;
+            width: auto;
+            max-width: 95vw;
+            max-height: 95vh;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* Memungkinkan scroll jika gambar lebih besar dari viewport */
+        }
+        #image-viewer-modal #full-view-image {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            border-radius: var(--border-radius-inner);
+            object-fit: contain; /* Memastikan seluruh gambar terlihat */
+        }
+        #image-viewer-modal .modal-close-btn {
+            position: fixed; /* Menggunakan fixed agar posisi relatif terhadap viewport */
+            top: 2rem;
+            right: 2rem;
+            z-index: 1002; /* Di atas gambar */
+        }
+
 
         @media (max-width: 1024px) {
             .navbar-menu { position: absolute; top: calc(100% + 1rem); left: 0; right: 0; width: 90%; margin: auto; flex-direction: column; align-items: stretch; padding: 1.5rem; background: var(--navbar-mobile-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius-main); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 1px solid var(--shadow-light); transform: translateY(-20px) scale(0.95); opacity: 0; pointer-events: none; transform-origin: top center; transition: transform 0.3s ease, opacity 0.3s ease; }
@@ -507,6 +538,13 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="image-viewer-modal">
+    <button class="modal-close-btn" style="color: white; text-shadow: 0 0 8px rgba(0,0,0,0.8);">&times;</button>
+    <div class="modal-content-image-viewer">
+        <img src="" alt="Testimonial Full View" id="full-view-image">
+    </div>
+</div>
+
 <div id="toast-container"></div>
 
 
@@ -727,6 +765,46 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const contactModal = setupModal('contact-modal', 'open-contact-modal-btn');
     const testimonialModal = setupModal('testimonial-modal', 'add-testimonial-btn');
+
+    // Image Viewer Modal Logic
+    const imageViewerModal = document.getElementById('image-viewer-modal');
+    const fullViewImage = document.getElementById('full-view-image');
+    const closeImageViewerBtn = imageViewerModal?.querySelector('.modal-close-btn');
+
+    const openImageViewer = (src) => {
+        if (!imageViewerModal || !fullViewImage) return;
+        fullViewImage.src = src;
+        imageViewerModal.classList.add('is-visible');
+        // Menggunakan class yang sama dengan modal lain untuk animasi
+        const content = imageViewerModal.querySelector('.modal-content-image-viewer');
+        setTimeout(() => {
+            if (content) content.style.transform = 'scale(1)';
+            content.style.opacity = '1';
+        }, 10);
+        body.style.overflow = 'hidden';
+    };
+
+    const closeImageViewer = () => {
+        if (!imageViewerModal) return;
+        const content = imageViewerModal.querySelector('.modal-content-image-viewer');
+        if (content) {
+            content.style.transform = 'scale(0.95)';
+            content.style.opacity = '0';
+        }
+        setTimeout(() => {
+            imageViewerModal.classList.remove('is-visible');
+            body.style.overflow = 'auto';
+            if(fullViewImage) fullViewImage.src = ""; // Kosongkan src setelah ditutup
+        }, 400);
+    };
+
+    if (closeImageViewerBtn) closeImageViewerBtn.addEventListener('click', closeImageViewer);
+    if (imageViewerModal) imageViewerModal.addEventListener('click', e => {
+        // Hanya tutup jika klik pada overlay, bukan pada gambar itu sendiri
+        if (e.target === imageViewerModal) {
+            closeImageViewer();
+        }
+    });
     
     const showToast = (message, isError = false) => {
         const container = document.getElementById('toast-container') || body;
@@ -893,6 +971,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (testimonialGrid) loadTestimonials();
     
     testimonialGrid?.addEventListener('click', e => {
+        const postImage = e.target.closest('.post-image');
+        if (postImage) {
+            e.preventDefault(); // Mencegah perilaku default jika gambar dibungkus <a>
+            openImageViewer(postImage.src);
+            return; // Hentikan eksekusi lebih lanjut agar tidak memicu event lain
+        }
+
         const likeBtn = e.target.closest('.like-btn');
         if (likeBtn) {
             const postKey = likeBtn.dataset.key;
