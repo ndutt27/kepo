@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
+
     // --- Element References ---
     const photoCustomPreview = document.getElementById('photoPreview');
     const frameButtonsContainer = document.getElementById('frame-buttons-container');
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- State Variables ---
     let assetsData = null;
     let selectedShape = 'default';
-    let selectedStickers = new Set(); // Allow multiple stickers
+    let selectedStickers = new Set();
     let selectedText = 'pictlord';
     let backgroundType = 'color';
     let backgroundColor = '#FFFFFF';
@@ -278,8 +278,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
-        
-        const columns = 2, rows = 3; 
+
+        const columns = 2, rows = 2;
         const imageGridSize = rows * columns;
         const canvasWidth = 900, canvasHeight = 1352;
         const borderWidth = 30, spacing = 12, bottomPadding = 100;
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (backgroundType === 'image' && backgroundImage && backgroundImage.complete) {
             ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
         }
-        
+
         if (storedImages.length === imageGridSize) {
             const imagePromises = storedImages.map(imgData => new Promise((resolve, reject) => {
                 const img = new Image();
@@ -307,13 +307,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.onload = () => resolve(img);
                 img.onerror = reject;
             }));
-            
+
             try {
                 const images = await Promise.all(imagePromises);
                 images.forEach((img, index) => {
                     const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
                     let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
-                    if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; } 
+                    if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; }
                     else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
                     const col = index % columns, row = Math.floor(index / columns);
                     const x = borderWidth + col * (photoWidth + spacing), y = borderWidth + row * (photoHeight + spacing);
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Gagal memuat gambar:", error);
             }
         }
-        
+
         ctx.fillStyle = textColor;
         ctx.font = 'bold 32px Arial, Roboto, sans-serif';
         ctx.textAlign = 'center';
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updatePreview(stackedCanvas);
     }
-    
+
     function updatePreview(canvas) {
         if (!photoCustomPreview) return;
         photoCustomPreview.innerHTML = '';
