@@ -309,9 +309,9 @@
                         <label for="frame-name" class="form-label">Nama Bingkai</label>
                         <input type="text" id="frame-name" class="form-input" placeholder="e.g., Pink Glitter">
                     </div>
-                    <div class="form-group" id="frame-path-group">
-                        <label for="frame-path" class="form-label">Path File Gambar</label>
-                        <input type="text" id="frame-path" class="form-input" placeholder="e.g., assets/frame-backgrounds/glitter.jpg">
+                    <div class="form-group" id="frame-file-group">
+                        <label for="frame-file" class="form-label">File Gambar</label>
+                        <input type="file" id="frame-file" class="form-input" accept="image/png, image/jpeg, image/gif">
                     </div>
                     <div class="form-group" id="frame-color-group" style="display: none;">
                         <label for="frame-color" class="form-label">Pilih Warna</label>
@@ -376,6 +376,36 @@
             </form>
         </section>
 
+        <!-- Testimonial Management -->
+        <section class="profile-settings" data-aos="fade-up" data-aos-delay="300">
+            <h2>Profil Author Testimoni</h2>
+            <form id="profile-form" class="profile-form">
+                <div class="form-group">
+                    <label for="author-name" class="form-label">Nama Author</label>
+                    <input type="text" id="author-name" class="form-input" style="padding-left: 14px;" placeholder="e.g., xlord" required>
+                </div>
+                <div class="form-group">
+                    <label for="author-avatar-upload" class="form-label">Avatar Profil</label>
+                    <div class="avatar-upload-wrapper">
+                         <img id="avatar-preview" src="https://placehold.co/100x100/2c2f36/e4e6eb?text=AVATAR" alt="Avatar Preview">
+                         <input type="file" id="author-avatar-upload" accept="image/png, image/jpeg, image/gif">
+                         <label for="author-avatar-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
+                         <button type="button" id="delete-avatar-btn" title="Hapus Avatar"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center;">
+                    <button type="submit" class="btn btn-primary btn-save-profile">Simpan Profil</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="testimonial-management" class="asset-section" data-aos="fade-up" data-aos-delay="400">
+            <h2>Kelola Testimoni</h2>
+            <div id="admin-testimonial-grid">
+                <!-- Testimonials will be loaded here -->
+            </div>
+        </section>
+
     </div>
     
     <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
@@ -413,6 +443,9 @@
         // --- STATE ---
         let assetsData = null;
         let isDataDirty = false;
+        let confirmCallback = null;
+        let authorProfile = { name: 'xlord', avatar: '' };
+        let newAvatarFile = null;
 
         // --- DOM Elements ---
         const loginSection = document.getElementById('login-section');
@@ -423,17 +456,49 @@
         const themeToggle = document.getElementById('theme-toggle');
         const docElement = document.documentElement;
         const saveChangesBtn = document.getElementById('save-all-changes-btn');
+        const modal = document.getElementById('confirmation-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
+        // Asset Management DOM
         const framesGrid = document.getElementById('frames-grid');
         const addFrameForm = document.getElementById('add-frame-form');
         const frameTypeSelect = document.getElementById('frame-type');
-
         const logosGrid = document.getElementById('logos-grid');
         const addLogoForm = document.getElementById('add-logo-form');
-
         const stickersGrid = document.getElementById('stickers-grid');
         const addStickerForm = document.getElementById('add-sticker-form');
 
+        // Testimonial Management DOM
+        const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
+        const profileForm = document.getElementById('profile-form');
+        const authorNameInput = document.getElementById('author-name');
+        const authorAvatarUpload = document.getElementById('author-avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
+
+        // --- Firebase Refs ---
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const testimonialsRef = database.ref('testimonials');
+
+        // --- MODAL ---
+        const showModal = (message, onConfirm) => {
+            modalMessage.textContent = message;
+            confirmCallback = onConfirm;
+            modal.classList.add('active');
+        };
+        const hideModal = () => {
+            modal.classList.remove('active');
+            confirmCallback = null;
+        };
+        modalConfirmBtn.addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            hideModal();
+        });
+        modalCancelBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
 
         // --- THEME ---
         const applyTheme = (theme) => {
@@ -511,7 +576,7 @@
                 logosGrid.appendChild(card);
             });
         };
-        
+
         const renderStickers = () => {
             if (!assetsData || !stickersGrid) return;
             stickersGrid.innerHTML = '';
@@ -530,32 +595,75 @@
         };
 
         // --- EVENT HANDLERS ---
-        addFrameForm.addEventListener('submit', (e) => {
+        addFrameForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const type = frameTypeSelect.value;
+            const submitBtn = addFrameForm.querySelector('button[type="submit"]');
+
             if (type === 'color') {
                 const colorValue = document.getElementById('frame-color').value;
                 const newFrame = { id: `colorFrame${Date.now()}`, value: colorValue };
                 assetsData.frames.colors.push(newFrame);
-            } else {
+                setDataDirty(true);
+                renderFrames();
+                addFrameForm.reset();
+            } else { // Image upload
                 const name = document.getElementById('frame-name').value.trim();
-                const path = document.getElementById('frame-path').value.trim();
-                if (!name || !path) {
-                    alert('Nama dan Path harus diisi untuk bingkai gambar.');
+                const fileInput = document.getElementById('frame-file');
+                const file = fileInput.files[0];
+
+                if (!name || !file) {
+                    alert('Nama Bingkai dan File Gambar harus diisi.');
                     return;
                 }
-                const newFrame = { id: `imageFrame${Date.now()}`, name, path };
-                assetsData.frames.images.push(newFrame);
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+
+                try {
+                    const filePath = `${githubConfig.assetsPath}/frame-backgrounds/${file.name}`;
+                    const reader = new FileReader();
+                    const fileReadPromise = new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = reject;
+                    });
+                    reader.readAsDataURL(file);
+                    const base64content = await fileReadPromise;
+
+                    const { owner, repo } = githubConfig;
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                    await githubApiRequest(apiUrl, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: `feat: upload frame ${file.name}`,
+                            content: base64content,
+                        }),
+                    });
+
+                    const newFrame = { id: `imageFrame${Date.now()}`, name, path: filePath };
+                    assetsData.frames.images.push(newFrame);
+
+                    setDataDirty(true);
+                    renderFrames();
+                    addFrameForm.reset();
+                    alert(`Bingkai gambar "${name}" berhasil diunggah! Jangan lupa simpan perubahan.`);
+
+                } catch (error) {
+                    console.error("Gagal mengunggah bingkai:", error);
+                    alert(`Gagal mengunggah bingkai: ${error.message}`);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Tambah Bingkai';
+                }
             }
-            setDataDirty(true);
-            renderFrames();
-            addFrameForm.reset();
         });
 
         frameTypeSelect.addEventListener('change', () => {
             const isColor = frameTypeSelect.value === 'color';
             document.getElementById('frame-name-group').style.display = isColor ? 'none' : 'block';
-            document.getElementById('frame-path-group').style.display = isColor ? 'none' : 'block';
+            document.getElementById('frame-file-group').style.display = isColor ? 'none' : 'block';
             document.getElementById('frame-color-group').style.display = isColor ? 'block' : 'none';
         });
 
@@ -623,7 +731,7 @@
                 }
             }
         });
-        
+
         addStickerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const stickerName = document.getElementById('sticker-name').value.trim();
@@ -778,12 +886,443 @@
         };
 
 
+        // --- GITHUB IMAGE DELETION (for Testimonial Avatars) ---
+        const deleteImageFromGithub = async (imageUrl) => {
+            try {
+                const { owner, repo } = githubConfig;
+                const url = new URL(imageUrl);
+                const filePathInRepo = url.pathname.split('/').slice(3).join('/');
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePathInRepo}`;
+
+                const fileResponse = await githubApiRequest(apiUrl, { method: 'GET' });
+                const fileData = await fileResponse.json();
+
+                await githubApiRequest(apiUrl, {
+                    method: 'DELETE',
+                    body: JSON.stringify({
+                        message: `feat: delete image ${fileData.name}`,
+                        sha: fileData.sha,
+                    }),
+                });
+                console.log(`Berhasil dihapus dari GitHub: ${fileData.name}`);
+            } catch (error) {
+                if (!error.message.includes("404")) {
+                    console.error("Error saat menghapus gambar dari GitHub:", error.message);
+                    throw error;
+                } else {
+                    console.log("Gambar tidak ditemukan di GitHub, mungkin sudah dihapus.");
+                }
+            }
+        };
+
+        // --- TESTIMONIAL RENDERING ---
+        const timeAgo = (timestamp) => {
+            const now = Date.now();
+            const seconds = Math.floor((now - timestamp) / 1000);
+            if (seconds < 60) return "Baru saja";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} menit lalu`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} jam lalu`;
+            const days = Math.floor(hours / 24);
+            return `${days} hari lalu`;
+        };
+
+        const createAdminPostCard = (postData, key, index) => {
+            const card = document.createElement('div');
+            card.className = 'admin-post-card';
+            card.id = `post-${key}`;
+            card.setAttribute('data-aos', 'fade-up');
+            card.setAttribute('data-aos-delay', index * 50);
+
+            const comments = postData.comments || {};
+            let commentsHTML = '';
+            const sortedKeys = Object.keys(comments).sort((a, b) => comments[a].timestamp - comments[b].timestamp);
+            sortedKeys.forEach(commentKey => {
+                commentsHTML += createCommentHTML(comments[commentKey], key, commentKey);
+            });
+
+            const postBadge = postData.badge;
+            const postBadgeHTML = postBadge ? `<span class="badge" style="background-color: ${postBadge.color || '#777'};">${postBadge.text}</span>` : '';
+
+            card.innerHTML = `
+                <div class="admin-post-header">
+                    <div class="post-user-info">
+                        <div class="post-avatar">${postData.name ? postData.name.charAt(0).toUpperCase() : 'U'}</div>
+                        <div>
+                            <div class="post-name-section">
+                                <div class="post-name">${postData.name}</div>
+                                ${postBadgeHTML}
+                            </div>
+                            <div class="post-timestamp">${timeAgo(postData.timestamp)}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn-icon edit-post-badge-btn" data-key="${key}" title="Edit Badge Postingan"><i class="fas fa-id-badge"></i></button>
+                        <button class="btn-icon delete-post-btn" data-key="${key}" title="Hapus Postingan"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+
+                <form class="badge-form post-badge-form" data-post-key="${key}">
+                    <div class="badge-form-inner">
+                        <div class="form-group"> <input type="text" class="form-input badge-text-input" placeholder="Teks Badge Postingan" value="${postBadge ? postBadge.text : ''}"> </div>
+                        <div class="form-group"> <input type="color" class="form-input color-input badge-color-input" value="${postBadge ? postBadge.color : '#8B5CF6'}"> </div>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+
+                ${postData.text ? `<p class="admin-post-content">${postData.text}</p>` : ''}
+                ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post image by ${postData.name}" class="admin-post-image" loading="lazy">` : ''}
+
+                <div class="comments-section">
+                    <h4>Komentar (${sortedKeys.length})</h4>
+                    <div class="comments-list" id="comments-list-${key}">${commentsHTML}</div>
+                    <div class="author-composer">
+                         <form class="add-comment-form" data-post-key="${key}">
+                            <div class="composer-wrapper">
+                                ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
+                                <div style="width: 100%;">
+                                    <textarea class="composer-input" placeholder="Tulis komentar sebagai author..." required></textarea>
+                                    <div class="composer-actions"> <button type="submit" class="btn btn-primary composer-btn">Kirim Komentar</button> </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            return card;
+        };
+
+        const createCommentHTML = (comment, postKey, commentKey) => {
+            if (comment.isDev) {
+                return createAdminCommentHTML(comment, postKey, commentKey, false);
+            }
+
+            let repliesHTML = '';
+            if (comment.replies) {
+                const sortedReplies = Object.keys(comment.replies).map(key => ({ key, ...comment.replies[key] })).sort((a, b) => a.timestamp - b.timestamp);
+                sortedReplies.forEach(reply => {
+                    repliesHTML += createAdminCommentHTML(reply, postKey, commentKey, true, reply.key);
+                });
+            }
+
+            const badge = comment.badge;
+            const badgeHTML = badge ? `<span class="badge" style="background-color: ${badge.color || '#777'};">${badge.text}</span>` : '';
+            const userAvatar = `<div class="comment-avatar">${comment.name ? comment.name.charAt(0).toUpperCase() : 'U'}</div>`;
+
+            return `
+                <div class="comment-container">
+                    <div class="comment-item">
+                        ${userAvatar}
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-user">${comment.name} ${badgeHTML}</span>
+                            </div>
+                            <p class="comment-text">${comment.text}</p>
+                            <div class="comment-actions">
+                                <button class="btn-action reply-to-comment-btn" data-comment-key="${commentKey}"><i class="fas fa-reply"></i> Balas</button>
+                                <button class="btn-action badge-comment-btn" data-comment-key="${commentKey}"><i class="fas fa-id-badge"></i> Badge</button>
+                                <button class="btn-action delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i> Hapus</button>
+                            </div>
+
+                            <form class="comment-reply-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
+                                <div class="composer-wrapper">
+                                    ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
+                                    <div style="width: 100%;">
+                                        <textarea class="composer-input" placeholder="Balas komentar ${comment.name}..." required></textarea>
+                                        <div class="composer-actions"> <button type="submit" class="btn btn-primary composer-btn">Kirim</button> </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form class="badge-form comment-badge-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
+                                <div class="badge-form-inner">
+                                    <div class="form-group"> <input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${badge ? badge.text : ''}"> </div>
+                                    <div class="form-group"> <input type="color" class="form-input color-input badge-color-input" value="${badge ? badge.color : '#8B5CF6'}"> </div>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="replies-container">${repliesHTML}</div>
+                </div>
+            `;
+        };
+
+        const createAvatarHTML = (name, avatarUrl, cssClass = 'comment-avatar') => {
+            if (avatarUrl) {
+                return `<img src="${avatarUrl}" alt="${name}" class="${cssClass}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=ERR'">`;
+            }
+            return `<div class="${cssClass}" style="background-color: var(--author-color); color: white;">${name ? name.charAt(0).toUpperCase() : 'A'}</div>`;
+        };
+
+        const createAdminCommentHTML = (comment, postKey, commentKey, isReply = false, replyKey = null) => {
+            const deleteButton = isReply
+                ? `<button class="btn-icon delete-reply-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" data-reply-key="${replyKey}" title="Hapus Balasan"><i class="fas fa-trash"></i></button>`
+                : `<button class="btn-icon delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i></button>`;
+
+            return `
+                <div class="admin-comment">
+                    <div class="comment-item">
+                        ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-user admin-user">
+                                    <span>${authorProfile.name}</span>
+                                    <img src="https://i.postimg.cc/hGJjPYW5/verified.png" alt="Verified Admin" class="verified-img">
+                                    <span class="badge" style="background-color: var(--author-color);">Author</span>
+                                </span>
+                                ${deleteButton}
+                            </div>
+                            <p class="comment-text">${comment.text}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        const loadAdminTestimonials = () => {
+            adminTestimonialGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
+            testimonialsRef.orderByChild('timestamp').on('value', (snapshot) => {
+                adminTestimonialGrid.innerHTML = '';
+                if (!snapshot.exists()) {
+                    adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada testimoni.</p>';
+                    return;
+                }
+                let posts = [];
+                snapshot.forEach(childSnapshot => {
+                    posts.push({ key: childSnapshot.key, val: childSnapshot.val() });
+                });
+                posts.reverse().forEach((post, index) => {
+                    adminTestimonialGrid.appendChild(createAdminPostCard(post.val, post.key, index));
+                });
+                setTimeout(() => { AOS.refresh(true); }, 100);
+            }, (error) => {
+                console.error("Firebase read failed: " + error.code);
+                adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--danger);">Gagal memuat data.</p>';
+            });
+        };
+
+        // --- AUTH & PROFILE ---
+        const saveAuthorProfile = async () => {
+            const newName = authorNameInput.value.trim();
+            let newAvatarUrl = authorProfile.avatar;
+
+            if (newAvatarFile) {
+                if (authorProfile.avatar) {
+                    await deleteImageFromGithub(authorProfile.avatar);
+                }
+
+                const reader = new FileReader();
+                const fileReadPromise = new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                });
+                reader.readAsDataURL(newAvatarFile);
+                const base64content = await fileReadPromise;
+
+                const { owner, repo, adminAvatarPath } = githubConfig;
+                const fileName = `avatar-${Date.now()}.${newAvatarFile.name.split('.').pop()}`;
+                const filePath = `${adminAvatarPath}/${fileName}`;
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                await githubApiRequest(apiUrl, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        message: `feat: upload admin avatar ${fileName}`,
+                        content: base64content,
+                    }),
+                });
+
+                newAvatarUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+            }
+
+            authorProfile.name = newName;
+            authorProfile.avatar = newAvatarUrl;
+
+            localStorage.setItem('pictlord_author_profile', JSON.stringify(authorProfile));
+            newAvatarFile = null;
+            loadAuthorProfile();
+            loadAdminTestimonials();
+        };
+
+        const loadAuthorProfile = () => {
+            const savedProfile = localStorage.getItem('pictlord_author_profile');
+            if (savedProfile) {
+                authorProfile = JSON.parse(savedProfile);
+            }
+            authorNameInput.value = authorProfile.name;
+            avatarPreview.src = authorProfile.avatar || 'https://placehold.co/100x100/2c2f36/e4e6eb?text=AVATAR';
+
+            if (authorProfile.avatar) {
+                deleteAvatarBtn.classList.add('visible');
+            } else {
+                deleteAvatarBtn.classList.remove('visible');
+            }
+        };
+
+        deleteAvatarBtn.addEventListener('click', async () => {
+            if (!authorProfile.avatar) return;
+
+            showModal('Apakah Anda yakin ingin menghapus avatar ini?', async () => {
+                try {
+                    await deleteImageFromGithub(authorProfile.avatar);
+                    authorProfile.avatar = '';
+                    localStorage.setItem('pictlord_author_profile', JSON.stringify(authorProfile));
+                    loadAuthorProfile();
+                    loadAdminTestimonials();
+                    alert('Avatar berhasil dihapus.');
+                } catch (error) {
+                    console.error("Gagal menghapus avatar:", error);
+                    alert(`Gagal menghapus avatar: ${error.message}`);
+                }
+            });
+        });
+
+        authorAvatarUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                newAvatarFile = file;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarPreview.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const saveButton = e.target.querySelector('.btn-save-profile');
+            saveButton.disabled = true;
+            saveButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+            try {
+                await saveAuthorProfile();
+                alert('Profil berhasil disimpan!');
+            } catch (error) {
+                console.error("Gagal menyimpan profil:", error);
+                alert(`Gagal menyimpan profil: ${error.message}`);
+            } finally {
+                saveButton.disabled = false;
+                saveButton.innerHTML = 'Simpan Profil';
+            }
+        });
+
+        // --- EVENT LISTENERS (TESTIMONIALS) ---
+        adminTestimonialGrid.addEventListener('click', (e) => {
+            const deletePostBtn = e.target.closest('.delete-post-btn');
+            if (deletePostBtn) {
+                const postKey = deletePostBtn.dataset.key;
+                showModal('Hapus postingan ini? Jika ada gambar, gambar di GitHub juga akan dihapus.', () => {
+                    testimonialsRef.child(postKey).once('value', async (snapshot) => {
+                        const postData = snapshot.val();
+                        if (postData && postData.imageUrl) {
+                            await deleteImageFromGithub(postData.imageUrl);
+                        }
+                        testimonialsRef.child(postKey).remove();
+                    });
+                });
+                return;
+            }
+
+            const deleteCommentBtn = e.target.closest('.delete-comment-btn');
+            if (deleteCommentBtn) {
+                showModal('Hapus komentar ini dan semua balasannya?', () => {
+                    testimonialsRef.child(deleteCommentBtn.dataset.postKey).child('comments').child(deleteCommentBtn.dataset.commentKey).remove();
+                });
+                return;
+            }
+
+            const deleteReplyBtn = e.target.closest('.delete-reply-btn');
+            if (deleteReplyBtn) {
+                showModal('Hapus balasan ini?', () => {
+                    const { postKey, commentKey, replyKey } = deleteReplyBtn.dataset;
+                    testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').child(replyKey).remove();
+                });
+                return;
+            }
+
+            const toggleForm = (button, formSelector, parentSelector) => {
+                const parent = button.closest(parentSelector);
+                const form = parent.querySelector(formSelector);
+                document.querySelectorAll('.comment-reply-form.active, .badge-form.active').forEach(activeForm => {
+                    if (activeForm !== form) activeForm.classList.remove('active');
+                });
+                form.classList.toggle('active');
+                if (form.classList.contains('active')) {
+                    form.querySelector('input, textarea').focus();
+                }
+            };
+
+            const replyToCommentBtn = e.target.closest('.reply-to-comment-btn');
+            if (replyToCommentBtn) {
+                toggleForm(replyToCommentBtn, '.comment-reply-form', '.comment-body');
+            }
+
+            const badgeCommentBtn = e.target.closest('.badge-comment-btn');
+            if (badgeCommentBtn) {
+                toggleForm(badgeCommentBtn, '.comment-badge-form', '.comment-body');
+            }
+
+            const editPostBadgeBtn = e.target.closest('.edit-post-badge-btn');
+            if (editPostBadgeBtn) {
+                toggleForm(editPostBadgeBtn, '.post-badge-form', '.admin-post-card');
+            }
+        });
+
+        adminTestimonialGrid.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const form = e.target;
+
+            if (form.classList.contains('comment-reply-form')) {
+                const input = form.querySelector('.composer-input');
+                const replyText = input.value.trim();
+                if (!replyText) return;
+                const { postKey, commentKey } = form.dataset;
+                const newReply = { text: replyText, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
+                testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').push(newReply)
+                    .then(() => { input.value = ''; form.classList.remove('active'); });
+            }
+
+            if (form.classList.contains('add-comment-form')) {
+                const input = form.querySelector('.composer-input');
+                const commentText = input.value.trim();
+                if (!commentText) return;
+                const { postKey } = form.dataset;
+                const newComment = { text: commentText, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
+                testimonialsRef.child(postKey).child('comments').push(newComment)
+                    .then(() => { input.value = ''; });
+            }
+
+            if (form.classList.contains('badge-form')) {
+                const text = form.querySelector('.badge-text-input').value.trim();
+                const color = form.querySelector('.badge-color-input').value;
+                const { postKey, commentKey } = form.dataset;
+
+                let badgeRef;
+                if (form.classList.contains('post-badge-form')) {
+                    badgeRef = testimonialsRef.child(postKey).child('badge');
+                } else {
+                    badgeRef = testimonialsRef.child(postKey).child('comments').child(commentKey).child('badge');
+                }
+
+                if (text) {
+                    badgeRef.set({ text, color });
+                } else {
+                    badgeRef.remove();
+                }
+                form.classList.remove('active');
+            }
+        });
+
         // --- AUTH ---
         const checkLogin = () => {
             if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
                 loginSection.style.display = 'none';
                 adminPanel.style.display = 'block';
                 loadAssets();
+                loadAuthorProfile();
+                loadAdminTestimonials();
             } else {
                 loginSection.style.display = 'flex';
                 adminPanel.style.display = 'none';

@@ -97,11 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const renderStickerButtons = () => {
         if (!assetsData.stickers || !stickerButtonsContainer) return;
+        stickerButtonsContainer.innerHTML = '';
         assetsData.stickers.forEach(sticker => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonStickers';
-            btn.dataset.sticker = sticker.layout; // layout name is the sticker identifier
-            btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize"><span class="tooltip-text">${sticker.name}</span>`;
+            btn.dataset.sticker = sticker.layout;
+            // Removed the tooltip span to fix the visual bug
+            btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
             if(sticker.id === 'noneSticker') btn.classList.add('active');
             stickerButtonsContainer.appendChild(btn);
         });
@@ -164,22 +166,25 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
+
         const stickerLayout = btn.dataset.sticker;
+        const wasActive = btn.classList.contains('active');
 
-        if (stickerLayout === 'null') { // 'null' because dataset converts it to string
-            selectedStickers.clear();
-            stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // Deactivate all buttons and clear selections first
+        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
+        selectedStickers.clear();
+
+        if (wasActive) {
+            // If the clicked button was the one that was active, we just cleared it.
+            // Now, activate the 'None' button to signify no selection.
+            const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
+            if (noneStickerBtn) noneStickerBtn.classList.add('active');
         } else {
-            // Deactivate 'None' button if another is clicked
-            stickerButtonsContainer.querySelector('[data-sticker="null"]').classList.remove('active');
-
-            if (selectedStickers.has(stickerLayout)) {
-                selectedStickers.delete(stickerLayout);
-                btn.classList.remove('active');
-            } else {
+            // If a new sticker is clicked, activate it and add it to the selection.
+            btn.classList.add('active');
+            // Ensure we don't add the 'null' layout to the set of stickers to be drawn
+            if (stickerLayout !== 'null') {
                 selectedStickers.add(stickerLayout);
-                btn.classList.add('active');
             }
         }
         redrawCanvas();
