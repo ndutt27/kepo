@@ -880,12 +880,26 @@
                         // Generate QR code and link
                         currentQrLink = await generateTemporaryLink(imageData);
                         const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
-                        qrCodePopupContainer.innerHTML = `<img src="${qrApiUrl}" alt="Scan to download">`;
                         
-                        // Enable buttons and start timer
-                        copyLinkBtn.disabled = false;
-                        downloadDirectBtn.disabled = false;
-                        startQrTimer(299);
+                        // --- ROBUST QR IMAGE LOADING ---
+                        const qrImage = new Image();
+                        qrImage.src = qrApiUrl;
+                        qrImage.alt = "Scan to download";
+                        
+                        qrImage.onload = () => {
+                            qrCodePopupContainer.innerHTML = ''; // Clear spinner
+                            qrCodePopupContainer.appendChild(qrImage);
+                            // Enable buttons and start timer only on successful load
+                            copyLinkBtn.disabled = false;
+                            downloadDirectBtn.disabled = false;
+                            startQrTimer(299);
+                        };
+
+                        qrImage.onerror = () => {
+                            console.error("Failed to load QR code image from:", qrApiUrl);
+                            qrCodePopupContainer.innerHTML = '<strong>Gagal memuat QR Code.</strong><br><span>Coba lagi nanti.</span>';
+                        };
+                        
                     } catch (error) {
                         console.error('Gagal membuat link Firebase atau QR Code:', error);
                         qrCodePopupContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong>';
