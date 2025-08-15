@@ -125,6 +125,36 @@
         .buttonBgFrames { background-size: cover; background-position: center; }
         .btnShapeSize, .stickerIconSize { width: 22px; height: 22px; }
         
+        /* --- Tooltip Styling --- */
+        .neumorphic-btn .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        .neumorphic-btn:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+        .dark-mode .neumorphic-btn .tooltip-text {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
         #colorPickerBtn { background: conic-gradient(red, orange, yellow, green, cyan, blue, violet, red); }
         #pinkBtnFrame { background-color: #FFC2D1; }
         #blueBtnFrame { background-color: #CAF0F8; }
