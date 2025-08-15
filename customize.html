@@ -523,12 +523,15 @@
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
+            flex-direction: column; /* Added for error message layout */
+            font-size: 1.4rem; /* Added for error message */
+            line-height: 1.5; /* Added for error message */
         }
         #qrCodePopupContainer .spinner {
             font-size: 40px;
             color: var(--light-accent);
         }
-        #qrCodePopupContainer::after {
+        #qrCodePopupContainer:not(:has(img))::after {
             content: '';
             position: absolute;
             top: 0;
@@ -862,49 +865,44 @@
                     if (qrTimerInterval) clearInterval(qrTimerInterval);
 
                     try {
-                        // Redraw the canvas to get the final, updated version
                         const finalCanvas = await window.drawFinalImage();
-                        if (!finalCanvas) {
-                            throw new Error("Canvas generation failed.");
-                        }
+                        if (!finalCanvas) throw new Error("Gagal membuat gambar final.");
 
                         const imageData = finalCanvas.toDataURL('image/png', 1.0);
-                        currentImageData = imageData; // Store for direct download
+                        currentImageData = imageData;
 
-                        // Trigger initial local download
                         const link = document.createElement('a');
                         link.download = `pictlord-${Date.now()}.png`;
                         link.href = imageData;
                         link.click();
                         
-                        // Generate QR code and link
                         currentQrLink = await generateTemporaryLink(imageData);
                         const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
-                        
-                        // --- ROBUST QR IMAGE LOADING ---
-                        const qrImage = new Image();
-                        qrImage.src = qrApiUrl;
-                        qrImage.alt = "Scan to download";
-                        
-                        qrImage.onload = () => {
-                            qrCodePopupContainer.innerHTML = ''; // Clear spinner
-                            qrCodePopupContainer.appendChild(qrImage);
-                            // Enable buttons and start timer only on successful load
-                            copyLinkBtn.disabled = false;
-                            downloadDirectBtn.disabled = false;
-                            startQrTimer(299);
-                        };
 
-                        qrImage.onerror = () => {
-                            console.error("Failed to load QR code image from:", qrApiUrl);
-                            qrCodePopupContainer.innerHTML = '<strong>Gagal memuat QR Code.</strong><br><span>Coba lagi nanti.</span>';
-                        };
+                        // --- NEW: Promise-based image loading for robustness ---
+                        const qrImage = await new Promise((resolve, reject) => {
+                            const img = new Image();
+                            img.crossOrigin = "anonymous"; // Helps prevent cross-origin issues
+                            img.onload = () => resolve(img);
+                            img.onerror = () => reject(new Error('Gagal memuat gambar QR Code dari layanan eksternal.'));
+                            img.src = qrApiUrl;
+                            img.alt = "Scan to download";
+                        });
                         
+                        // --- This code only runs if the promise above resolves (image loads successfully) ---
+                        qrCodePopupContainer.innerHTML = '';
+                        qrCodePopupContainer.appendChild(qrImage);
+                        copyLinkBtn.disabled = false;
+                        downloadDirectBtn.disabled = false;
+                        startQrTimer(299);
+
                     } catch (error) {
-                        console.error('Gagal membuat link Firebase atau QR Code:', error);
-                        qrCodePopupContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong>';
-                        hideModal(qrModal);
-                        alert('Terjadi kesalahan saat membuat gambar Anda. Silakan coba lagi.');
+                        console.error('An error occurred in the download/QR process:', error);
+                        // Display a user-friendly error inside the modal itself
+                        qrCodePopupContainer.innerHTML = `<strong>Oops! Terjadi kesalahan.</strong><br><span>${error.message || 'Tidak dapat membuat QR code.'}</span>`;
+                        // Disable buttons on failure
+                        copyLinkBtn.disabled = true;
+                        downloadDirectBtn.disabled = true;
                     }
                 });
             }
