@@ -9,12 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateCheckbox = document.getElementById('dateCheckbox');
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
     const logoColorPicker = document.getElementById('logoColorPicker');
-    const colorPickerBtnContainer = document.createElement('div'); // Temp container for picker
 
     // --- State Variables ---
     let assetsData = null;
     let selectedShape = 'default';
-    let selectedStickerLayout = null; // Single sticker selection
+    let selectedStickerLayout = null;
     let selectedText = 'pictlord';
     let backgroundType = 'color';
     let backgroundColor = '#FFFFFF';
@@ -35,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             setupEventListeners();
 
-            // Initial draw
-            redrawCanvas();
+            // Initial draw after a short delay to ensure everything is ready
+            setTimeout(redrawCanvas, 100);
 
         } catch (error) {
             console.error("Initialization failed:", error);
@@ -79,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.style.backgroundImage = `url(${frame.path})`;
             btn.dataset.type = 'image';
             btn.dataset.src = frame.path;
-            // btn.title = frame.name; // Removed to fix issue
             frameButtonsContainer.appendChild(btn);
         });
     };
@@ -102,9 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonStickers';
             btn.dataset.sticker = sticker.layout;
-            // Removed the tooltip span to fix the visual bug
             btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
-            if(sticker.id === 'noneSticker') btn.classList.add('active');
+            if(sticker.layout === null) btn.classList.add('active'); // Activate 'none' sticker
             stickerButtonsContainer.appendChild(btn);
         });
     };
@@ -123,13 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Event Handling ---
     const setupEventListeners = () => {
-        // Use event delegation for dynamic buttons
         frameButtonsContainer.addEventListener('click', handleFrameClick);
         shapeButtonsContainer.addEventListener('click', handleShapeClick);
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
 
-        // Static element listeners
         dateCheckbox.addEventListener('change', redrawCanvas);
         dateTimeCheckbox.addEventListener('change', redrawCanvas);
         logoColorPicker.addEventListener('input', (e) => {
@@ -149,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setBackground({ type: 'image', src: btn.dataset.src });
         }
 
-        // Active state management
         frameButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
@@ -167,20 +161,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
 
-        const stickerLayout = btn.dataset.sticker;
+        const clickedStickerLayout = btn.dataset.sticker === 'null' ? null : btn.dataset.sticker;
 
-        // Deactivate all buttons first
-        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-
-        if (selectedStickerLayout === stickerLayout) {
-            // If the same sticker is clicked again, deselect it
+        // If the same sticker is clicked, deselect it. Otherwise, select the new one.
+        if (selectedStickerLayout === clickedStickerLayout) {
             selectedStickerLayout = null;
-            const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
-            if (noneStickerBtn) noneStickerBtn.classList.add('active');
         } else {
-            // Otherwise, select the new sticker
-            selectedStickerLayout = stickerLayout === 'null' ? null : stickerLayout;
-            btn.classList.add('active');
+            selectedStickerLayout = clickedStickerLayout;
+        }
+
+        // Update active states
+        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => {
+            const layout = b.dataset.sticker === 'null' ? null : b.dataset.sticker;
+            b.classList.toggle('active', selectedStickerLayout === layout);
+        });
+        
+        // Ensure 'none' is active if nothing is selected
+        if (selectedStickerLayout === null) {
+             const noneBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
+             if(noneBtn) noneBtn.classList.add('active');
         }
 
         redrawCanvas();
@@ -215,11 +214,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
         console.error("No valid images found in sessionStorage.");
-        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan.</p>';
-        return; // Stop execution if no images
+        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan. Silakan kembali dan ambil foto baru.</p>';
+        return;
     }
 
-    async function drawSticker(ctx, stackedCanvas) {
+    async function drawSticker(ctx) {
         if (!selectedStickerLayout || !assetsData.stickerLayouts) {
             return;
         }
@@ -277,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function redrawCanvas() {
-        if (!storedImages) return;
+        if (!storedImages) return null;
 
         const imageArrayLength = storedImages.length;
         const stackedCanvas = document.createElement('canvas');
@@ -357,10 +356,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // 5. Draw Stickers on top
-        await drawSticker(ctx, stackedCanvas);
+        await drawSticker(ctx);
         
         // 6. Update the preview on the page
         updatePreview(stackedCanvas);
+
+        // 7. Return the canvas element so other scripts can use it
+        return stackedCanvas;
     }
     
     function updatePreview(canvas) {
@@ -374,6 +376,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         photoCustomPreview.appendChild(canvas);
     }
+
+    // --- Expose the drawing function to the global window object ---
+    // This allows the script in customize.html to call it.
+    window.drawFinalImage = redrawCanvas;
 
     // --- Start the app ---
     init();
