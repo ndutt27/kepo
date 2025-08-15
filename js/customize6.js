@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- State Variables ---
     let assetsData = null;
     let selectedShape = 'default';
-    let selectedStickers = new Set(); // Allow multiple stickers
+    let selectedStickerLayout = null; // Single sticker selection
     let selectedText = 'pictlord';
     let backgroundType = 'color';
     let backgroundColor = '#FFFFFF';
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.style.backgroundImage = `url(${frame.path})`;
             btn.dataset.type = 'image';
             btn.dataset.src = frame.path;
-            btn.title = frame.name;
+            // btn.title = frame.name; // Removed to fix issue
             frameButtonsContainer.appendChild(btn);
         });
     };
@@ -162,25 +162,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!btn) return;
 
         const stickerLayout = btn.dataset.sticker;
-        const wasActive = btn.classList.contains('active');
 
-        // Deactivate all buttons and clear selections first
+        // Deactivate all buttons first
         stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        selectedStickers.clear();
 
-        if (wasActive) {
-            // If the clicked button was the one that was active, we just cleared it.
-            // Now, activate the 'None' button to signify no selection.
+        if (selectedStickerLayout === stickerLayout) {
+            // If the same sticker is clicked again, deselect it
+            selectedStickerLayout = null;
             const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
             if (noneStickerBtn) noneStickerBtn.classList.add('active');
         } else {
-            // If a new sticker is clicked, activate it and add it to the selection.
+            // Otherwise, select the new sticker
+            selectedStickerLayout = stickerLayout === 'null' ? null : stickerLayout;
             btn.classList.add('active');
-            // Ensure we don't add the 'null' layout to the set of stickers to be drawn
-            if (stickerLayout !== 'null') {
-                selectedStickers.add(stickerLayout);
-            }
         }
+
         redrawCanvas();
     }
 
@@ -218,21 +214,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function drawSticker(ctx, stackedCanvas) {
-        if (!selectedStickers.size || !assetsData.stickerLayouts) {
+        if (!selectedStickerLayout || !assetsData.stickerLayouts) {
             return;
         }
 
-        const allStickersToDraw = [];
-        selectedStickers.forEach(layoutKey => {
-            const layout = assetsData.stickerLayouts[layoutKey];
-            if (layout) {
-                allStickersToDraw.push(...layout);
-            }
-        });
+        const layout = assetsData.stickerLayouts[selectedStickerLayout];
+        if (!layout) return;
 
-        if (allStickersToDraw.length === 0) return;
-
-        await Promise.all(allStickersToDraw.map(({ src, x, y, size }) => {
+        await Promise.all(layout.map(({ src, x, y, size }) => {
             return new Promise((resolve) => {
                 const stickerImg = new Image();
                 stickerImg.src = src;

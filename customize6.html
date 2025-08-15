@@ -518,13 +518,17 @@
 
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', async () => {
+                    // --- FIX FOR RACE CONDITION ---
+                    if (typeof redrawCanvas === 'function') {
+                        await redrawCanvas();
+                    }
+
                     const finalCanvas = document.querySelector('#photoPreview canvas');
                     if (!finalCanvas) { alert('Silakan buat gambar terlebih dahulu!'); return; }
                     
                     showModal(qrModal);
                     qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
                     
-                    // BARU: Hentikan timer lama jika ada dan reset state
                     if (qrTimerInterval) clearInterval(qrTimerInterval);
                     qrTimerElement.style.display = 'none';
                     copyLinkBtn.disabled = true;
@@ -544,8 +548,7 @@
                         copyLinkBtn.disabled = false;
                         downloadFromModalBtn.disabled = false;
 
-                        // BARU: Mulai timer setelah QR code berhasil dibuat
-                        startQrTimer(299); // 5 menit (dikurangi 1 detik agar tampilan awal benar)
+                        startQrTimer(299);
 
                     } catch (error) {
                         console.error('Gagal membuat link Firebase atau QR Code:', error);

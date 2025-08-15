@@ -490,13 +490,17 @@
 
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', async () => {
+                    // --- FIX FOR RACE CONDITION ---
+                    if (typeof redrawCanvas === 'function') {
+                        await redrawCanvas();
+                    }
+
                     const finalCanvas = document.querySelector('#photoPreview canvas');
                     if (!finalCanvas) { alert('Silakan buat gambar terlebih dahulu!'); return; }
                     
                     showModal(qrModal);
                     qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
                     
-                    // BARU: Hentikan timer lama dan reset state
                     if (qrTimerInterval) clearInterval(qrTimerInterval);
                     qrTimerElement.style.display = 'none';
                     copyLinkBtn.disabled = true;
@@ -516,7 +520,6 @@
                         copyLinkBtn.disabled = false;
                         downloadFromModalBtn.disabled = false;
                         
-                        // BARU: Mulai timer
                         startQrTimer(299);
 
                     } catch (error) {
