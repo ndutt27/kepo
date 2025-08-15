@@ -635,7 +635,8 @@
     <main id="main-section">
         <div class="customize-container">
             <div class="photo-preview-area" id="photoPreview">
-                </div>
+                <!-- Canvas will be inserted here by customize.js -->
+            </div>
 
             <aside class="controls-panel">
                 <h1>Customize Your Photo</h1>
@@ -725,7 +726,8 @@
             <h2 class="qr-title">Scan to Download</h2>
             <p class="qr-subtitle">Buka kamera ponsel Anda dan pindai kode di bawah ini.</p>
             <div id="qrCodePopupContainer">
-                </div>
+                <!-- QR Code will be inserted here -->
+            </div>
 
             <div id="qrTimer" class="qr-timer-text"></div>
             
@@ -771,37 +773,14 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Variabel State ---
+            // --- State Variables ---
             let currentQrLink = ''; 
             let currentImageData = null; 
             let qrTimerInterval = null;
             
-            const finalCanvasContainer = document.getElementById('photoPreview');
             const modalImagePreview = document.getElementById('modalImagePreview');
             const previewModal = document.getElementById('previewModal');
             const qrModal = document.getElementById('qrModal');
-
-            // =========================================================================
-            // FUNGSI PEMBARUAN CANVAS TERPUSAT
-            // =========================================================================
-            async function updateCanvasPreview() {
-                // Asumsi fungsi `drawFinalImage` ada di file canvas.js atau customize.js
-                if (typeof drawFinalImage === 'function') {
-                    await drawFinalImage();
-                } else {
-                    console.warn('Fungsi `drawFinalImage()` tidak ditemukan.');
-                    return;
-                }
-
-                const finalCanvas = finalCanvasContainer.querySelector('canvas');
-                if (!finalCanvas) return;
-
-                // Perbarui modal preview jika sedang terbuka
-                if (previewModal.classList.contains('show')) {
-                    modalImagePreview.src = finalCanvas.toDataURL('image/png', 1.0);
-                }
-            }
-
 
             // =========================================================================
             // EVENT LISTENERS
@@ -811,7 +790,10 @@
             const themeToggle = document.getElementById('theme-toggle');
             const applyTheme = (theme) => {
                 document.body.classList.toggle('dark-mode', theme === 'dark');
-                updateCanvasPreview(); 
+                // Redraw canvas if the function is available
+                if (typeof window.drawFinalImage === 'function') {
+                    window.drawFinalImage();
+                }
             };
             themeToggle.addEventListener('click', () => {
                 const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
@@ -820,46 +802,10 @@
             });
             const savedTheme = localStorage.getItem('theme') || 'dark';
             applyTheme(savedTheme);
-
-
-            // 2. Event Listener Terpusat untuk semua tombol kustomisasi
-            const controlsPanel = document.querySelector('.controls-panel');
-            controlsPanel.addEventListener('click', (e) => {
-                const target = e.target;
-                // Cek jika yang diklik adalah tombol atau checkbox, tapi BUKAN tombol Share
-                if ((target.closest('.neumorphic-btn') && !target.closest('#shareBtn')) || target.type === 'checkbox') {
-                    const button = target.closest('button');
-                    if(button) {
-                        const container = button.parentElement;
-                        const isStickerGroup = container.previousElementSibling?.textContent === 'Stickers';
-
-                        if (isStickerGroup) {
-                            if (button.id === 'noneSticker') {
-                                container.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-                                button.classList.add('active');
-                            } else {
-                                document.getElementById('noneSticker')?.classList.remove('active');
-                                button.classList.toggle('active');
-                            }
-                        } else if (container.classList.contains('custom-buttons-container') || container.classList.contains('logo-container')) {
-                            container.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-                            button.classList.add('active');
-                        }
-                    }
-                    updateCanvasPreview();
-                }
-            });
-
-            // Event listener khusus untuk color picker
-            const logoColorPicker = document.getElementById('logoColorPicker');
-            if (logoColorPicker) {
-                logoColorPicker.addEventListener('input', updateCanvasPreview);
-                logoColorPicker.addEventListener('change', updateCanvasPreview);
-            }
             
 
             // =========================================================================
-            // LOGIKA MODAL (PREVIEW & QR)
+            // MODAL LOGIC (PREVIEW & QR)
             // =========================================================================
             function showModal(modal) {
                 modal.style.display = 'block';
@@ -877,11 +823,15 @@
                 }, 400);
             }
             
-            // --- Tombol & Event untuk Modal Preview ---
+            // --- Preview Modal Button ---
             const previewBtn = document.getElementById('previewBtn');
             if(previewBtn) {
-                previewBtn.addEventListener('click', () => {
-                    const finalCanvas = finalCanvasContainer.querySelector('canvas');
+                previewBtn.addEventListener('click', async () => {
+                    if (typeof window.drawFinalImage !== 'function') {
+                        alert('Error: Komponen gambar tidak siap.');
+                        return;
+                    }
+                    const finalCanvas = await window.drawFinalImage(); // Await the drawing
                     if (finalCanvas) {
                         modalImagePreview.src = finalCanvas.toDataURL('image/png', 1.0);
                         showModal(previewModal);
@@ -891,54 +841,61 @@
                 });
             }
             
-            // --- Tombol & Event untuk Modal QR ---
+            // --- QR Modal Button (THE FIX) ---
             const downloadBtn = document.getElementById('downloadCopyBtn');
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', async () => {
-                    // --- FIX FOR RACE CONDITION ---
-                    // Ensure canvas is fully redrawn before we try to use it.
-                    await redrawCanvas();
-
-                    const finalCanvas = finalCanvasContainer.querySelector('canvas');
-                    if (!finalCanvas) {
-                        alert('Silakan buat gambar terlebih dahulu!');
+                    if (typeof window.drawFinalImage !== 'function') {
+                        alert('Error: Komponen gambar tidak siap. Coba muat ulang halaman.');
                         return;
                     }
-                    
+
                     showModal(qrModal);
                     const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
                     const copyLinkBtn = document.getElementById('copyLinkBtn');
                     const downloadDirectBtn = document.getElementById('downloadDirectBtn');
                     
+                    // Set loading state
                     qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
                     copyLinkBtn.disabled = true;
                     downloadDirectBtn.disabled = true;
                     if (qrTimerInterval) clearInterval(qrTimerInterval);
 
                     try {
+                        // Redraw the canvas to get the final, updated version
+                        const finalCanvas = await window.drawFinalImage();
+                        if (!finalCanvas) {
+                            throw new Error("Canvas generation failed.");
+                        }
+
                         const imageData = finalCanvas.toDataURL('image/png', 1.0);
-                        currentImageData = imageData;
-                        
+                        currentImageData = imageData; // Store for direct download
+
+                        // Trigger initial local download
                         const link = document.createElement('a');
                         link.download = `pictlord-${Date.now()}.png`;
                         link.href = imageData;
                         link.click();
                         
+                        // Generate QR code and link
                         currentQrLink = await generateTemporaryLink(imageData);
                         const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
                         qrCodePopupContainer.innerHTML = `<img src="${qrApiUrl}" alt="Scan to download">`;
                         
+                        // Enable buttons and start timer
                         copyLinkBtn.disabled = false;
                         downloadDirectBtn.disabled = false;
                         startQrTimer(299);
                     } catch (error) {
                         console.error('Gagal membuat link Firebase atau QR Code:', error);
                         qrCodePopupContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong>';
+                        hideModal(qrModal);
+                        alert('Terjadi kesalahan saat membuat gambar Anda. Silakan coba lagi.');
                     }
                 });
             }
 
-            // --- Event penutup modal ---
+            // --- Modal Close Events ---
             document.querySelectorAll('.modal-close-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     hideModal(btn.closest('.modal'));
@@ -952,7 +909,7 @@
             });
 
 
-            // --- Fungsi & Event untuk QR Code ---
+            // --- QR Code Functions & Events ---
             const qrTimerElement = document.getElementById('qrTimer');
             function startQrTimer(durationInSeconds) {
                 let timer = durationInSeconds;
@@ -1017,60 +974,57 @@
                 }
             });
             
-            // --- Tombol Retake ---
+            // --- Retake Button ---
             document.getElementById('customBack')?.addEventListener('click', () => {
                 window.history.back();
             });
 
-            // const shareBtn = document.getElementById('shareBtn');
+            // --- Share Button ---
+            const shareBtn = document.getElementById('shareBtn');
             if (shareBtn) {
                 shareBtn.addEventListener('click', async () => {
-                    const finalCanvas = finalCanvasContainer.querySelector('canvas');
-                    if (!finalCanvas) {
+                    if (typeof window.drawFinalImage !== 'function') {
                         alert('Gambar belum siap untuk dibagikan. Mohon tunggu sebentar.');
                         return;
                     }
                     
-                    // Tambahkan loading state pada tombol
                     const originalBtnHTML = shareBtn.innerHTML;
                     shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
                     shareBtn.disabled = true;
 
                     try {
+                        const finalCanvas = await window.drawFinalImage();
+                        if (!finalCanvas) throw new Error("Gagal membuat canvas untuk dibagikan.");
+
                         const imageData = finalCanvas.toDataURL('image/png', 1.0);
-                        // Gunakan fungsi yang sudah ada untuk membuat link sementara
                         const shareUrl = await generateTemporaryLink(imageData);
 
                         const shareData = {
                             title: 'Pictlord Photobooth',
                             text: 'bingung nyari? photobooth online free dimana dan kapan aja tenang pictlord 📸solusinya 😎',
-                            url: window.location.origin // Menggunakan URL domain utama situs
-};
+                            url: shareUrl // Share the direct image link
+                        };
 
                         if (navigator.share) {
                              await navigator.share(shareData);
                              console.log('Link berhasil dibagikan!');
                         } else {
+                            // Fallback for desktop/unsupported browsers: open the QR modal
                             alert('Browser Anda tidak mendukung fitur berbagi. Silakan gunakan tombol "Get QR / Download".');
+                            document.getElementById('downloadCopyBtn').click();
                         }
 
                     } catch (err) {
                         console.error('Error saat berbagi:', err);
-                        // Cek jika error karena pengguna membatalkan dialog share
                         if (err.name !== 'AbortError') {
                             alert(`Gagal membuat link untuk dibagikan. Silakan coba lagi.`);
                         }
                     } finally {
-                        // Kembalikan tombol ke state semula
                         shareBtn.innerHTML = originalBtnHTML;
                         shareBtn.disabled = false;
                     }
                 });
             }
-            // // =========================================================================
-            // RENDER AWAL
-            // =========================================================================
-            setTimeout(updateCanvasPreview, 100);
         });
     </script>
 </body>
