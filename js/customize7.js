@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateCheckbox = document.getElementById('dateCheckbox');
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
     const logoColorPicker = document.getElementById('logoColorPicker');
-    // --- NEW: Add references for Download and Share buttons from your HTML ---
-    const downloadBtn = document.getElementById('downloadBtn');
-    const shareBtn = document.getElementById('shareBtn');
+    const downloadButton = document.getElementById('download-btn');
+    const shareButton = document.getElementById('share-btn');
+    const qrContainer = document.getElementById('qr-code-container');
 
 
     // --- State Variables ---
@@ -23,27 +23,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
-    let currentCanvas = null; // To hold the current canvas for download/share
+    let currentCanvas = null; // To hold the current canvas for download and sharing
 
     // --- Main Initialization ---
     const init = async () => {
         try {
-            // Fetch asset data with a cache-busting query parameter
             const response = await fetch('assets.json?v=' + Date.now());
             if (!response.ok) throw new Error('Failed to load assets.json');
             assetsData = await response.json();
 
-            // Render all the customization buttons
             renderFrameButtons();
             renderShapeButtons();
             renderStickerButtons();
             renderLogoButtons();
 
-            // Setup all event listeners
             setupEventListeners();
 
-            // Initial drawing of the canvas
-            redrawCanvas();
+            await redrawCanvas(); // Make sure initial drawing is complete
 
         } catch (error) {
             console.error("Initialization failed:", error);
@@ -56,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!assetsData.frames || !frameButtonsContainer) return;
         frameButtonsContainer.innerHTML = '';
 
-        // Color Picker Button
         const colorPickerBtn = document.createElement('button');
         colorPickerBtn.id = 'colorPickerBtn';
         colorPickerBtn.className = 'neumorphic-btn buttonFrames';
@@ -75,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         colorPickerBtn.addEventListener('click', () => picker.show());
 
-        // Color Swatch Buttons
         assetsData.frames.colors.forEach(color => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonFrames';
@@ -85,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
             frameButtonsContainer.appendChild(btn);
         });
 
-        // Background Image Buttons
         assetsData.frames.images.forEach(frame => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonBgFrames';
@@ -136,21 +129,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Event Handling ---
     const setupEventListeners = () => {
-        if (frameButtonsContainer) frameButtonsContainer.addEventListener('click', handleFrameClick);
-        if (shapeButtonsContainer) shapeButtonsContainer.addEventListener('click', handleShapeClick);
-        if (stickerButtonsContainer) stickerButtonsContainer.addEventListener('click', handleStickerClick);
-        if (logoButtonsContainer) logoButtonsContainer.addEventListener('click', handleLogoClick);
+        frameButtonsContainer.addEventListener('click', handleFrameClick);
+        shapeButtonsContainer.addEventListener('click', handleShapeClick);
+        stickerButtonsContainer.addEventListener('click', handleStickerClick);
+        logoButtonsContainer.addEventListener('click', handleLogoClick);
 
-        if (dateCheckbox) dateCheckbox.addEventListener('change', redrawCanvas);
-        if (dateTimeCheckbox) dateTimeCheckbox.addEventListener('change', redrawCanvas);
-        if (logoColorPicker) logoColorPicker.addEventListener('input', (e) => {
+        dateCheckbox.addEventListener('change', redrawCanvas);
+        dateTimeCheckbox.addEventListener('change', redrawCanvas);
+        logoColorPicker.addEventListener('input', (e) => {
             textColor = e.target.value;
             redrawCanvas();
         });
 
-        // --- NEW: Event listeners for download and share buttons ---
-        if (downloadBtn) downloadBtn.addEventListener('click', handleDownload);
-        if (shareBtn) shareBtn.addEventListener('click', handleShare);
+        if (downloadButton) {
+            downloadButton.addEventListener('click', downloadImage);
+        }
+        if (shareButton) {
+            shareButton.addEventListener('click', shareImage);
+        }
     };
 
     function handleFrameClick(e) {
@@ -191,10 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
 
-        // Toggle logic: if the same sticker is clicked again, deselect it.
         if (selectedStickerLayout === stickerLayout || stickerLayout === 'null') {
             selectedStickerLayout = null;
-            // Activate the 'none' button
             const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
             if (noneStickerBtn) noneStickerBtn.classList.add('active');
         } else {
@@ -214,59 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
         redrawCanvas();
     }
 
-    // --- NEW: Download and Share Handlers ---
-    function handleDownload() {
-        if (!currentCanvas) {
-            console.error("Canvas is not ready for download.");
-            return;
-        }
-        const link = document.createElement('a');
-        link.download = 'pictlord-creation.png';
-        link.href = currentCanvas.toDataURL('image/png');
-        link.click();
-    }
-
-    async function handleShare() {
-        if (!currentCanvas) {
-            console.error("Canvas is not ready for sharing.");
-            return;
-        }
-
-        try {
-            // Convert canvas to blob
-            currentCanvas.toBlob(async (blob) => {
-                if (!blob) {
-                    console.error("Failed to convert canvas to blob.");
-                    return;
-                }
-                // Create a file from the blob
-                const file = new File([blob], 'pictlord-creation.png', {
-                    type: 'image/png'
-                });
-                const shareData = {
-                    files: [file],
-                    title: 'My Photobooth Creation',
-                    text: 'Check out this picture I made!',
-                };
-
-                // Check if the browser supports sharing these files
-                if (navigator.canShare && navigator.canShare(shareData)) {
-                    await navigator.share(shareData);
-                } else {
-                    // Fallback for browsers that don't support sharing files
-                    alert("Sharing is not supported on this browser, please download the image instead.");
-                    handleDownload();
-                }
-            }, 'image/png');
-        } catch (error) {
-            console.error('Error sharing:', error);
-            // If sharing fails, offer download as a fallback
-            alert("Something went wrong with sharing. Please try downloading the image.");
-            handleDownload();
-        }
-    }
-
-
     // --- State Update Functions ---
     function setBackground(option) {
         if (option.type === 'color') {
@@ -278,8 +219,6 @@ document.addEventListener('DOMContentLoaded', function() {
             backgroundType = 'image';
             backgroundImage = new Image();
             backgroundImage.src = option.src;
-            // Ensure cross-origin images can be used on the canvas
-            backgroundImage.crossOrigin = "Anonymous";
             backgroundImage.onload = redrawCanvas;
             backgroundImage.onerror = () => console.error(`Failed to load background image: ${option.src}`);
         }
@@ -296,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function drawSticker(ctx, stackedCanvas) {
         if (!selectedStickerLayout) return;
 
+        // Sticker layouts remain the same as they are positioned relative to the canvas
         const stickerLayouts = {
             'kiss': [{ src: 'assets/stickers/kiss1.png', x: 30, y: 300, size: 170 }],
             'sweet': [
@@ -442,7 +382,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const layout = stickerLayouts[selectedStickerLayout];
         if (!layout) return;
 
-        // Use Promise.all to wait for all sticker images to load and draw
         await Promise.all(layout.map(({
             src,
             x,
@@ -452,14 +391,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return new Promise((resolve) => {
                 const stickerImg = new Image();
                 stickerImg.src = src;
-                stickerImg.crossOrigin = "Anonymous"; // Handle potential CORS issues
                 stickerImg.onload = () => {
                     ctx.drawImage(stickerImg, x, y, size, size);
                     resolve();
                 };
                 stickerImg.onerror = () => {
                     console.error(`Failed to load sticker: ${src}`);
-                    resolve(); // Resolve even if one sticker fails to load
+                    resolve(); // Resolve even on error to not block other stickers
                 };
             });
         }));
@@ -472,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (shapeType === 'circle') {
             ctx.arc(dx + dWidth / 2, dy + dHeight / 2, Math.min(dWidth, dHeight) / 2, 0, Math.PI * 2);
         } else if (shapeType === 'rounded') {
-            const r = 30; // corner radius
+            const r = 30; // Radius for rounded corners
             ctx.moveTo(dx + r, dy);
             ctx.lineTo(dx + dWidth - r, dy);
             ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
@@ -484,11 +422,10 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.quadraticCurveTo(dx, dy, dx + r, dy);
         } else if (shapeType === 'heart') {
             // A simple heart shape path
-            ctx.moveTo(dx + dWidth / 2, dy + dHeight * 0.35);
-            ctx.bezierCurveTo(dx + dWidth / 2, dy + dHeight * 0.1, dx, dy, dx, dy + dHeight * 0.5);
-            ctx.bezierCurveTo(dx, dy + dHeight, dx + dWidth, dy + dHeight, dx + dWidth, dy + dHeight * 0.5);
-            ctx.bezierCurveTo(dx + dWidth, dy, dx + dWidth / 2, dy + dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.35);
-        } else { // Default is 'square' or any other value
+            ctx.moveTo(dx + dWidth / 2, dy + dHeight);
+            ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
+            ctx.bezierCurveTo(dx + dWidth * 0.1, dy - dHeight * 0.1, dx - dWidth * 0.25, dy + dHeight * 0.7, dx + dWidth / 2, dy + dHeight);
+        } else { // Default is 'default' or rectangle
             ctx.rect(dx, dy, dWidth, dHeight);
         }
         ctx.closePath();
@@ -503,27 +440,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        // Define canvas layout
-        const columns = 2,
-            rows = 2;
-        const imageGridSize = rows * columns;
+        const imageGridSize = 7;
         const canvasWidth = 900,
             canvasHeight = 1352;
         const borderWidth = 30,
             spacing = 12,
             bottomPadding = 100;
 
-        // Calculate dimensions for each photo
-        const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
-        const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
-        const photoWidth = availableWidth / columns;
-        const photoHeight = availableHeight / rows;
-
         stackedCanvas.width = canvasWidth;
         stackedCanvas.height = canvasHeight;
         ctx.clearRect(0, 0, stackedCanvas.width, stackedCanvas.height);
 
-        // Draw background (color or image)
+        // Draw background
         if (backgroundType === 'color') {
             ctx.fillStyle = backgroundColor;
             ctx.fillRect(0, 0, stackedCanvas.width, stackedCanvas.height);
@@ -531,11 +459,31 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
         }
 
-        // Draw the grid of photos
+        // Define the layout for 7 photos
+        const availableWidth = canvasWidth - (borderWidth * 2);
+        const availableHeight = canvasHeight - (borderWidth * 2) - bottomPadding;
+
+        const smallPhotoHeight = Math.floor((availableHeight - (2 * spacing)) / 4); // Divide by 4 because large is 2x small
+        const largePhotoHeight = smallPhotoHeight * 2;
+        const smallPhotoWidth = Math.floor((availableWidth - (2 * spacing)) / 3);
+
+        const positions = [
+            // Top large photo
+            { x: borderWidth, y: borderWidth, width: availableWidth, height: largePhotoHeight },
+            // Middle row of 3 small photos
+            { x: borderWidth, y: borderWidth + largePhotoHeight + spacing, width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + smallPhotoWidth + spacing, y: borderWidth + largePhotoHeight + spacing, width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + (smallPhotoWidth + spacing) * 2, y: borderWidth + largePhotoHeight + spacing, width: smallPhotoWidth, height: smallPhotoHeight },
+            // Bottom row of 3 small photos
+            { x: borderWidth, y: borderWidth + largePhotoHeight + smallPhotoHeight + (2 * spacing), width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + smallPhotoWidth + spacing, y: borderWidth + largePhotoHeight + smallPhotoHeight + (2 * spacing), width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + (smallPhotoWidth + spacing) * 2, y: borderWidth + largePhotoHeight + smallPhotoHeight + (2 * spacing), width: smallPhotoWidth, height: smallPhotoHeight },
+        ];
+
+
         if (storedImages.length === imageGridSize) {
             const imagePromises = storedImages.map(imgData => new Promise((resolve, reject) => {
                 const img = new Image();
-                img.crossOrigin = "Anonymous"; // Handle potential CORS issues
                 img.src = imgData;
                 img.onload = () => resolve(img);
                 img.onerror = reject;
@@ -544,14 +492,13 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const images = await Promise.all(imagePromises);
                 images.forEach((img, index) => {
-                    // Logic to crop the image to fit the target aspect ratio (cover effect)
+                    const pos = positions[index];
+                    const targetAspect = pos.width / pos.height;
                     const imgAspect = img.width / img.height;
-                    const targetAspect = photoWidth / photoHeight;
-                    let sx = 0,
-                        sy = 0,
-                        sWidth = img.width,
-                        sHeight = img.height;
-
+                    
+                    let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+                    
+                    // Crop the image to fit the target aspect ratio
                     if (imgAspect > targetAspect) { // Image is wider than target
                         sWidth = img.height * targetAspect;
                         sx = (img.width - sWidth) / 2;
@@ -559,32 +506,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         sHeight = img.width / targetAspect;
                         sy = (img.height - sHeight) / 2;
                     }
-
-                    const col = index % columns;
-                    const row = Math.floor(index / columns);
-                    const x = borderWidth + col * (photoWidth + spacing);
-                    const y = borderWidth + row * (photoHeight + spacing);
-
-                    clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+                    
+                    clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, pos.x, pos.y, pos.width, pos.height, selectedShape);
                 });
             } catch (error) {
                 console.error("Gagal memuat gambar:", error);
             }
         }
 
-        // Draw the logo text
+        // Draw text and date/time
         ctx.fillStyle = textColor;
         ctx.font = 'bold 32px Arial, Roboto, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(selectedText, stackedCanvas.width / 2, stackedCanvas.height - 55);
 
-        // Draw the date/time if checked
         if (dateCheckbox.checked || dateTimeCheckbox.checked) {
             const currentDate = new Date();
             let displayText = '';
-            if (dateCheckbox.checked) {
-                displayText += currentDate.toLocaleDateString();
-            }
+            if (dateCheckbox.checked) displayText += currentDate.toLocaleDateString();
             if (dateTimeCheckbox.checked) {
                 const timeString = currentDate.toLocaleTimeString([], {
                     hour: '2-digit',
@@ -597,28 +536,91 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.fillText(displayText, stackedCanvas.width / 2, stackedCanvas.height - 30);
         }
 
-        // Draw stickers on top of everything
+        // Draw stickers on top
         await drawSticker(ctx, stackedCanvas);
 
-        // Update the live preview and store the canvas for actions
         updatePreview(stackedCanvas);
-        currentCanvas = stackedCanvas;
+        currentCanvas = stackedCanvas; // Save canvas for download/share
     }
 
     function updatePreview(canvas) {
         if (!photoCustomPreview) return;
-        photoCustomPreview.innerHTML = ''; // Clear previous preview
-        // Make the preview canvas responsive
-        canvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
-        canvas.style.height = 'auto';
-        // Add a border if the background is white for better visibility
+        photoCustomPreview.innerHTML = '';
+        const previewCanvas = canvas.cloneNode();
+        const previewCtx = previewCanvas.getContext('2d');
+        previewCtx.drawImage(canvas, 0, 0);
+
+        previewCanvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
+        previewCanvas.style.height = 'auto';
         if (backgroundColor === '#FFFFFF' && backgroundType === 'color') {
-            canvas.style.border = '1px solid #ccc';
+            previewCanvas.style.border = '1px solid #ccc';
         } else {
-            canvas.style.border = 'none';
+            previewCanvas.style.border = 'none';
         }
-        photoCustomPreview.appendChild(canvas);
+        photoCustomPreview.appendChild(previewCanvas);
     }
+
+    // --- Action Functions (Download, Share, QR) ---
+    function downloadImage() {
+        if (!currentCanvas) {
+            console.error("Canvas is not ready for download.");
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = `pictlord-photobooth-${Date.now()}.png`;
+        link.href = currentCanvas.toDataURL('image/png');
+        link.click();
+    }
+
+    async function shareImage() {
+        if (!currentCanvas) {
+            console.error("Canvas is not ready for sharing.");
+            return;
+        }
+        try {
+            const blob = await new Promise(resolve => currentCanvas.toBlob(resolve, 'image/png'));
+            const file = new File([blob], `pictlord-photobooth-${Date.now()}.png`, {
+                type: 'image/png'
+            });
+            const shareData = {
+                files: [file],
+                title: 'PictLord Photobooth',
+                text: 'Check out my photo from PictLord!',
+            };
+            if (navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+            } else {
+                alert("Sharing is not supported on this browser.");
+            }
+        } catch (error) {
+            console.error('Error sharing the image:', error);
+            alert('Could not share the image.');
+        }
+    }
+
+    function generateAndShowQRCode() {
+        if (!currentCanvas) {
+            console.error("Canvas is not ready for QR code generation.");
+            return;
+        }
+        if (qrContainer) {
+            qrContainer.innerHTML = ''; // Clear previous QR code
+            new QRCode(qrContainer, {
+                text: currentCanvas.toDataURL('image/png'),
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            qrContainer.style.display = 'block';
+        }
+    }
+    
+    // --- Expose functions to global window object if needed by HTML ---
+    window.drawFinalImage = redrawCanvas;
+    window.generateAndShowQRCode = generateAndShowQRCode;
+
 
     // --- Start the application ---
     init();
