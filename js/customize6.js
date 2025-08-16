@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateCheckbox = document.getElementById('dateCheckbox');
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
     const logoColorPicker = document.getElementById('logoColorPicker');
+    const downloadButton = document.getElementById('download-btn');
+    const shareButton = document.getElementById('share-btn');
+    const qrContainer = document.getElementById('qr-code-container');
+
 
     // --- State Variables ---
     let assetsData = null;
@@ -19,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
-    let currentCanvas = null; // To hold the current canvas for download
+    let currentCanvas = null; // To hold the current canvas for download and sharing
 
     // --- Main Initialization ---
     const init = async () => {
@@ -35,11 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             setupEventListeners();
 
-            redrawCanvas();
+            await redrawCanvas(); // Make sure initial drawing is complete
 
         } catch (error) {
             console.error("Initialization failed:", error);
-            if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Gagal memuat aset kustomisasi.</p>';
+            if (photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Gagal memuat aset kustomisasi.</p>';
         }
     };
 
@@ -56,8 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
             parent: colorPickerBtn,
             popup: 'bottom',
             color: '#FFFFFF',
-            onChange: (color) => setBackground({ type: 'color', value: color.hex }),
-            onDone: (color) => { colorPickerBtn.style.backgroundColor = color.hex; }
+            onChange: (color) => setBackground({
+                type: 'color',
+                value: color.hex
+            }),
+            onDone: (color) => {
+                colorPickerBtn.style.backgroundColor = color.hex;
+            }
         });
         colorPickerBtn.addEventListener('click', () => picker.show());
 
@@ -100,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.className = 'neumorphic-btn buttonStickers';
             btn.dataset.sticker = sticker.layout;
             btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
-            if(sticker.id === 'noneSticker') btn.classList.add('active');
+            if (sticker.id === 'noneSticker') btn.classList.add('active');
             stickerButtonsContainer.appendChild(btn);
         });
     };
@@ -111,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
         assetsData.logos.forEach((logo, index) => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn logoCustomBtn';
-            if(index === 0) btn.classList.add('active');
+            if (index === 0) btn.classList.add('active');
             btn.dataset.text = logo.value;
             btn.textContent = logo.name;
             logoButtonsContainer.appendChild(btn);
@@ -131,6 +140,13 @@ document.addEventListener('DOMContentLoaded', function() {
             textColor = e.target.value;
             redrawCanvas();
         });
+
+        if (downloadButton) {
+            downloadButton.addEventListener('click', downloadImage);
+        }
+        if (shareButton) {
+            shareButton.addEventListener('click', shareImage);
+        }
     };
 
     function handleFrameClick(e) {
@@ -139,9 +155,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const type = btn.dataset.type;
         if (type === 'color') {
-            setBackground({ type: 'color', value: btn.dataset.value });
+            setBackground({
+                type: 'color',
+                value: btn.dataset.value
+            });
         } else if (type === 'image') {
-            setBackground({ type: 'image', src: btn.dataset.src });
+            setBackground({
+                type: 'image',
+                src: btn.dataset.src
+            });
         }
 
         frameButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
@@ -206,13 +228,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
         console.error("No valid images found in sessionStorage.");
-        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan.</p>';
+        if (photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan.</p>';
         return;
     }
 
     async function drawSticker(ctx, stackedCanvas) {
         if (!selectedStickerLayout) return;
 
+        // Sticker layouts remain the same as they are positioned relative to the canvas
         const stickerLayouts = {
             'kiss': [{ src: 'assets/stickers/kiss1.png', x: 30, y: 300, size: 170 }],
             'sweet': [
@@ -322,7 +345,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 { src: 'assets/stickers/tabbyCat3.png', x: -5, y: 830, size: 75 }, { src: 'assets/stickers/tabbyCat3.png', x: stackedCanvas.width - 120, y: stackedCanvas.height - 190, size: 65 },
                 { src: 'assets/stickers/tabbyCat7.png', x: 1, y: stackedCanvas.height - 230, size: 120 }
             ],
-            // Fixed sticker path for 'ballerinacappuccino'.
             'ballerinacappuccino': [
                 { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: 402, y: -2, size: 90 },
                 { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
@@ -360,7 +382,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const layout = stickerLayouts[selectedStickerLayout];
         if (!layout) return;
 
-        await Promise.all(layout.map(({ src, x, y, size }) => {
+        await Promise.all(layout.map(({
+            src,
+            x,
+            y,
+            size
+        }) => {
             return new Promise((resolve) => {
                 const stickerImg = new Image();
                 stickerImg.src = src;
@@ -370,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 stickerImg.onerror = () => {
                     console.error(`Failed to load sticker: ${src}`);
-                    resolve();
+                    resolve(); // Resolve even on error to not block other stickers
                 };
             });
         }));
@@ -383,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (shapeType === 'circle') {
             ctx.arc(dx + dWidth / 2, dy + dHeight / 2, Math.min(dWidth, dHeight) / 2, 0, Math.PI * 2);
         } else if (shapeType === 'rounded') {
-            const r = 30;
+            const r = 30; // Radius for rounded corners
             ctx.moveTo(dx + r, dy);
             ctx.lineTo(dx + dWidth - r, dy);
             ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
@@ -394,10 +421,11 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.lineTo(dx, dy + r);
             ctx.quadraticCurveTo(dx, dy, dx + r, dy);
         } else if (shapeType === 'heart') {
+            // A simple heart shape path
             ctx.moveTo(dx + dWidth / 2, dy + dHeight);
             ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
             ctx.bezierCurveTo(dx + dWidth * 0.1, dy - dHeight * 0.1, dx - dWidth * 0.25, dy + dHeight * 0.7, dx + dWidth / 2, dy + dHeight);
-        } else {
+        } else { // Default is 'default' or rectangle
             ctx.rect(dx, dy, dWidth, dHeight);
         }
         ctx.closePath();
@@ -412,26 +440,46 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        const columns = 2, rows = 3;
-        const imageGridSize = rows * columns;
-        const canvasWidth = 900, canvasHeight = 1352;
-        const borderWidth = 30, spacing = 12, bottomPadding = 100;
-
-        const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
-        const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
-        const photoWidth = availableWidth / columns;
-        const photoHeight = availableHeight / rows;
+        const imageGridSize = 7;
+        const canvasWidth = 900,
+            canvasHeight = 1352;
+        const borderWidth = 30,
+            spacing = 12,
+            bottomPadding = 100;
 
         stackedCanvas.width = canvasWidth;
         stackedCanvas.height = canvasHeight;
         ctx.clearRect(0, 0, stackedCanvas.width, stackedCanvas.height);
 
+        // Draw background
         if (backgroundType === 'color') {
             ctx.fillStyle = backgroundColor;
             ctx.fillRect(0, 0, stackedCanvas.width, stackedCanvas.height);
         } else if (backgroundType === 'image' && backgroundImage && backgroundImage.complete) {
             ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
         }
+
+        // Define the layout for 7 photos
+        const availableWidth = canvasWidth - (borderWidth * 2);
+        const availableHeight = canvasHeight - (borderWidth * 2) - bottomPadding;
+
+        const smallPhotoHeight = Math.floor((availableHeight - (2 * spacing)) / 4); // Divide by 4 because large is 2x small
+        const largePhotoHeight = smallPhotoHeight * 2;
+        const smallPhotoWidth = Math.floor((availableWidth - (2 * spacing)) / 3);
+
+        const positions = [
+            // Top large photo
+            { x: borderWidth, y: borderWidth, width: availableWidth, height: largePhotoHeight },
+            // Middle row of 3 small photos
+            { x: borderWidth, y: borderWidth + largePhotoHeight + spacing, width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + smallPhotoWidth + spacing, y: borderWidth + largePhotoHeight + spacing, width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + (smallPhotoWidth + spacing) * 2, y: borderWidth + largePhotoHeight + spacing, width: smallPhotoWidth, height: smallPhotoHeight },
+            // Bottom row of 3 small photos
+            { x: borderWidth, y: borderWidth + largePhotoHeight + smallPhotoHeight + (2 * spacing), width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + smallPhotoWidth + spacing, y: borderWidth + largePhotoHeight + smallPhotoHeight + (2 * spacing), width: smallPhotoWidth, height: smallPhotoHeight },
+            { x: borderWidth + (smallPhotoWidth + spacing) * 2, y: borderWidth + largePhotoHeight + smallPhotoHeight + (2 * spacing), width: smallPhotoWidth, height: smallPhotoHeight },
+        ];
+
 
         if (storedImages.length === imageGridSize) {
             const imagePromises = storedImages.map(imgData => new Promise((resolve, reject) => {
@@ -444,19 +492,29 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const images = await Promise.all(imagePromises);
                 images.forEach((img, index) => {
-                    const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
+                    const pos = positions[index];
+                    const targetAspect = pos.width / pos.height;
+                    const imgAspect = img.width / img.height;
+                    
                     let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
-                    if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; }
-                    else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
-                    const col = index % columns, row = Math.floor(index / columns);
-                    const x = borderWidth + col * (photoWidth + spacing), y = borderWidth + row * (photoHeight + spacing);
-                    clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+                    
+                    // Crop the image to fit the target aspect ratio
+                    if (imgAspect > targetAspect) { // Image is wider than target
+                        sWidth = img.height * targetAspect;
+                        sx = (img.width - sWidth) / 2;
+                    } else { // Image is taller than target
+                        sHeight = img.width / targetAspect;
+                        sy = (img.height - sHeight) / 2;
+                    }
+                    
+                    clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, pos.x, pos.y, pos.width, pos.height, selectedShape);
                 });
             } catch (error) {
                 console.error("Gagal memuat gambar:", error);
             }
         }
 
+        // Draw text and date/time
         ctx.fillStyle = textColor;
         ctx.font = 'bold 32px Arial, Roboto, sans-serif';
         ctx.textAlign = 'center';
@@ -467,7 +525,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let displayText = '';
             if (dateCheckbox.checked) displayText += currentDate.toLocaleDateString();
             if (dateTimeCheckbox.checked) {
-                const timeString = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const timeString = currentDate.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
                 displayText += (dateCheckbox.checked ? ' ' : '') + timeString;
             }
             ctx.fillStyle = textColor;
@@ -475,23 +536,92 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.fillText(displayText, stackedCanvas.width / 2, stackedCanvas.height - 30);
         }
 
+        // Draw stickers on top
         await drawSticker(ctx, stackedCanvas);
 
         updatePreview(stackedCanvas);
-        currentCanvas = stackedCanvas;
+        currentCanvas = stackedCanvas; // Save canvas for download/share
     }
 
     function updatePreview(canvas) {
         if (!photoCustomPreview) return;
         photoCustomPreview.innerHTML = '';
-        canvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
+        const previewCanvas = canvas.cloneNode();
+        const previewCtx = previewCanvas.getContext('2d');
+        previewCtx.drawImage(canvas, 0, 0);
+
+        previewCanvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
+        previewCanvas.style.height = 'auto';
         if (backgroundColor === '#FFFFFF' && backgroundType === 'color') {
-            canvas.style.border = '1px solid #ccc';
+            previewCanvas.style.border = '1px solid #ccc';
         } else {
-            canvas.style.border = 'none';
+            previewCanvas.style.border = 'none';
         }
-        photoCustomPreview.appendChild(canvas);
+        photoCustomPreview.appendChild(previewCanvas);
     }
 
+    // --- Action Functions (Download, Share, QR) ---
+    function downloadImage() {
+        if (!currentCanvas) {
+            console.error("Canvas is not ready for download.");
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = `pictlord-photobooth-${Date.now()}.png`;
+        link.href = currentCanvas.toDataURL('image/png');
+        link.click();
+    }
+
+    async function shareImage() {
+        if (!currentCanvas) {
+            console.error("Canvas is not ready for sharing.");
+            return;
+        }
+        try {
+            const blob = await new Promise(resolve => currentCanvas.toBlob(resolve, 'image/png'));
+            const file = new File([blob], `pictlord-photobooth-${Date.now()}.png`, {
+                type: 'image/png'
+            });
+            const shareData = {
+                files: [file],
+                title: 'PictLord Photobooth',
+                text: 'Check out my photo from PictLord!',
+            };
+            if (navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+            } else {
+                alert("Sharing is not supported on this browser.");
+            }
+        } catch (error) {
+            console.error('Error sharing the image:', error);
+            alert('Could not share the image.');
+        }
+    }
+
+    function generateAndShowQRCode() {
+        if (!currentCanvas) {
+            console.error("Canvas is not ready for QR code generation.");
+            return;
+        }
+        if (qrContainer) {
+            qrContainer.innerHTML = ''; // Clear previous QR code
+            new QRCode(qrContainer, {
+                text: currentCanvas.toDataURL('image/png'),
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            qrContainer.style.display = 'block';
+        }
+    }
+    
+    // --- Expose functions to global window object if needed by HTML ---
+    window.drawFinalImage = redrawCanvas;
+    window.generateAndShowQRCode = generateAndShowQRCode;
+
+
+    // --- Start the application ---
     init();
 });
