@@ -752,7 +752,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script src="js/customize7.js"></script>
-    <script src="canvas7.js"></script>
     <script src="js/main.js"></script>
 
     <script>
@@ -785,7 +784,7 @@
             const downloadBtn = document.getElementById('downloadCopyBtn');
             const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
             const copyLinkBtn = document.getElementById('copyLinkBtn');
-            const downloadFromModalBtn = document.getElementById('downloadFromModalBtn');
+            const downloadFromModalBtn = document.getElementById('downloadDirectBtn');
             const qrTimerElement = document.getElementById('qrTimer'); // BARU: Elemen timer
 
             // BARU: Fungsi untuk memulai dan menghentikan timer
@@ -840,6 +839,41 @@
             }
             if(previewModalCloseBtn) { previewModalCloseBtn.addEventListener('click', () => hideModal(previewModal)); }
             if(qrModalCloseBtn) { qrModalCloseBtn.addEventListener('click', () => hideModal(qrModal)); }
+
+            const shareBtn = document.getElementById('shareBtn');
+
+            if(shareBtn) {
+                shareBtn.addEventListener('click', async () => {
+                    try {
+                        if (typeof redrawCanvas === 'function') {
+                            await redrawCanvas();
+                        }
+
+                        const finalCanvas = document.querySelector('#photoPreview canvas');
+                        if (!finalCanvas) {
+                            alert('Silakan buat gambar terlebih dahulu!');
+                            return;
+                        }
+
+                        const dataUrl = finalCanvas.toDataURL('image/png', 1.0);
+                        const blob = await (await fetch(dataUrl)).blob();
+                        const file = new File([blob], 'pictlord-photobooth.png', { type: blob.type });
+
+                        if (navigator.share && navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: 'My Pictlord Photobooth!',
+                                text: 'Check out the photo I made with Pictlord!',
+                            });
+                        } else {
+                            alert('Web Share API is not supported in your browser or cannot share files.');
+                        }
+                    } catch (error) {
+                        console.error('Error sharing:', error);
+                        alert('An error occurred while trying to share the image.');
+                    }
+                });
+            }
 
             window.addEventListener('click', (event) => {
                 if (event.target == previewModal) { hideModal(previewModal); }
