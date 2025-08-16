@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(redrawCanvas, 100);
 
-        } catch (error) {
+        } catch (error)
+        {
             console.error("Initialization failed:", error);
             if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Gagal memuat aset kustomisasi.</p>';
         }
@@ -161,9 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.classList.add('active');
         redrawCanvas();
     }
-
-    // --- [UPDATED] ---
-    // This function now uses the logic from your reference code for better stability.
+    
     function handleStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
@@ -230,8 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error(`Sticker layout "${selectedStickerLayout}" not found in assets.json.`);
             return;
         }
-
-        // [FIX] Corrects the typo in the path for the 'ballerinacp' sticker set
+        
         if (selectedStickerLayout === 'ballerinacp') {
             layoutData = layoutData.map(sticker => ({
                 ...sticker,
@@ -286,8 +284,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const stackedCanvas = document.createElement('canvas');
             const ctx = stackedCanvas.getContext('2d');
 
-            // Using 2x2 Grid Layout Calculations
-            const columns = 2, rows = 2;
+            // --- [FIXED] Reverted to 2x3 grid to match sticker coordinates ---
+            const columns = 2, rows = 3; 
             const imageGridSize = rows * columns;
             const canvasWidth = 900, canvasHeight = 1352;
             const borderWidth = 30, spacing = 12, bottomPadding = 100;
@@ -358,9 +356,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // --- [FIXED] Added style properties to control preview size ---
     function updatePreview(canvas) {
         if (!photoCustomPreview || !canvas) return;
         photoCustomPreview.innerHTML = '';
+        canvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
+        if (backgroundColor === '#FFFFFF' && backgroundType === 'color') {
+            canvas.style.border = '1px solid #ccc';
+        } else {
+            canvas.style.border = 'none';
+        }
         photoCustomPreview.appendChild(canvas);
     }
 
