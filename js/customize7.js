@@ -212,9 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function drawSticker(ctx, stackedCanvas) {
         if (!selectedStickerLayout) return;
-        
-        // CATATAN: Posisi stiker di bawah ini mungkin perlu penyesuaian manual
-        // karena tinggi canvas berubah dari 1352px menjadi 1212px.
+
         const stickerLayouts = {
             'kiss': [{ src: 'assets/stickers/kiss1.png', x: 30, y: 300, size: 170 }],
             'sweet': [
@@ -235,14 +233,14 @@ document.addEventListener('DOMContentLoaded', function() {
             'pearl': [ { src: 'assets/stickers/pearl1.png', x: 35, y: 30, size: 30 }, { src: 'assets/stickers/pearl1.png', x: 25, y: 50, size: 25 }, { src: 'assets/stickers/pearl1.png', x: 65, y: 40, size: 20 }, { src: 'assets/stickers/pearl1.png', x: 95, y: 40, size: 15 }, { src: 'assets/stickers/pearl1.png', x: 75, y: 26, size: 15 }, { src: 'assets/stickers/pearl1.png', x: 25, y: 65, size: 55 }, { src: 'assets/stickers/pearl1.png', x: 25, y: 120, size: 15 }, { src: 'assets/stickers/pearl1.png', x: 825, y: stackedCanvas.height - 620, size: 15 }, { src: 'assets/stickers/pearl1.png', x: 800, y: stackedCanvas.height - 690, size: 15 }, { src: 'assets/stickers/pearl1.png', x: 840, y: stackedCanvas.height - 650, size: 25 }, { src: 'assets/stickers/pearl1.png', x: 830, y: stackedCanvas.height - 700, size: 45 }, { src: 'assets/stickers/pearl1.png', x: 810, y: stackedCanvas.height - 670, size: 30 }, { src: 'assets/stickers/pearl1.png', x: 810, y: stackedCanvas.height - 710, size: 30 }, { src: 'assets/stickers/pearl1.png', x: 15, y: stackedCanvas.height - 200, size: 30 }, { src: 'assets/stickers/pearl1.png', x: 35, y: stackedCanvas.height - 220, size: 20 }, { src: 'assets/stickers/pearl1.png', x: 20, y: stackedCanvas.height - 240, size: 15 }, { src: 'assets/stickers/pearl2.png', x: 15, y: stackedCanvas.height - 180, size: 150 }, { src: 'assets/stickers/pearl2.png', x: stackedCanvas.width - 150, y: 270, size: 120 } ],
             'classic': [
                 { src: 'assets/stickers/classic1.png', x: 1, y: 50, size: 32 }, { src: 'assets/stickers/classic1.png', x: 1, y: 550, size: 32 },
-                { src: 'assets/stickers/classic2.png', x: 4, y: 80, size: 20 },
-                { src: 'assets/stickers/classic3.png', x: stackedCanvas.width - 75, y: 70, size: 120 },
+                { src: 'assets/stickers/classic1.png', x: 1, y: 950, size: 32 }, { src: 'assets/stickers/classic2.png', x: 4, y: 80, size: 20 },
+                { src: 'assets/stickers/classic2.png', x: 4, y: 980, size: 20 }, { src: 'assets/stickers/classic3.png', x: stackedCanvas.width - 75, y: 70, size: 120 },
                 { src: 'assets/stickers/classic3.png', x: stackedCanvas.width - 75, y: 670, size: 120 }
             ],
             'classicbsticker': [
                 { src: 'assets/stickers/classic4.png', x: 1, y: 50, size: 32 }, { src: 'assets/stickers/classic4.png', x: 1, y: 550, size: 32 },
-                { src: 'assets/stickers/classic5.png', x: 4, y: 80, size: 20 },
-                { src: 'assets/stickers/classic6.png', x: stackedCanvas.width - 75, y: 70, size: 120 },
+                { src: 'assets/stickers/classic4.png', x: 1, y: 950, size: 32 }, { src: 'assets/stickers/classic5.png', x: 4, y: 80, size: 20 },
+                { src: 'assets/stickers/classic5.png', x: 4, y: 980, size: 20 }, { src: 'assets/stickers/classic6.png', x: stackedCanvas.width - 75, y: 70, size: 120 },
                 { src: 'assets/stickers/classic6.png', x: stackedCanvas.width - 75, y: 670, size: 120 }
             ],
             'soft': [
@@ -254,7 +252,109 @@ document.addEventListener('DOMContentLoaded', function() {
                 { src: 'assets/stickers/bunny1.png', x: stackedCanvas.width - 170, y: 10, size: 150 }, { src: 'assets/stickers/bunny2.png', x: 15, y: 300, size: 95 },
                 { src: 'assets/stickers/bunny2.png', x: stackedCanvas.width - 100, y: 700, size: 75 }, { src: 'assets/stickers/bunny3.png', x: 15, y: stackedCanvas.height - 200, size: 135 }
             ],
-            // More layouts...
+            'lucky': [
+                { src: 'assets/stickers/lucky2.png', x: stackedCanvas.width - 170, y: 20, size: 150 }, { src: 'assets/stickers/lucky1.png', x: 15, y: stackedCanvas.height - 215, size: 170 },
+                { src: 'assets/stickers/lucky3.png', x: stackedCanvas.width - 120, y: 420, size: 90 }, { src: 'assets/stickers/lucky4.png', x: stackedCanvas.width - 120, y: 520, size: 90 },
+                { src: 'assets/stickers/lucky5.png', x: stackedCanvas.width - 128, y: 620, size: 110 }, { src: 'assets/stickers/lucky6.png', x: stackedCanvas.width - 120, y: 720, size: 100 },
+                { src: 'assets/stickers/lucky7.png', x: stackedCanvas.width - 120, y: 800, size: 95 }
+            ],
+            'confetti': [
+                { src: 'assets/stickers/confetti/star5.png', x: 100, y: 20, size: 40 }, { src: 'assets/stickers/confetti/circle2.png', x: stackedCanvas.width - 120, y: 45, size: 50 },
+                { src: 'assets/stickers/confetti/circle1.png', x: 30, y: 150, size: 35 }, { src: 'assets/stickers/confetti/circle1.png', x: stackedCanvas.width - 70, y: 180, size: 32 },
+                { src: 'assets/stickers/confetti/star2.png', x: stackedCanvas.width - 100, y: 320, size: 40 }, { src: 'assets/stickers/confetti/star1.png', x: 100, y: 550, size: 32 },
+                { src: 'assets/stickers/confetti/circle2.png', x: stackedCanvas.width - 30, y: 600, size: 27 }, { src: 'assets/stickers/confetti/star4.png', x: stackedCanvas.width - 70, y: 650, size: 27 },
+                { src: 'assets/stickers/confetti/star3.png', x: 22, y: 750, size: 47 }, { src: 'assets/stickers/confetti/circle1.png', x: stackedCanvas.width - 200, y: 880, size: 32 },
+                { src: 'assets/stickers/confetti/star2.png', x: 100, y: 950, size: 49 }, { src: 'assets/stickers/confetti/circle2.png', x: 22, y: 1050, size: 30 },
+                { src: 'assets/stickers/confetti/star1.png', x: stackedCanvas.width - 100, y: stackedCanvas.height - 200, size: 35 }
+            ],
+            'ribboncoquette': [
+                { src: 'assets/stickers/ribboncq2.png', x: 1, y: 0, size: 80 }, { src: 'assets/stickers/ribboncq3.png', x: 392, y: 15, size: 95 },
+                { src: 'assets/stickers/ribboncq1.png', x: stackedCanvas.width - 39, y: 25, size: 82 }, { src: 'assets/stickers/ribboncq1.png', x: -22, y: 290, size: 75 },
+                { src: 'assets/stickers/ribboncq2.png', x: stackedCanvas.width - 100, y: 240, size: 55 }, { src: 'assets/stickers/ribboncq3.png', x: 5, y: 700, size: 52 },
+                { src: 'assets/stickers/ribboncq3.png', x: stackedCanvas.width - 78, y: 600, size: 69 }, { src: 'assets/stickers/ribboncq1.png', x: 399, y: stackedCanvas.height - 200, size: 82 },
+                { src: 'assets/stickers/ribboncq2.png', x: stackedCanvas.width - 42, y: 850, size: 55 }, { src: 'assets/stickers/ribboncq1.png', x: -15, y: 980, size: 72 },
+                { src: 'assets/stickers/ribboncq3.png', x: stackedCanvas.width - 70, y: 1100, size: 55 }, { src: 'assets/stickers/ribboncq2.png', x: -8, y: stackedCanvas.height - 200, size: 80 },
+                { src: 'assets/stickers/ribboncq3.png', x: stackedCanvas.width - 70, y: stackedCanvas.height - 100, size: 55 }
+            ],
+            'blueribboncoquette': [
+                { src: 'assets/stickers/blueRibbon.png', x: 1, y: 0, size: 80 }, { src: 'assets/stickers/blueRibbon.png', x: 392, y: 15, size: 95 },
+                { src: 'assets/stickers/blueRibbon.png', x: stackedCanvas.width - 39, y: 25, size: 82 }, { src: 'assets/stickers/blueRibbon.png', x: -22, y: 290, size: 75 },
+                { src: 'assets/stickers/blueRibbon.png', x: stackedCanvas.width - 100, y: 240, size: 55 }, { src: 'assets/stickers/blueRibbon.png', x: 5, y: 700, size: 52 },
+                { src: 'assets/stickers/blueRibbon.png', x: stackedCanvas.width - 78, y: 600, size: 69 }, { src: 'assets/stickers/blueRibbon.png', x: 399, y: stackedCanvas.height - 200, size: 82 },
+                { src: 'assets/stickers/blueRibbon.png', x: stackedCanvas.width - 42, y: 850, size: 55 }, { src: 'assets/stickers/blueRibbon.png', x: -15, y: 980, size: 72 },
+                { src: 'assets/stickers/blueRibbon.png', x: stackedCanvas.width - 70, y: 1100, size: 55 }, { src: 'assets/stickers/blueRibbon.png', x: -8, y: stackedCanvas.height - 200, size: 80 },
+                { src: 'assets/stickers/blueRibbon.png', x: stackedCanvas.width - 70, y: stackedCanvas.height - 100, size: 55 }
+            ],
+            'blackstar': [
+                { src: 'assets/stickers/blackStar1.png', x: 340, y: -90, size: 250 }, { src: 'assets/stickers/blackStar2.png', x: stackedCanvas.width - 90, y: -30, size: 110 },
+                { src: 'assets/stickers/blackStar3.png', x: 18, y: 130, size: 98 }, { src: 'assets/stickers/blackStar4.png', x: stackedCanvas.width - 120, y: 230, size: 115 },
+                { src: 'assets/stickers/blackStar2.png', x: -17, y: 390, size: 65 }, { src: 'assets/stickers/blackStar3.png', x: stackedCanvas.width - 190, y: 650, size: 145 },
+                { src: 'assets/stickers/blackStar2.png', x: 15, y: 850, size: 45 }, { src: 'assets/stickers/blackStar2.png', x: stackedCanvas.width - 80, y: 1050, size: 55 },
+                { src: 'assets/stickers/blackStar4.png', x: -50, y: stackedCanvas.height - 150, size: 190 }
+            ],
+            'yellowchicken': [
+                { src: 'assets/stickers/yellowChicken1.png', x: 1, y: 2, size: 90 }, { src: 'assets/stickers/yellowChicken2.png', x: 220, y: -2, size: 66 },
+                { src: 'assets/stickers/yellowChicken1.png', x: stackedCanvas.width - 160, y: 25, size: 55 }, { src: 'assets/stickers/yellowChicken2.png', x: stackedCanvas.width - 90, y: 145, size: 85 },
+                { src: 'assets/stickers/yellowChicken2.png', x: -20, y: 245, size: 95 }, { src: 'assets/stickers/yellowChicken1.png', x: 140, y: 360, size: 55 },
+                { src: 'assets/stickers/yellowChicken2.png', x: stackedCanvas.width - 220, y: 750, size: 55 }, { src: 'assets/stickers/yellowChicken3.png', x: stackedCanvas.width - 70, y: 550, size: 85 },
+                { src: 'assets/stickers/yellowChicken1.png', x: -5, y: 700, size: 80 }, { src: 'assets/stickers/yellowChicken1.png', x: stackedCanvas.width - 70, y: 900, size: 75 },
+                { src: 'assets/stickers/yellowChicken2.png', x: stackedCanvas.width - 120, y: stackedCanvas.height - 190, size: 65 }, { src: 'assets/stickers/yellowChicken4.png', x: 1, y: stackedCanvas.height - 230, size: 95 },
+            ],
+            'brownbear': [
+                { src: 'assets/stickers/brownyBear1.png', x: 1, y: 5, size: 120 }, { src: 'assets/stickers/brownyBear2.png', x: stackedCanvas.width - 100, y: 25, size: 80 },
+                { src: 'assets/stickers/brownyBear3.png', x: -8, y: 315, size: 82 }, { src: 'assets/stickers/brownyBear4.png', x: stackedCanvas.width - 100, y: 580, size: 91 },
+                { src: 'assets/stickers/brownyBear5.png', x: -2, y: 680, size: 91 }, { src: 'assets/stickers/brownyBear2.png', x: stackedCanvas.width - 70, y: 880, size: 87 },
+                { src: 'assets/stickers/brownyBear3.png', x: -1, y: stackedCanvas.height - 320, size: 82 }, { src: 'assets/stickers/brownyBear6.png', x: stackedCanvas.width - 90, y: stackedCanvas.height - 200, size: 92 }
+            ],
+            'lotsheart': [
+                { src: 'assets/stickers/lotsHeart1.png', x: 1, y: 15, size: 78 }, { src: 'assets/stickers/lotsHeart5.png', x: -18, y: 550, size: 78 },
+                { src: 'assets/stickers/lotsHeart7.png', x: -8, y: 950, size: 60 }, { src: 'assets/stickers/lotsHeart6.png', x: 25, y: stackedCanvas.height - 170, size: 70 },
+                { src: 'assets/stickers/lotsHeart2.png', x: stackedCanvas.width - 250, y: 20, size: 60 }, { src: 'assets/stickers/lotsHeart4.png', x: stackedCanvas.width - 70, y: 200, size: 57 },
+                { src: 'assets/stickers/lotsHeart6.png', x: stackedCanvas.width - 80, y: 750, size: 60 }, { src: 'assets/stickers/lotsHeart3.png', x: stackedCanvas.width - 50, y: 1080, size: 50 },
+                { src: 'assets/stickers/lotsHeart8.png', x: stackedCanvas.width - 90, y: stackedCanvas.height - 140, size: 70 },
+            ],
+            'tabbycat': [
+                { src: 'assets/stickers/tabbyCat1.png', x: 1, y: 2, size: 95 }, { src: 'assets/stickers/tabbyCat2.png', x: 220, y: -2, size: 66 },
+                { src: 'assets/stickers/tabbyCat3.png', x: stackedCanvas.width - 160, y: 25, size: 60 }, { src: 'assets/stickers/tabbyCat4.png', x: stackedCanvas.width - 90, y: 145, size: 95 },
+                { src: 'assets/stickers/tabbyCat9.png', x: -20, y: 245, size: 100 }, { src: 'assets/stickers/tabbyCat2.png', x: 140, y: 360, size: 55 },
+                { src: 'assets/stickers/tabbyCat2.png', x: stackedCanvas.width - 220, y: 1050, size: 65 }, { src: 'assets/stickers/tabbyCat5.png', x: stackedCanvas.width - 90, y: 580, size: 95 },
+                { src: 'assets/stickers/tabbyCat6.png', x: -5, y: 720, size: 84 }, { src: 'assets/stickers/tabbyCat9.png', x: stackedCanvas.width - 70, y: 900, size: 75 },
+                { src: 'assets/stickers/tabbyCat3.png', x: -5, y: 830, size: 75 }, { src: 'assets/stickers/tabbyCat3.png', x: stackedCanvas.width - 120, y: stackedCanvas.height - 190, size: 65 },
+                { src: 'assets/stickers/tabbyCat7.png', x: 1, y: stackedCanvas.height - 230, size: 120 }
+            ],
+            // Fixed sticker path for 'ballerinacappuccino'.
+            'ballerinacappuccino': [
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: 402, y: -2, size: 90 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino5.png', x: -10, y: 780, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino7.png', x: -10, y: 295, size: 100 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino6.png', x: stackedCanvas.width - 115, y: 850, size: 110 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: -5, y: stackedCanvas.height - 200, size: 145 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
+            ],
+            'doggywhite': [
+                { src: 'assets/stickers/doggyWhite/doggyWhite3.png', x: 1, y: 230, size: 115 }, { src: 'assets/stickers/doggyWhite/doggyWhite1.png', x: stackedCanvas.width - 130, y: 25, size: 125 },
+                { src: 'assets/stickers/doggyWhite/doggyWhite4.png', x: stackedCanvas.width - 110, y: 650, size: 115 }, { src: 'assets/stickers/doggyWhite/doggyWhite2.png', x: -10, y: 780, size: 125 },
+                { src: 'assets/stickers/doggyWhite/doggyWhite3.png', x: -5, y: stackedCanvas.height - 200, size: 115 }, { src: 'assets/stickers/doggyWhite/doggyWhite1.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
+            ],
+            'mygirls': [
+                { src: 'assets/stickers/myGirls/myGirls4.png', x: -30, y: 15, size: 200 }, { src: 'assets/stickers/myGirls/myGirls7.png', x: 342, y: -25, size: 215 },
+                { src: 'assets/stickers/myGirls/myGirls8.png', x: stackedCanvas.width - 110, y: 25, size: 105 }, { src: 'assets/stickers/myGirls/myGirls10.png', x: stackedCanvas.width - 150, y: 95, size: 155 },
+                { src: 'assets/stickers/myGirls/myGirls11.png', x: stackedCanvas.width - 95, y: 185, size: 115 }, { src: 'assets/stickers/myGirls/myGirls6.png', x: stackedCanvas.width - 110, y: 450, size: 135 },
+                { src: 'assets/stickers/myGirls/myGirls4.png', x: stackedCanvas.width - 110, y: 650, size: 135 }, { src: 'assets/stickers/myGirls/myGirls1.png', x: stackedCanvas.width - 110, y: 780, size: 135 },
+                { src: 'assets/stickers/myGirls/myGirls2.png', x: -20, y: 305, size: 125 }, { src: 'assets/stickers/myGirls/myGirls4.png', x: -20, y: 550, size: 125 },
+                { src: 'assets/stickers/myGirls/myGirls6.png', x: -20, y: 680, size: 125 }, { src: 'assets/stickers/myGirls/myGirls10.png', x: -15, y: stackedCanvas.height - 370, size: 115 },
+                { src: 'assets/stickers/myGirls/myGirls11.png', x: 15, y: stackedCanvas.height - 300, size: 155 }, { src: 'assets/stickers/myGirls/myGirls9.png', x: -5, y: stackedCanvas.height - 200, size: 115 },
+                { src: 'assets/stickers/myGirls/myGirls5.png', x: stackedCanvas.width - 190, y: stackedCanvas.height - 290, size: 222 }
+            ],
+            'sakurablossom': [
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom1.png', x: 1, y: 5, size: 120 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom2.png', x: stackedCanvas.width - 100, y: 25, size: 80 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom4.png', x: stackedCanvas.width - 120, y: 95, size: 40 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom2.png', x: -8, y: 315, size: 82 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom3.png', x: 35, y: 390, size: 50 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom2.png', x: stackedCanvas.width - 100, y: 580, size: 91 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom4.png', x: stackedCanvas.width - 140, y: 430, size: 35 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom2.png', x: -2, y: 680, size: 91 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom3.png', x: -15, y: 790, size: 45 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom5.png', x: 50, y: 980, size: 45 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom1.png', x: stackedCanvas.width - 70, y: 880, size: 87 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom2.png', x: -1, y: stackedCanvas.height - 320, size: 82 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom5.png', x: 30, y: stackedCanvas.height - 100, size: 48 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom5.png', x: 90, y: stackedCanvas.height - 40, size: 44 },
+                { src: 'assets/stickers/sakuraBlossom/sakuraBlossom2.png', x: stackedCanvas.width - 90, y: stackedCanvas.height - 200, size: 92 }, { src: 'assets/stickers/sakuraBlossom/sakuraBlossom4.png', x: stackedCanvas.width - 40, y: stackedCanvas.height - 290, size: 40 }
+            ]
         };
 
         const layout = stickerLayouts[selectedStickerLayout];
@@ -311,13 +411,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
-        
-        // DIUBAH: Mengganti layout dari 2x3 menjadi 2x2
+
         const columns = 2, rows = 2;
         const imageGridSize = rows * columns;
-
-        // DIUBAH: Menyesuaikan tinggi canvas agar proporsional untuk 4 foto dengan gaya "panjang"
-        const canvasWidth = 900, canvasHeight = 1212;
+        const canvasWidth = 900, canvasHeight = 1352;
         const borderWidth = 30, spacing = 12, bottomPadding = 100;
 
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
@@ -335,10 +432,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (backgroundType === 'image' && backgroundImage && backgroundImage.complete) {
             ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
         }
-        
-        // DIUBAH: Logika dibuat lebih aman jika jumlah foto lebih dari 4
-        if (storedImages.length >= imageGridSize) {
-            const imagePromises = storedImages.slice(0, imageGridSize).map(imgData => new Promise((resolve, reject) => {
+
+        if (storedImages.length === imageGridSize) {
+            const imagePromises = storedImages.map(imgData => new Promise((resolve, reject) => {
                 const img = new Image();
                 img.src = imgData;
                 img.onload = () => resolve(img);
@@ -382,14 +478,13 @@ document.addEventListener('DOMContentLoaded', function() {
         await drawSticker(ctx, stackedCanvas);
 
         updatePreview(stackedCanvas);
-        currentCanvas = stackedCanvas;
+        currentCanvas = stackedCanvas; // Save canvas for download
     }
 
     function updatePreview(canvas) {
         if (!photoCustomPreview) return;
         photoCustomPreview.innerHTML = '';
-        // DIUBAH: Ukuran preview diperbesar agar tidak terlihat "mini"
-        canvas.style.width = (window.innerWidth <= 768) ? "280px" : "340px";
+        canvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
         if (backgroundColor === '#FFFFFF' && backgroundType === 'color') {
             canvas.style.border = '1px solid #ccc';
         } else {
@@ -397,6 +492,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         photoCustomPreview.appendChild(canvas);
     }
+
+    // --- Expose the drawing function to the global window object ---
+    // This allows the script in customize.html to call it.
+    window.drawFinalImage = redrawCanvas;
 
     init();
 });
