@@ -162,23 +162,28 @@ document.addEventListener('DOMContentLoaded', function() {
         redrawCanvas();
     }
 
+    // --- [UPDATED] ---
+    // This function now uses the logic from your reference code for better stability.
     function handleStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-        const clickedStickerLayout = btn.dataset.sticker === 'null' ? null : btn.dataset.sticker;
-        if (selectedStickerLayout === clickedStickerLayout) {
+
+        const stickerLayout = btn.dataset.sticker;
+
+        // Deactivate all buttons first
+        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
+
+        if (selectedStickerLayout === stickerLayout) {
+            // If the same sticker is clicked again, deselect it
             selectedStickerLayout = null;
+            const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
+            if (noneStickerBtn) noneStickerBtn.classList.add('active');
         } else {
-            selectedStickerLayout = clickedStickerLayout;
+            // Otherwise, select the new sticker
+            selectedStickerLayout = stickerLayout === 'null' ? null : stickerLayout;
+            btn.classList.add('active');
         }
-        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => {
-            const layout = b.dataset.sticker === 'null' ? null : b.dataset.sticker;
-            b.classList.toggle('active', selectedStickerLayout === layout);
-        });
-        if (selectedStickerLayout === null) {
-             const noneBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
-             if(noneBtn) noneBtn.classList.add('active');
-        }
+
         redrawCanvas();
     }
 
@@ -281,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const stackedCanvas = document.createElement('canvas');
             const ctx = stackedCanvas.getContext('2d');
 
-            // [CORRECTED] Using 2x2 Grid Layout Calculations
+            // Using 2x2 Grid Layout Calculations
             const columns = 2, rows = 2;
             const imageGridSize = rows * columns;
             const canvasWidth = 900, canvasHeight = 1352;
