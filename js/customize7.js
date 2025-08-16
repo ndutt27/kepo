@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Expose the drawing function to the global window object ---
     // This allows the script in customize.html to call it.
-    window.drawFinalImage = redrawCanvas;
+    window.redrawCanvas = redrawCanvas;
 
     init();
 });
