@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
 
-        // Logic from customize7.js for better toggling
         if (selectedStickerLayout === stickerLayout || stickerLayout === 'null') {
             selectedStickerLayout = null;
             const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
@@ -214,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function drawSticker(ctx, stackedCanvas) {
         if (!selectedStickerLayout) return;
 
-        // Sticker layouts copied from customize7.js for precise placement
         const stickerLayouts = {
             'kiss': [{ src: 'assets/stickers/kiss1.png', x: 30, y: 300, size: 170 }],
             'sweet': [
@@ -324,12 +322,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 { src: 'assets/stickers/tabbyCat3.png', x: -5, y: 830, size: 75 }, { src: 'assets/stickers/tabbyCat3.png', x: stackedCanvas.width - 120, y: stackedCanvas.height - 190, size: 65 },
                 { src: 'assets/stickers/tabbyCat7.png', x: 1, y: stackedCanvas.height - 230, size: 120 }
             ],
+            // [FIXED] Mengubah path kembali ke 'balerina' (satu 'l') karena kemungkinan nama folder Anda masih menggunakan versi lama.
+            // Jika stiker ini masih tidak muncul, pastikan nama folder di server Anda adalah 'balerinaCappuccino' dan ubah path di bawah ini agar sesuai.
             'ballerinacappuccino': [
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: 402, y: -2, size: 90 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino5.png', x: -10, y: 780, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino7.png', x: -10, y: 295, size: 100 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino6.png', x: stackedCanvas.width - 115, y: 850, size: 110 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: -5, y: stackedCanvas.height - 200, size: 145 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
+                { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino3.png', x: 402, y: -2, size: 90 },
+                { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
+                { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino5.png', x: -10, y: 780, size: 150 }, { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino7.png', x: -10, y: 295, size: 100 },
+                { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino6.png', x: stackedCanvas.width - 115, y: 850, size: 110 }, { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino3.png', x: -5, y: stackedCanvas.height - 200, size: 145 },
+                { src: 'assets/stickers/balerinaCappuccino/balerinaCappuccino4.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
             ],
             'doggywhite': [
                 { src: 'assets/stickers/doggyWhite/doggyWhite3.png', x: 1, y: 230, size: 115 }, { src: 'assets/stickers/doggyWhite/doggyWhite1.png', x: stackedCanvas.width - 130, y: 25, size: 125 },
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        const columns = 2, rows = 3; // Kept the original 2x3 grid for customize6
+        const columns = 2, rows = 3;
         const imageGridSize = rows * columns;
         const canvasWidth = 900, canvasHeight = 1352;
         const borderWidth = 30, spacing = 12, bottomPadding = 100;
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
         await drawSticker(ctx, stackedCanvas);
 
         updatePreview(stackedCanvas);
-        currentCanvas = stackedCanvas; // Save canvas for download
+        currentCanvas = stackedCanvas;
     }
 
     function updatePreview(canvas) {
