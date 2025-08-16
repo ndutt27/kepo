@@ -1,354 +1,603 @@
-document.addEventListener('DOMContentLoaded', function() {
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kreasikan photobooth 4 foto (2x2) online Anda. Pilih dari puluhan bingkai, warna, dan stiker untuk menciptakan foto grid unik milikmu.">
+    <meta name="keywords" content="photobooth 4 foto, 2x2 photobooth, customize foto, edit foto, online photobooth, tiktok photobooth, picapica, digibooth, pictlord, firebase, qr code, download">
+    <title>pictlord | Customize Foto Kamu</title>
 
-    // --- Element References ---
-    const photoCustomPreview = document.getElementById('photoPreview');
-    const frameButtonsContainer = document.getElementById('frame-buttons-container');
-    const shapeButtonsContainer = document.getElementById('shape-buttons-container');
-    const stickerButtonsContainer = document.getElementById('sticker-buttons-container');
-    const logoButtonsContainer = document.getElementById('logo-buttons-container');
-    const dateCheckbox = document.getElementById('dateCheckbox');
-    const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
-    const logoColorPicker = document.getElementById('logoColorPicker');
-    const customBackButton = document.getElementById('customBack');
-    const previewButton = document.getElementById('previewBtn');
-    const shareButton = document.getElementById('shareBtn');
-    const downloadCopyButton = document.getElementById('downloadCopyBtn');
+    <meta property="og:title" content="Pictlord | Photobooth Online 4 Foto Gratis">
+    <meta property="og:description" content="Ambil 4 foto instan bergaya photobooth 2x2 online. Kustomisasi dengan bingkai, stiker, dan unduh foto berkualitas tinggi secara instan.">
+    <meta property="og:image" content="https://www.pictlord.me/assets/home-mockup-4-photo.png">
+    <meta property="og:url" content="https://www.pictlord.me/customize7">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pictlord | Photobooth Online 4 Foto Gratis">
+    <meta name="twitter:description" content="Ambil 4 foto instan bergaya photobooth 2x2 online. Kustomisasi dengan bingkai, stiker, dan unduh foto berkualitas tinggi secara instan.">
+    <meta name="twitter:image" content="https://www.pictlord.me/assets/home-mockup-4-photo.png">
 
-
-    // --- State Variables ---
-    let assetsData = null;
-    let selectedShape = 'default';
-    let selectedStickerLayout = null;
-    let selectedText = 'pictlord';
-    let backgroundType = 'color';
-    let backgroundColor = '#FFFFFF';
-    let backgroundImage = null;
-    let textColor = '#E28585';
-    let currentCanvas = null;
-
-    // --- Main Initialization ---
-    const init = async () => {
-        try {
-            // It's better to reference the JS file directly if it's in the same folder structure
-            const response = await fetch('assets.json?v=' + Date.now());
-            if (!response.ok) throw new Error('Failed to load assets.json');
-            assetsData = await response.json();
-
-            renderFrameButtons();
-            renderShapeButtons();
-            renderStickerButtons();
-            renderLogoButtons();
-            setupEventListeners();
-            redrawCanvas();
-
-        } catch (error) {
-            console.error("Initialization failed:", error);
-            if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Gagal memuat aset kustomisasi.</p>';
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Customize 4 Foto Kamu | Pictlord",
+          "description": "Kreasikan dan edit photobooth 4 foto Anda dengan berbagai pilihan bingkai, warna, dan stiker.",
+          "url": "https://www.pictlord.me/customize7",
+          "isPartOf": { "@type": "WebSite", "url": "https://www.pictlord.me", "name": "Pictlord" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://www.pictlord.me" },
+            { "@type": "ListItem", "position": 2, "name": "Customize 4 Foto", "item": "https://www.pictlord.me/customize7" }
+          ]
         }
-    };
+      ]
+    }
+    </script>
+    
+    <link rel="canonical" href="https://www.pictlord.me/customize7">
+    <link rel="icon" type="image/png" href="images/pictlord logo.png" />
+    <link rel="apple-touch-icon" href="images/pictlord logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    // --- Rendering Functions ---
-    const renderFrameButtons = () => {
-        if (!assetsData.frames || !frameButtonsContainer) return;
-        frameButtonsContainer.innerHTML = '';
+    <style>
+        :root {
+            --light-bg: #e0e5ec; --light-text: #555; --light-shadow-dark: #a3b1c6; --light-shadow-light: #ffffff;
+            --light-accent: #E28585; --light-inset-shadow-dark: rgba(163, 177, 198, 0.6); --light-inset-shadow-light: rgba(255, 255, 255, 1);
+        }
+        .dark-mode {
+            --light-bg: #2d343c; --light-text: #e0e5ec; --light-shadow-dark: #242a30; --light-shadow-light: #363e48;
+            --light-accent: #ff85a1; --light-inset-shadow-dark: rgba(36, 42, 48, 0.6); --light-inset-shadow-light: rgba(54, 62, 72, 1);
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalFadeInScale { from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
 
-        const colorPickerBtn = document.createElement('button');
-        colorPickerBtn.id = 'colorPickerBtn';
-        colorPickerBtn.className = 'neumorphic-btn buttonFrames';
-        frameButtonsContainer.appendChild(colorPickerBtn);
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 62.5%; }
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--light-bg); color: var(--light-text);
+            transition: background-color 0.3s ease, color 0.3s ease; display: flex; flex-direction: column;
+            align-items: center; min-height: 100vh; padding: 20px;
+        }
+
+        #main-header {
+            width: 95%; max-width: 1100px; margin: 0 auto 2rem; padding: 8px; display: flex; justify-content: space-between;
+            align-items: center; background-color: rgba(56, 64, 72, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 50px; animation: fadeInUp 0.5s ease-out; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1); position: sticky; top: 20px; z-index: 1000;
+        }
+        .side-logo { font-size: 2.3rem; font-weight: 600; color: #e0e5ec; text-decoration: none; padding-left: 15px; }
+        .side-logo span { color: #20c997; }
+        #theme-toggle {
+            width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; background-color: #2d343c; color: #e0e5ec;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        #theme-toggle:active { transform: scale(0.95); }
+        #theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; }
+        #sun-icon { display: block; }
+        #moon-icon { display: none; }
+        .dark-mode #sun-icon { display: none; }
+        .dark-mode #moon-icon { display: block; }
+        body:not(.dark-mode) #main-header { background-color: rgba(240, 242, 245, 0.75); border: 1px solid rgba(0, 0, 0, 0.1); }
+        body:not(.dark-mode) .side-logo { color: #333; }
+        body:not(.dark-mode) #theme-toggle { background-color: #e4e6eb; color: #333; }
         
-        // Make sure vanilla-picker.min.js is loaded before this script
-        if (typeof Picker !== 'undefined') {
-            const picker = new Picker({
-                parent: colorPickerBtn, popup: 'bottom', color: '#FFFFFF',
-                onChange: (color) => setBackground({ type: 'color', value: color.hex }),
-                onDone: (color) => { colorPickerBtn.style.backgroundColor = color.hex; }
-            });
-            colorPickerBtn.addEventListener('click', () => picker.show());
-        } else {
-            console.error("Vanilla Picker library not loaded.");
+        #main-section { width: 100%; max-width: 1200px; }
+        .customize-container { display: flex; gap: 30px; width: 100%; }
+        .photo-preview-area {
+            flex: 1; display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 2rem; animation: fadeInUp 0.5s ease-out 0.1s; animation-fill-mode: both;
         }
-
-
-        assetsData.frames.colors.forEach(color => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonFrames';
-            btn.style.backgroundColor = color.value;
-            btn.dataset.type = 'color';
-            btn.dataset.value = color.value;
-            btn.id = color.id;
-            frameButtonsContainer.appendChild(btn);
-        });
-
-        assetsData.frames.images.forEach(frame => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonBgFrames';
-            // The background image is set by CSS using the ID
-            btn.dataset.type = 'image';
-            btn.dataset.src = frame.path;
-            btn.id = frame.id;
-            frameButtonsContainer.appendChild(btn);
-        });
-    };
-
-    const renderShapeButtons = () => {
-        if (!assetsData.shapes || !shapeButtonsContainer) return;
-        shapeButtonsContainer.innerHTML = '';
-        assetsData.shapes.forEach(shape => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonShapes';
-            btn.dataset.shape = shape.value;
-            btn.id = shape.id;
-            btn.innerHTML = `<img src="${shape.icon}" alt="${shape.name}" class="btnShapeSize"><span class="tooltip-text">${shape.name}</span>`;
-            shapeButtonsContainer.appendChild(btn);
-        });
-    };
-
-    const renderStickerButtons = () => {
-        if (!assetsData.stickers || !stickerButtonsContainer) return;
-        stickerButtonsContainer.innerHTML = '';
-        assetsData.stickers.forEach(sticker => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonStickers';
-            btn.dataset.sticker = sticker.layout;
-            btn.id = sticker.id;
-            btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize"><span class="tooltip-text">${sticker.name}</span>`;
-            if(sticker.id === 'noneSticker') btn.classList.add('active');
-            stickerButtonsContainer.appendChild(btn);
-        });
-    };
-
-    const renderLogoButtons = () => {
-        if (!assetsData.logos || !logoButtonsContainer) return;
-        logoButtonsContainer.innerHTML = '';
-        assetsData.logos.forEach((logo, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn logoCustomBtn';
-            if(index === 0) btn.classList.add('active');
-            btn.dataset.text = logo.value;
-            btn.id = logo.id;
-            btn.textContent = logo.name;
-            logoButtonsContainer.appendChild(btn);
-        });
-    };
-
-    // --- Event Handling ---
-    const setupEventListeners = () => {
-        frameButtonsContainer.addEventListener('click', handleFrameClick);
-        shapeButtonsContainer.addEventListener('click', handleShapeClick);
-        stickerButtonsContainer.addEventListener('click', handleStickerClick);
-        logoButtonsContainer.addEventListener('click', handleLogoClick);
-
-        dateCheckbox.addEventListener('change', redrawCanvas);
-        dateTimeCheckbox.addEventListener('change', redrawCanvas);
-        logoColorPicker.addEventListener('input', (e) => {
-            textColor = e.target.value;
-            redrawCanvas();
-        });
+        #photoPreview canvas {
+            max-width: 100%; height: auto; border-radius: 15px;
+            box-shadow: 10px 10px 20px var(--light-shadow-dark), -10px -10px 20px var(--light-shadow-light);
+        }
+        .controls-panel {
+            flex-basis: 400px; background-color: var(--light-bg); padding: 25px; border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--light-shadow-dark), -10px -10px 20px var(--light-shadow-light);
+            animation: fadeInUp 0.5s ease-out 0.2s; animation-fill-mode: both;
+            max-height: calc(100vh - 120px); overflow-y: auto;
+        }
+        .controls-panel h1 { font-size: 2.2rem; font-weight: 600; text-align: center; margin-bottom: 25px; }
+        .options-label { font-size: 1.6rem; font-weight: 500; margin-top: 20px; margin-bottom: 15px; display: block; }
         
-        if (customBackButton) {
-            customBackButton.addEventListener('click', () => {
-                // Assuming canvas7.html is the correct page for 4 photos
-                window.location.href = 'canvas7.html';
-            });
+        .neumorphic-btn {
+            border: none; background: var(--light-bg); color: var(--light-text); font-family: 'Poppins', sans-serif;
+            font-weight: 500; cursor: pointer; transition: all 0.2s ease-in-out;
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-    };
-
-    function handleFrameClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
-        const type = btn.dataset.type;
-        if (type === 'color') setBackground({ type: 'color', value: btn.dataset.value });
-        else if (type === 'image') setBackground({ type: 'image', src: btn.dataset.src });
-        frameButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function handleShapeClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
-        selectedShape = btn.dataset.shape;
-        shapeButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        redrawCanvas();
-    }
-
-    function handleStickerClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
-        const stickerLayout = btn.dataset.sticker;
-        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        if (selectedStickerLayout === stickerLayout || stickerLayout === 'null') {
-            selectedStickerLayout = null;
-            const noneStickerBtn = stickerButtonsContainer.querySelector('#noneSticker');
-            if(noneStickerBtn) noneStickerBtn.classList.add('active');
-        } else {
-            selectedStickerLayout = stickerLayout;
-            btn.classList.add('active');
+        .neumorphic-btn:hover { color: var(--light-accent); }
+        .neumorphic-btn:active, .neumorphic-btn.active {
+            box-shadow: inset 5px 5px 10px var(--light-inset-shadow-dark), inset -5px -5px 10px var(--light-inset-shadow-light);
+            color: var(--light-accent); transform: scale(0.98);
         }
-        redrawCanvas();
-    }
-
-    function handleLogoClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
-        selectedText = btn.dataset.text;
-        logoButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        redrawCanvas();
-    }
-
-    // --- State Update Functions ---
-    function setBackground(option) {
-        if (option.type === 'color') {
-            backgroundType = 'color';
-            backgroundColor = option.value;
-            backgroundImage = null;
-            redrawCanvas();
-        } else if (option.type === 'image') {
-            backgroundType = 'image';
-            backgroundImage = new Image();
-            backgroundImage.src = option.src;
-            backgroundImage.onload = redrawCanvas;
-            backgroundImage.onerror = () => console.error(`Failed to load background image: ${option.src}`);
-        }
-    }
-
-    // --- Canvas Drawing ---
-    const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
-    if (!storedImages || storedImages.length === 0) {
-        console.error("No valid images found in sessionStorage.");
-        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan.</p>';
-        return;
-    }
-
-    async function drawSticker(ctx) {
-        if (!selectedStickerLayout || !assetsData.stickerLayouts) return;
-
-        const layoutData = assetsData.stickerLayouts[selectedStickerLayout];
-        if (!layoutData) {
-            console.error(`Sticker layout "${selectedStickerLayout}" not found in assets.json.`);
-            return;
+        .neumorphic-btn[disabled] { cursor: not-allowed; opacity: 0.7; }
+        .custom-buttons-container { display: flex; flex-wrap: wrap; gap: 12px; }
+        .buttonFrames, .buttonBgFrames, .buttonShapes, .buttonStickers { width: 40px; height: 40px; border-radius: 50%; }
+        .buttonBgFrames { background-size: cover; background-position: center; }
+        .btnShapeSize, .stickerIconSize { width: 22px; height: 22px; }
+        
+        /* --- Tooltip Styling --- */
+        .neumorphic-btn .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            font-size: 1.2rem;
+            pointer-events: none;
         }
 
-        const stickerPromises = layoutData.map(({ src, x, y, size }) => {
-            return new Promise((resolve) => {
-                const stickerImg = new Image();
-                stickerImg.src = src;
-                stickerImg.onload = () => {
-                    ctx.drawImage(stickerImg, x, y, size, size);
-                    resolve();
-                };
-                stickerImg.onerror = () => {
-                    console.error(`Failed to load sticker image: ${src}`);
-                    resolve(); 
-                };
-            });
-        });
-        await Promise.all(stickerPromises);
-    }
-
-    function clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, shapeType) {
-        ctx.save();
-        ctx.beginPath();
-        if (shapeType === 'circle') {
-            ctx.arc(dx + dWidth / 2, dy + dHeight / 2, Math.min(dWidth, dHeight) / 2, 0, Math.PI * 2);
-        } else if (shapeType === 'rounded') {
-            const r = 30;
-            ctx.moveTo(dx + r, dy); ctx.lineTo(dx + dWidth - r, dy); ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
-            ctx.lineTo(dx + dWidth, dy + dHeight - r); ctx.quadraticCurveTo(dx + dWidth, dy + dHeight, dx + dWidth - r, dy + dHeight);
-            ctx.lineTo(dx + r, dy + dHeight); ctx.quadraticCurveTo(dx, dy + dHeight, dx, dy + dHeight - r);
-            ctx.lineTo(dx, dy + r); ctx.quadraticCurveTo(dx, dy, dx + r, dy);
-        } else if (shapeType === 'heart') {
-            ctx.moveTo(dx + dWidth / 2, dy + dHeight);
-            ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
-            ctx.bezierCurveTo(dx + dWidth * 0.1, dy - dHeight * 0.1, dx - dWidth * 0.25, dy + dHeight * 0.7, dx + dWidth / 2, dy + dHeight);
-        } else {
-            ctx.rect(dx, dy, dWidth, dHeight);
+        .neumorphic-btn:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
         }
-        ctx.closePath(); ctx.clip();
-        ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-        ctx.restore();
-    }
+        .dark-mode .neumorphic-btn .tooltip-text {
+            background-color: #f1f1f1;
+            color: #333;
+        }
 
-    async function redrawCanvas() {
-        return new Promise(async (resolve) => {
-            if (!storedImages) return resolve();
-            const stackedCanvas = document.createElement('canvas');
-            const ctx = stackedCanvas.getContext('2d');
-            const columns = 2, rows = 2;
-            const imageGridSize = rows * columns;
-            const canvasWidth = 900, canvasHeight = 1352;
-            const borderWidth = 30, spacing = 12, bottomPadding = 100;
-            const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
-            const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
-            const photoWidth = availableWidth / columns;
-            const photoHeight = availableHeight / rows;
+        #colorPickerBtn { background: conic-gradient(red, orange, yellow, green, cyan, blue, violet, red); }
+        #pinkBtnFrame { background-color: #FFC2D1; }
+        #blueBtnFrame { background-color: #CAF0F8; }
+        #yellowBtnFrame { background-color: #FFF8A5; }
+        #matchaBtnFrame { background-color: #90a955; }
+        #purpleBtnFrame { background-color: #c19ee0; }
+        #brownBtnFrame { background-color: #DDBEA9; }
+        #redBtnFrame { background-color: #780000; }
+        #whiteBtnFrame { background-color: #FFFFFF; border: 1px solid #ccc; }
+        #blackBtnFrame { background-color: #000000; }
+        #pinkGlitter { background-image: url(assets/frame-backgrounds/pink-glitter.jpg); }
+        #pinkPlaid { background-image: url(assets/frame-backgrounds/pink-plaid.jpg); }
+        #bluePlaid { background-image: url(assets/frame-backgrounds/blue-plaid.jpg); }
+        #black-cq { background-image: url(assets/frame-backgrounds/black-couqutte.jpg); background-size: 200%; }
+        #white-cq { background-image: url(assets/frame-backgrounds/white-couquette.jpg); background-size: 200%; }
+        #pinkLeather { background-image: url(assets/frame-backgrounds/pink-diamond-leather.jpg); background-size: 200%; }
+        #brownKnittedFrame { background-image: url(assets/frame-backgrounds/brown-knitted.jpg); }
+        #hotPinkKnittedFrame { background-image: url(assets/frame-backgrounds/hot-pink-knitted.jpg); }
+        #redKnittedFrame { background-image: url(assets/frame-backgrounds/red-knitted.jpg); }
+        #pinkKnittedFrame { background-image: url(assets/frame-backgrounds/pink-knitted.jpg); }
+        #redStripesFrame { background-image: url(assets/frame-backgrounds/red-stripes.jpg); background-size: 190%; }
+        #greenStripesFrame { background-image: url(assets/frame-backgrounds/green-stripes.jpg); background-size: 190%; }
+        #blueStripesFrame { background-image: url(assets/frame-backgrounds/blue-stripes.jpg); background-size: 190%; }
+        #vsPinkFrame { background-image: url(assets/frame-backgrounds/vs-pink.jpg); }
+        #vsYellowFrame { background-image: url(assets/frame-backgrounds/vs-yellow.jpg); }
+        #blueYellowSquares { background-image: url(assets/frame-backgrounds/blue-yellow-squares.jpg); }
+        #blueWhiteSquares { background-image: url(assets/frame-backgrounds/blue-white-squares.jpg); }
+        #brownLeopard { background-image: url(assets/frame-backgrounds/brown-leopard.jpg); }
+        #cowPrint { background-image: url(assets/frame-backgrounds/cow-print.jpg); }
+        #redLeather { background-image: url(assets/frame-backgrounds/red-leather.jpg); }
+        #pinkGumamela { background-image: url(assets/frame-backgrounds/pink-gumamela.jpg); background-size: 150%; }
+        #pinkLiliesFrame { background-image: url(assets/frame-backgrounds/pink-lilies.jpg); }
+        #whiteKnitted { background-image: url(assets/frame-backgrounds/white-knitted-cloth.jpg); }
+        #ribbonSweaterFrame { background-image: url(assets/frame-backgrounds/ribbon-sweater.jpg); }
+        #ribbonDenim { background-image: url(assets/frame-backgrounds/ribbon-denim.jpg); background-size: 120%; }
+        #blackPinkRibbon { background-image: url(assets/frame-backgrounds/black-pink-ribbon.jpg); }
+        #fourLockers { background-image: url(assets/frame-backgrounds/4-lockers.jpg); }
+        #gridPaperFrame { background-image: url(assets/frame-backgrounds/grid-paper.jpg); background-size: 200%; }
+        #crumpledPaper { background-image: url(assets/frame-backgrounds/crumpled-paper.jpg); background-size: 190%; }
+        #roughTextureFrame { background-image: url(assets/frame-backgrounds/rough-texture.jpg); background-size: 190%; }
+        #blueBackdrop { background-image: url(assets/frame-backgrounds/blue-backdrop.jpg); background-size: 190%; }
+        #greenHills { background-image: url(assets/frame-backgrounds/green-hills.jpg); background-size: 190%; }
+        #sandShells { background-image: url(assets/frame-backgrounds/sand-shells.jpg); background-size: 190%; }
+        #waterBeach { background-image: url(assets/frame-backgrounds/water.jpg); background-size: 190%; }
+        #cocoTrees { background-image: url(assets/frame-backgrounds/coco-trees.jpg); background-size: 190%; }
+        #stardustFrame { background-image: url(assets/frame-backgrounds/stardust.jpg); background-size: 200%; }
+        #roseCardFrame { background-image: url(assets/frame-backgrounds/rose-card.jpg); }
+        #princessVintageFrame { background-image: url(assets/frame-backgrounds/princess-vintage.jpg); }
+        #redRosesPaintFrame { background-image: url(assets/frame-backgrounds/red-roses-paint.jpg); background-size: 190%; }
+        #grayTrashFrame { background-image: url(assets/frame-backgrounds/gray-trash.jpg); background-size: 190%; }
+        #blackTrashFrame { background-image: url(assets/frame-backgrounds/black-trash.jpg); background-size: 190%; }
+        #whiteTrashFrame { background-image: url(assets/frame-backgrounds/white-trash.jpg); background-size: 180%; }
+        #partyDrapeFrame { background-image: url(assets/frame-backgrounds/party-drape.jpg); }
+        #partyDotsFrame { background-image: url(assets/frame-backgrounds/party-dots.jpg); background-size: 210%; }
+        #blingDenimFrame { background-image: url(assets/frame-backgrounds/bling-denim.jpg); background-size: 210%; }
 
-            stackedCanvas.width = canvasWidth;
-            stackedCanvas.height = canvasHeight;
-            ctx.clearRect(0, 0, stackedCanvas.width, stackedCanvas.height);
+        .logo-container { display: flex; gap: 10px; }
+        .logoCustomBtn { padding: 8px 15px; border-radius: 20px; font-size: 1.4rem; }
+        .date-overlay { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
+        .date-option { display: flex; align-items: center; gap: 8px; }
+        .date-option label { font-size: 1.4rem; cursor: pointer; }
+        .date-option input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; width: 20px; height: 20px; background: var(--light-bg);
+            border-radius: 5px; box-shadow: inset 2px 2px 5px var(--light-inset-shadow-dark), inset -2px -2px 5px var(--light-inset-shadow-light);
+            cursor: pointer; position: relative;
+        }
+        .date-option input[type="checkbox"]:checked { background-color: var(--light-accent); }
+        .date-option input[type="checkbox"]:checked::before {
+            content: '✔'; font-size: 14px; color: white; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
 
-            if (backgroundType === 'color') {
-                ctx.fillStyle = backgroundColor;
-                ctx.fillRect(0, 0, stackedCanvas.width, stackedCanvas.height);
-            } else if (backgroundType === 'image' && backgroundImage && backgroundImage.complete) {
-                ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
-            }
+        .final-actions-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(0, 0, 0, 0.1); }
+        .download-action-container { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); }
+        .final-actions-container button, .download-action-container button { padding: 12px; font-size: 1.5rem; border-radius: 25px; transition: all 0.3s ease; }
+        .final-actions-container button:hover, .download-action-container button:hover { transform: translateY(-2px); }
+        .final-actions-container button:active, .download-action-container button:active { transform: scale(0.95); }
+        .final-actions-container button .fas, .download-action-container button .fas { margin-right: 8px; }
+        #downloadCopyBtn { width: 100%; background: var(--light-accent); color: white; box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light); }
+        #downloadCopyBtn:active { box-shadow: inset 5px 5px 10px var(--light-inset-shadow-dark), inset -5px -5px 10px var(--light-inset-shadow-light); }
 
-            if (storedImages.length === imageGridSize) {
-                const imagePromises = storedImages.map(imgData => new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.crossOrigin = "Anonymous"; // Handle potential CORS issues
-                    img.src = imgData;
-                    img.onload = () => resolve(img);
-                    img.onerror = reject;
-                }));
-                try {
-                    const images = await Promise.all(imagePromises);
-                    images.forEach((img, index) => {
-                        const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
-                        let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
-                        if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; } 
-                        else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
-                        const col = index % columns, row = Math.floor(index / columns);
-                        const x = borderWidth + col * (photoWidth + spacing), y = borderWidth + row * (photoHeight + spacing);
-                        clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
-                    });
-                } catch (error) { console.error("Gagal memuat gambar:", error); }
-            }
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .modal.show .modal-content { animation: modalFadeInScale 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+        .modal-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 700px;
+        }
+        #modalImagePreview { width: 100%; border-radius: 15px; border: 5px solid white; }
+        .modal-close-btn {
+            position: absolute; top: -10px; right: -10px; color: white; background-color: #333;
+            width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; font-size: 20px; font-weight: bold; transition: 0.3s;
+            cursor: pointer; z-index: 10;
+        }
+        .modal-close-btn:hover, .modal-close-btn:focus { transform: scale(1.1); background-color: var(--light-accent); }
+        
+        .qr-modal-content {
+            background: var(--light-bg); border-radius: 24px; max-width: 380px; padding: 30px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--light-shadow-light);
+        }
+        .qr-icon {
+            width: 60px; height: 60px; border-radius: 50%; background: var(--light-accent); color: white; display: flex;
+            justify-content: center; align-items: center; font-size: 30px; margin-bottom: 20px;
+            box-shadow: inset 3px 3px 7px rgba(0,0,0,0.2), 0px 5px 10px rgba(0,0,0,0.1);
+        }
+        .qr-title { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; color: var(--light-text); }
+        .qr-subtitle { font-size: 1.5rem; max-width: 280px; line-height: 1.5; margin-bottom: 25px; color: var(--light-text); opacity: 0.8; }
+        #qrCodePopupContainer {
+            padding: 15px; background: white; border-radius: 16px; margin-top: 10px; min-height: 180px; min-width: 180px; 
+            display: flex; justify-content: center; align-items: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            position: relative; overflow: hidden;
+        }
+        #qrCodePopupContainer .spinner { font-size: 40px; color: var(--light-accent); }
+        #qrCodePopupContainer::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(100deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 80%);
+            animation: shimmer 2.5s infinite linear;
+        }
+        
+        /* BARU: Styling untuk Timer */
+        #qrTimer {
+            margin-top: 20px;
+            font-size: 1.4rem;
+            color: var(--light-text);
+            opacity: 0.8;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        .qr-actions { display: flex; gap: 15px; margin-top: 25px; width: 100%; }
+        .qr-actions button { flex: 1; padding: 10px 15px; border-radius: 15px; font-size: 1.4rem; font-weight: 600; }
+        #downloadFromModalBtn { background-color: var(--light-accent); color: white; }
+        #copyLinkBtn { background: transparent; border: 2px solid var(--light-shadow-dark); }
 
-            await drawSticker(ctx);
+        .logo-options-grid { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 15px; }
+        .color-picker-container { display: flex; align-items: center; gap: 10px; }
+        .color-picker-label { font-size: 1.4rem; }
+        input[type="color"] {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; background-color: transparent;
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+        input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
+
+        @media only screen and (max-width: 900px) {
+            .customize-container { flex-direction: column; align-items: center; }
+            .controls-panel { flex-basis: auto; width: 100%; max-width: 500px; max-height: none; }
+            #photoPreview canvas { max-width: 80%; }
+        }
+        @media only screen and (max-width: 540px) {
+            html { font-size: 55%; }
+            body { padding: 10px; }
+            #main-header { top: 10px; }
+            .controls-panel { padding: 15px; }
+            #photoPreview canvas { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header">
+        <a href="#" class="side-logo">pict<span>lord</span></a>
+        <div class="header-buttons">
+            <button id="theme-toggle">
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <main id="main-section">
+        <div class="customize-container">
+            <div class="photo-preview-area" id="photoPreview"></div>
+            <aside class="controls-panel">
+                <h1>Customize Your Photo</h1>
+                <div class="control-group">
+                    <h3 class="options-label">Frame Color</h3>
+                    <div id="frame-buttons-container" class="custom-buttons-container">
+                        <!-- Frame buttons will be dynamically inserted here -->
+                    </div>
+                </div>
+                <div class="control-group">
+                    <h3 class="options-label">Photo Shape</h3>
+                    <div id="shape-buttons-container" class="custom-buttons-container">
+                        <!-- Shape buttons will be dynamically inserted here -->
+                    </div>
+                </div>
+                <div class="control-group">
+                    <h3 class="options-label">Stickers</h3>
+                    <div id="sticker-buttons-container" class="custom-buttons-container">
+                        <!-- Sticker buttons will be dynamically inserted here -->
+                    </div>
+                </div>
+                <div class="control-group">
+                    <h3 class="options-label">Logo</h3>
+                    <div class="logo-options-grid">
+                        <div id="logo-buttons-container" class="logo-container">
+                            <!-- Logo buttons will be dynamically inserted here -->
+                        </div>
+                        <div class="color-picker-container">
+                            <label for="logoColorPicker" class="color-picker-label">Color:</label>
+                            <input type="color" id="logoColorPicker" value="#E28585">
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                     <h3 class="options-label">Date Overlay</h3>
+                     <div class="date-overlay">
+                         <div class="date-option"> <input type="checkbox" id="dateCheckbox"> <label for="dateCheckbox">Add Date</label> </div>
+                         <div class="date-option"> <input type="checkbox" id="dateTimeCheckbox"> <label for="dateTimeCheckbox">Add Time</label> </div>
+                     </div>
+                </div>
+                <div class="final-actions-container">
+                    <button class="neumorphic-btn" id="customBack"> <i class="fas fa-undo"></i> Retake </button>
+                    <button class="neumorphic-btn" id="previewBtn"> <i class="fas fa-eye"></i> Preview </button>
+                    <button class="neumorphic-btn" id="shareBtn"> <i class="fas fa-share-alt"></i> Share </button>
+                </div>
+                <div class="download-action-container">
+                    <button class="neumorphic-btn" id="downloadCopyBtn"> <i class="fas fa-qrcode"></i> Get QR & Download </button>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <img id="modalImagePreview" src="" alt="Image Preview">
+        </div>
+    </div>
+    
+    <div id="qrModal" class="modal">
+        <div class="modal-content qr-modal-content">
+             <span class="modal-close-btn qr-close-btn">&times;</span>
+             <div class="qr-icon"><i class="fas fa-qrcode"></i></div>
+            <h2 class="qr-title">Scan to Download</h2>
+            <p class="qr-subtitle">Buka kamera ponsel Anda dan pindai kode di bawah ini.</p>
+            <div id="qrCodePopupContainer"></div>
+
+            <div id="qrTimer"></div>
+
+            <div class="qr-actions">
+                <button id="downloadFromModalBtn" class="neumorphic-btn"><i class="fas fa-download"></i> Download</button>
+                <button id="copyLinkBtn" class="neumorphic-btn"><i class="fas fa-copy"></i> Copy Link</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/vanilla-picker.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="js/customize7.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/main.js"></script>
+    <script src="/update.js"></script>
+
+    <script>
+        // !!! PENTING: GANTI DENGAN KONFIGURASI FIREBASE ANDA !!!
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+            authDomain: "project-xlord.firebaseapp.com",
+            databaseURL: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "project-xlord",
+            storageBucket: "project-xlord.appspot.com",
+            messagingSenderId: "847461816867",
+            appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
+            measurementId: "G-344KX3B197"
+        };
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const database = firebase.database();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentQrLink = ''; 
+            let currentImageData = '';
+            let qrTimerInterval = null; // BARU: Variabel untuk interval timer
+
+            // --- Deklarasi elemen ---
+            const previewModal = document.getElementById('previewModal');
+            const previewBtn = document.getElementById('previewBtn');
+            const previewModalCloseBtn = previewModal.querySelector('.modal-close-btn');
+            const qrModal = document.getElementById('qrModal');
+            const qrModalCloseBtn = qrModal.querySelector('.qr-close-btn');
+            const downloadBtn = document.getElementById('downloadCopyBtn');
+            const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            const downloadFromModalBtn = document.getElementById('downloadFromModalBtn');
+            const qrTimerElement = document.getElementById('qrTimer'); // BARU: Elemen timer
             
-            ctx.fillStyle = textColor;
-            ctx.font = 'bold 32px Arial, Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(selectedText, stackedCanvas.width / 2, stackedCanvas.height - 55);
+            // BARU: Fungsi untuk memulai dan menghentikan timer
+            function startQrTimer(durationInSeconds) {
+                let timer = durationInSeconds;
+                qrTimerElement.style.display = 'block';
 
-            if (dateCheckbox.checked || dateTimeCheckbox.checked) {
-                const currentDate = new Date();
-                let displayText = '';
-                if (dateCheckbox.checked) displayText += currentDate.toLocaleDateString('id-ID');
-                if (dateTimeCheckbox.checked) {
-                    const timeString = currentDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                    displayText += (dateCheckbox.checked ? ' ' : '') + timeString;
-                }
-                ctx.font = '18px "Poppins", Arial, Roboto, sans-serif';
-                ctx.fillText(displayText, stackedCanvas.width / 2, stackedCanvas.height - 30);
+                const updateTimer = () => {
+                    if (timer < 0) {
+                        clearInterval(qrTimerInterval);
+                        qrTimerElement.textContent = "Link telah kadaluarsa.";
+                        copyLinkBtn.disabled = true;
+                        downloadFromModalBtn.disabled = true;
+                        return;
+                    }
+
+                    const minutes = Math.floor(timer / 60);
+                    let seconds = timer % 60;
+                    seconds = seconds < 10 ? '0' + seconds : seconds;
+                    
+                    qrTimerElement.innerHTML = `Link kamu kadaluarsa dalam <strong>${minutes}:${seconds}</strong>`;
+                    timer--;
+                };
+
+                updateTimer();
+                qrTimerInterval = setInterval(updateTimer, 1000);
             }
 
-            updatePreview(stackedCanvas);
-            currentCanvas = stackedCanvas;
-            resolve();
+            function showModal(modal) { modal.style.display = 'block'; setTimeout(() => modal.classList.add('show'), 10); }
+
+            // BARU: Modifikasi fungsi hideModal
+            function hideModal(modal) { 
+                modal.classList.remove('show'); 
+                modal.style.display = 'none';
+                if (modal.id === 'qrModal' && qrTimerInterval) {
+                    clearInterval(qrTimerInterval);
+                    qrTimerElement.style.display = 'none';
+                }
+            }
+            
+            if(previewBtn) {
+                previewBtn.addEventListener('click', () => {
+                    const finalCanvas = document.querySelector('#photoPreview canvas');
+                    if (finalCanvas) {
+                        document.getElementById('modalImagePreview').src = finalCanvas.toDataURL('image/png', 1.0);
+                        showModal(previewModal);
+                    } else { alert('Silakan buat gambar terlebih dahulu!'); }
+                });
+            }
+            if(previewModalCloseBtn) { previewModalCloseBtn.addEventListener('click', () => hideModal(previewModal)); }
+            if(qrModalCloseBtn) { qrModalCloseBtn.addEventListener('click', () => hideModal(qrModal)); }
+            
+            window.addEventListener('click', (event) => {
+                if (event.target == previewModal) { hideModal(previewModal); }
+                if (event.target == qrModal) { hideModal(qrModal); }
+            });
+
+            function generateShortId(length) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) { result += chars.charAt(Math.floor(Math.random() * chars.length)); }
+                return result;
+            }
+
+            async function generateTemporaryLink(base64ImageData) {
+                const expirationTime = Date.now() + (5 * 60 * 1000);
+                const dataToStore = { imageData: base64ImageData, expiresAt: expirationTime };
+                const shortId = generateShortId(5);
+                await database.ref('images/' + shortId).set(dataToStore);
+                return `${window.location.origin}/hasil?id=${shortId}`;
+            }
+
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', async () => {
+                    // --- FIX FOR RACE CONDITION ---
+                    if (typeof redrawCanvas === 'function') {
+                        await redrawCanvas();
+                    }
+
+                    const finalCanvas = document.querySelector('#photoPreview canvas');
+                    if (!finalCanvas) { alert('Silakan buat gambar terlebih dahulu!'); return; }
+                    
+                    showModal(qrModal);
+                    qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
+                    
+                    if (qrTimerInterval) clearInterval(qrTimerInterval);
+                    qrTimerElement.style.display = 'none';
+                    copyLinkBtn.disabled = true;
+                    downloadFromModalBtn.disabled = true;
+
+                    try {
+                        currentImageData = finalCanvas.toDataURL('image/png', 1.0);
+                        const link = document.createElement('a');
+                        link.download = `pictlord-4-photo-${Date.now()}.png`; // Nama file sesuai halaman
+                        link.href = currentImageData;
+                        link.click();
+                        
+                        currentQrLink = await generateTemporaryLink(currentImageData);
+                        const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
+
+                        qrCodePopupContainer.innerHTML = `<img src="${qrApiUrl}" alt="Scan to download">`;
+                        copyLinkBtn.disabled = false;
+                        downloadFromModalBtn.disabled = false;
+                        
+                        startQrTimer(299);
+
+                    } catch (error) {
+                        console.error('Gagal membuat link Firebase atau QR Code:', error);
+                        qrCodePopupContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong><br>Pastikan konfigurasi Firebase sudah benar & cek console (F12).';
+                    }
+                });
+            }
+
+            if(copyLinkBtn) {
+                copyLinkBtn.addEventListener('click', () => {
+                    if (currentQrLink && !copyLinkBtn.disabled) {
+                        navigator.clipboard.writeText(currentQrLink).then(() => {
+                            const originalBtnHTML = copyLinkBtn.innerHTML;
+                            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => { copyLinkBtn.innerHTML = originalBtnHTML; }, 2000);
+                        }).catch(err => { console.error('Gagal menyalin link: ', err); alert('Gagal menyalin link.'); });
+                    }
+                });
+            }
+            
+            if(downloadFromModalBtn) {
+                downloadFromModalBtn.addEventListener('click', () => {
+                    if (currentImageData && !downloadFromModalBtn.disabled) {
+                        const link = document.createElement('a');
+                        link.download = `pictlord-4-photo-retry-${Date.now()}.png`; // Nama file sesuai halaman
+                        link.href = currentImageData;
+                        link.click();
+                    } else { alert('Data gambar tidak ditemukan atau link sudah kadaluarsa.'); }
+                });
+            }
+            
+            // Logika untuk theme toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            if(themeToggle) {
+                const applyTheme = (theme) => {
+                    document.body.classList.toggle('dark-mode', theme === 'dark');
+                };
+                themeToggle.addEventListener('click', () => {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    const newTheme = isDarkMode ? 'light' : 'dark';
+                    localStorage.setItem('theme', newTheme);
+                    applyTheme(newTheme);
+                });
+                const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
+                applyTheme(savedTheme);
+            }
         });
-    }
-
-
-    function updatePreview(canvas) {
-        if (!photoCustomPreview) return;
-        photoCustomPreview.innerHTML = '';
-        photoCustomPreview.appendChild(canvas);
-    }
-
-    init();
-});
+    </script>
+</body>
+</html>
