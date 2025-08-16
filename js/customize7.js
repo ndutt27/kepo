@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { src: 'assets/stickers/classic2.png', x: 4, y: 980, size: 20 }, { src: 'assets/stickers/classic3.png', x: stackedCanvas.width - 75, y: 70, size: 120 },
                 { src: 'assets/stickers/classic3.png', x: stackedCanvas.width - 75, y: 670, size: 120 }
             ],
-            'classicbsticker': [
+            'classicB': [ // Changed from classicbsticker to match assets.json
                 { src: 'assets/stickers/classic4.png', x: 1, y: 50, size: 32 }, { src: 'assets/stickers/classic4.png', x: 1, y: 550, size: 32 },
                 { src: 'assets/stickers/classic4.png', x: 1, y: 950, size: 32 }, { src: 'assets/stickers/classic5.png', x: 4, y: 80, size: 20 },
                 { src: 'assets/stickers/classic5.png', x: 4, y: 980, size: 20 }, { src: 'assets/stickers/classic6.png', x: stackedCanvas.width - 75, y: 70, size: 120 },
@@ -322,14 +322,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 { src: 'assets/stickers/tabbyCat3.png', x: -5, y: 830, size: 75 }, { src: 'assets/stickers/tabbyCat3.png', x: stackedCanvas.width - 120, y: stackedCanvas.height - 190, size: 65 },
                 { src: 'assets/stickers/tabbyCat7.png', x: 1, y: stackedCanvas.height - 230, size: 120 }
             ],
-            // [FIXED AGAIN] The key now uses the typo 'balerina' to match the likely value from assets.json,
-            // but the file paths inside still use the correct spelling 'ballerina'.
-            'balerinacappuccino': [
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: 402, y: -2, size: 90 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino5.png', x: -10, y: 780, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino7.png', x: -10, y: 295, size: 100 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino6.png', x: stackedCanvas.width - 115, y: 850, size: 110 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: -5, y: stackedCanvas.height - 200, size: 145 },
-                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
+            // [FINAL FIX] The key is now "ballerinacp" to match assets.json, and paths are correct.
+            'ballerinacp': [
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png", "x": 1, "y": 2, "size": 125 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png", "x": 402, "y": -2, "size": 90 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png", "x": stackedCanvas.width - 130, "y": 25, "size": 150 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png", "x": stackedCanvas.width - 120, "y": 345, "size": 129 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino5.png", "x": -10, "y": 780, "size": 150 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino7.png", "x": -10, "y": 295, "size": 100 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino6.png", "x": stackedCanvas.width - 115, "y": 850, "size": 110 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png", "x": -5, "y": stackedCanvas.height - 200, "size": 145 },
+                { "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png", "x": stackedCanvas.width - 130, "y": stackedCanvas.height - 200, "size": 125 }
             ],
             'doggywhite': [
                 { src: 'assets/stickers/doggyWhite/doggyWhite3.png', x: 1, y: 230, size: 115 }, { src: 'assets/stickers/doggyWhite/doggyWhite1.png', x: stackedCanvas.width - 130, y: 25, size: 125 },
@@ -359,7 +362,11 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         const layout = stickerLayouts[selectedStickerLayout];
-        if (!layout) return;
+        if (!layout) {
+            console.error(`Sticker layout "${selectedStickerLayout}" not found.`);
+            return;
+        }
+
 
         await Promise.all(layout.map(({ src, x, y, size }) => {
             return new Promise((resolve) => {
