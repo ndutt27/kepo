@@ -751,290 +751,177 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <script src="js/customize7.js"></script>
-    <script src="canvas7.js"></script>
-    <script src="main.js"></script>
+    <script src="js/customize6.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/main.js"></script>
 
     <script>
-        // !!! PENTING: GANTI DENGAN KONFIGURASI PROYEK FIREBASE ANDA SENDIRI !!!
+        // !!! PENTING: GANTI DENGAN KONFIGURASI FIREBASE ANDA SENDIRI !!!
         const firebaseConfig = {
-            apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
-            authDomain: "project-xlord.firebaseapp.com",
-            databaseURL: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "project-xlord",
-            storageBucket: "project-xlord.appspot.com",
-            messagingSenderId: "847461816867",
-            appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
-            measurementId: "G-344KX3B197"
-        };
+    apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+    authDomain: "project-xlord.firebaseapp.com",
+    databaseURL: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "project-xlord",
+    storageBucket: "project-xlord.appspot.com",
+    messagingSenderId: "847461816867",
+    appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
+    measurementId: "G-344KX3B197"
+};
 
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const database = firebase.database();
 
-
         document.addEventListener('DOMContentLoaded', () => {
-            // --- State Variables ---
             let currentQrLink = ''; 
-            let currentImageData = null; 
-            let qrTimerInterval = null;
-            
-            const modalImagePreview = document.getElementById('modalImagePreview');
+            let currentImageData = '';
+            let qrTimerInterval = null; // BARU: Variabel untuk interval timer
+
+            // --- Deklarasi elemen ---
             const previewModal = document.getElementById('previewModal');
-            const qrModal = document.getElementById('qrModal');
-
-            // =========================================================================
-            // EVENT LISTENERS
-            // =========================================================================
-            
-            // 1. Theme Manager
-            const themeToggle = document.getElementById('theme-toggle');
-            const applyTheme = (theme) => {
-                document.body.classList.toggle('dark-mode', theme === 'dark');
-                // Redraw canvas if the function is available
-                if (typeof window.drawFinalImage === 'function') {
-                    window.drawFinalImage();
-                }
-            };
-            themeToggle.addEventListener('click', () => {
-                const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
-            });
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            applyTheme(savedTheme);
-            
-
-            // =========================================================================
-            // MODAL LOGIC (PREVIEW & QR)
-            // =========================================================================
-            function showModal(modal) {
-                modal.style.display = 'block';
-                setTimeout(() => modal.classList.add('show'), 10);
-            }
-
-            function hideModal(modal) {
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    if (modal.id === 'qrModal' && qrTimerInterval) {
-                        clearInterval(qrTimerInterval);
-                        qrTimerElement.style.display = 'none';
-                    }
-                }, 400);
-            }
-            
-            // --- Preview Modal Button ---
             const previewBtn = document.getElementById('previewBtn');
-            if(previewBtn) {
-                previewBtn.addEventListener('click', async () => {
-                    if (typeof window.drawFinalImage !== 'function') {
-                        alert('Error: Komponen gambar tidak siap.');
-                        return;
-                    }
-                    const finalCanvas = await window.drawFinalImage(); // Await the drawing
-                    if (finalCanvas) {
-                        modalImagePreview.src = finalCanvas.toDataURL('image/png', 1.0);
-                        showModal(previewModal);
-                    } else { 
-                        alert('Gambar belum selesai dibuat. Mohon tunggu sebentar.'); 
-                    }
-                });
-            }
-            
-            // --- QR Modal Button (THE FIX) ---
+            const previewModalCloseBtn = previewModal.querySelector('.modal-close-btn');
+            const qrModal = document.getElementById('qrModal');
+            const qrModalCloseBtn = qrModal.querySelector('.qr-close-btn');
             const downloadBtn = document.getElementById('downloadCopyBtn');
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', async () => {
-                    if (typeof window.drawFinalImage !== 'function') {
-                        alert('Error: Komponen gambar tidak siap. Coba muat ulang halaman.');
-                        return;
-                    }
+            const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            const downloadFromModalBtn = document.getElementById('downloadFromModalBtn');
+            const qrTimerElement = document.getElementById('qrTimer'); // BARU: Elemen timer
 
-                    showModal(qrModal);
-                    const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
-                    const copyLinkBtn = document.getElementById('copyLinkBtn');
-                    const downloadDirectBtn = document.getElementById('downloadDirectBtn');
-                    
-                    // Set loading state
-                    qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
-                    copyLinkBtn.disabled = true;
-                    downloadDirectBtn.disabled = true;
-                    if (qrTimerInterval) clearInterval(qrTimerInterval);
-
-                    try {
-                        const finalCanvas = await window.drawFinalImage();
-                        if (!finalCanvas) throw new Error("Gagal membuat gambar final.");
-
-                        const imageData = finalCanvas.toDataURL('image/png', 1.0);
-                        currentImageData = imageData;
-
-                        const link = document.createElement('a');
-                        link.download = `pictlord-${Date.now()}.png`;
-                        link.href = imageData;
-                        link.click();
-                        
-                        currentQrLink = await generateTemporaryLink(imageData);
-                        const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
-
-                        // --- NEW: Promise-based image loading for robustness ---
-                        const qrImage = await new Promise((resolve, reject) => {
-                            const img = new Image();
-                            img.crossOrigin = "anonymous"; // Helps prevent cross-origin issues
-                            img.onload = () => resolve(img);
-                            img.onerror = () => reject(new Error('Gagal memuat gambar QR Code dari layanan eksternal.'));
-                            img.src = qrApiUrl;
-                            img.alt = "Scan to download";
-                        });
-                        
-                        // --- This code only runs if the promise above resolves (image loads successfully) ---
-                        qrCodePopupContainer.innerHTML = '';
-                        qrCodePopupContainer.appendChild(qrImage);
-                        copyLinkBtn.disabled = false;
-                        downloadDirectBtn.disabled = false;
-                        startQrTimer(299);
-
-                    } catch (error) {
-                        console.error('An error occurred in the download/QR process:', error);
-                        // Display a user-friendly error inside the modal itself
-                        qrCodePopupContainer.innerHTML = `<strong>Oops! Terjadi kesalahan.</strong><br><span>${error.message || 'Tidak dapat membuat QR code.'}</span>`;
-                        // Disable buttons on failure
-                        copyLinkBtn.disabled = true;
-                        downloadDirectBtn.disabled = true;
-                    }
-                });
-            }
-
-            // --- Modal Close Events ---
-            document.querySelectorAll('.modal-close-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    hideModal(btn.closest('.modal'));
-                });
-            });
-            
-            window.addEventListener('click', (event) => {
-                if (event.target.classList.contains('modal')) {
-                     hideModal(event.target);
-                }
-            });
-
-
-            // --- QR Code Functions & Events ---
-            const qrTimerElement = document.getElementById('qrTimer');
+            // BARU: Fungsi untuk memulai dan menghentikan timer
             function startQrTimer(durationInSeconds) {
                 let timer = durationInSeconds;
                 qrTimerElement.style.display = 'block';
+
                 const updateTimer = () => {
                     if (timer < 0) {
                         clearInterval(qrTimerInterval);
                         qrTimerElement.textContent = "Link telah kadaluarsa.";
-                        document.getElementById('copyLinkBtn').disabled = true;
-                        document.getElementById('downloadDirectBtn').disabled = true;
+                        // Nonaktifkan tombol jika link sudah tidak valid
+                        copyLinkBtn.disabled = true;
+                        downloadFromModalBtn.disabled = true;
                         return;
                     }
+
                     const minutes = Math.floor(timer / 60);
                     let seconds = timer % 60;
                     seconds = seconds < 10 ? '0' + seconds : seconds;
+
                     qrTimerElement.innerHTML = `Link kamu kadaluarsa dalam <strong>${minutes}:${seconds}</strong>`;
                     timer--;
                 };
-                updateTimer();
+
+                updateTimer(); // Panggil sekali agar langsung tampil
                 qrTimerInterval = setInterval(updateTimer, 1000);
             }
+
+
+            function showModal(modal) { modal.style.display = 'block'; setTimeout(() => modal.classList.add('show'), 10); }
+
+            // BARU: Modifikasi fungsi hideModal
+            function hideModal(modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+                // Hentikan timer saat modal ditutup
+                if (modal.id === 'qrModal' && qrTimerInterval) {
+                    clearInterval(qrTimerInterval);
+                    qrTimerElement.style.display = 'none'; // Sembunyikan elemen timer
+                }
+            }
+
+            if(previewBtn) {
+                previewBtn.addEventListener('click', () => {
+                    const finalCanvas = document.querySelector('#photoPreview canvas');
+                    if (finalCanvas) {
+                        document.getElementById('modalImagePreview').src = finalCanvas.toDataURL('image/png', 1.0);
+                        showModal(previewModal);
+                    } else { alert('Silakan buat gambar terlebih dahulu!'); }
+                });
+            }
+            if(previewModalCloseBtn) { previewModalCloseBtn.addEventListener('click', () => hideModal(previewModal)); }
+            if(qrModalCloseBtn) { qrModalCloseBtn.addEventListener('click', () => hideModal(qrModal)); }
+
+            window.addEventListener('click', (event) => {
+                if (event.target == previewModal) { hideModal(previewModal); }
+                if (event.target == qrModal) { hideModal(qrModal); }
+            });
 
             function generateShortId(length) {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                 let result = '';
-                for (let i = 0; i < length; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
+                for (let i = 0; i < length; i++) { result += chars.charAt(Math.floor(Math.random() * chars.length)); }
                 return result;
             }
 
             async function generateTemporaryLink(base64ImageData) {
-                const expirationTime = Date.now() + (5 * 60 * 1000);
+                const expirationTime = Date.now() + (5 * 60 * 1000); // 5 menit
                 const dataToStore = { imageData: base64ImageData, expiresAt: expirationTime };
                 const shortId = generateShortId(5);
                 await database.ref('images/' + shortId).set(dataToStore);
                 return `${window.location.origin}/hasil?id=${shortId}`;
             }
 
-            document.getElementById('downloadDirectBtn')?.addEventListener('click', () => {
-                if (currentImageData) {
-                    const link = document.createElement('a');
-                    link.download = `pictlord-direct-${Date.now()}.png`;
-                    link.href = currentImageData;
-                    link.click();
-                } else {
-                    alert('Data gambar tidak ditemukan. Coba lagi.');
-                }
-            });
-
-            document.getElementById('copyLinkBtn')?.addEventListener('click', () => {
-                const copyBtn = document.getElementById('copyLinkBtn');
-                if (currentQrLink && !copyBtn.disabled) {
-                    navigator.clipboard.writeText(currentQrLink).then(() => {
-                        const originalText = copyBtn.innerHTML;
-                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                        setTimeout(() => { copyBtn.innerHTML = originalText; }, 2000);
-                    }).catch(err => {
-                        console.error('Gagal menyalin link: ', err);
-                        alert('Gagal menyalin link.');
-                    });
-                }
-            });
-            
-            // --- Retake Button ---
-            document.getElementById('customBack')?.addEventListener('click', () => {
-                window.history.back();
-            });
-
-            // --- Share Button ---
-            const shareBtn = document.getElementById('shareBtn');
-            if (shareBtn) {
-                shareBtn.addEventListener('click', async () => {
-                    if (typeof window.drawFinalImage !== 'function') {
-                        alert('Gambar belum siap untuk dibagikan. Mohon tunggu sebentar.');
-                        return;
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', async () => {
+                    // --- FIX FOR RACE CONDITION ---
+                    if (typeof redrawCanvas === 'function') {
+                        await redrawCanvas();
                     }
+
+                    const finalCanvas = document.querySelector('#photoPreview canvas');
+                    if (!finalCanvas) { alert('Silakan buat gambar terlebih dahulu!'); return; }
+
+                    showModal(qrModal);
+                    qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
                     
-                    const originalBtnHTML = shareBtn.innerHTML;
-                    shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
-                    shareBtn.disabled = true;
+                    if (qrTimerInterval) clearInterval(qrTimerInterval);
+                    qrTimerElement.style.display = 'none';
+                    copyLinkBtn.disabled = true;
+                    downloadFromModalBtn.disabled = true;
 
                     try {
-                        const finalCanvas = await window.drawFinalImage();
-                        if (!finalCanvas) throw new Error("Gagal membuat canvas untuk dibagikan.");
+                        currentImageData = finalCanvas.toDataURL('image/png', 1.0);
+                        const link = document.createElement('a');
+                        link.download = `pictlord-strip-${Date.now()}.png`;
+                        link.href = currentImageData;
+                        link.click();
 
-                        const imageData = finalCanvas.toDataURL('image/png', 1.0);
-                        const shareUrl = await generateTemporaryLink(imageData);
+                        currentQrLink = await generateTemporaryLink(currentImageData);
+                        const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
 
-                        const shareData = {
-                            title: 'Pictlord Photobooth',
-                            text: 'bingung nyari? photobooth online free dimana dan kapan aja tenang pictlord 📸solusinya 😎',
-                            url: shareUrl // Share the direct image link
-                        };
+                        qrCodePopupContainer.innerHTML = `<img src="${qrApiUrl}" alt="Scan to download">`;
+                        copyLinkBtn.disabled = false;
+                        downloadFromModalBtn.disabled = false;
 
-                        if (navigator.share) {
-                             await navigator.share(shareData);
-                             console.log('Link berhasil dibagikan!');
-                        } else {
-                            // Fallback for desktop/unsupported browsers: open the QR modal
-                            alert('Browser Anda tidak mendukung fitur berbagi. Silakan gunakan tombol "Get QR / Download".');
-                            document.getElementById('downloadCopyBtn').click();
-                        }
+                        startQrTimer(299);
 
-                    } catch (err) {
-                        console.error('Error saat berbagi:', err);
-                        if (err.name !== 'AbortError') {
-                            alert(`Gagal membuat link untuk dibagikan. Silakan coba lagi.`);
-                        }
-                    } finally {
-                        shareBtn.innerHTML = originalBtnHTML;
-                        shareBtn.disabled = false;
+                    } catch (error) {
+                        console.error('Gagal membuat link Firebase atau QR Code:', error);
+                        qrCodePopupContainer.innerHTML = '<strong>Gagal membuat QR Code.</strong><br>Pastikan konfigurasi Firebase sudah benar & cek console (F12).';
                     }
+                });
+            }
+
+            if(copyLinkBtn) {
+                copyLinkBtn.addEventListener('click', () => {
+                    if (currentQrLink && !copyLinkBtn.disabled) {
+                        navigator.clipboard.writeText(currentQrLink).then(() => {
+                            const originalBtnHTML = copyLinkBtn.innerHTML;
+                            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => { copyLinkBtn.innerHTML = originalBtnHTML; }, 2000);
+                        }).catch(err => { console.error('Gagal menyalin link: ', err); alert('Gagal menyalin link.'); });
+                    }
+                });
+            }
+
+            if(downloadFromModalBtn) {
+                downloadFromModalBtn.addEventListener('click', () => {
+                    if (currentImageData && !downloadFromModalBtn.disabled) {
+                        const link = document.createElement('a');
+                        link.download = `pictlord-strip-retry-${Date.now()}.png`;
+                        link.href = currentImageData;
+                        link.click();
+                    } else { alert('Data gambar tidak ditemukan atau link sudah kadaluarsa.'); }
                 });
             }
         });
