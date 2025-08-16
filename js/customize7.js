@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
-    let currentCanvas = null; // To hold the current canvas for other scripts
+    let currentCanvas = null;
 
     // --- Main Initialization ---
     const init = async () => {
@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
             renderStickerButtons();
             renderLogoButtons();
             setupEventListeners();
-
-            // Initial draw after a short delay to ensure everything is ready
+            
+            // Initial draw after a short delay
             setTimeout(redrawCanvas, 100);
 
         } catch (error) {
@@ -61,9 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 onDone: (color) => { colorPickerBtn.style.backgroundColor = color.hex; }
             });
             colorPickerBtn.addEventListener('click', () => picker.show());
-        } else {
-            console.error("Vanilla Picker library not found. Make sure vanilla-picker.min.js is loaded.");
-        }
+        } else { console.error("Vanilla Picker library not loaded."); }
 
         assetsData.frames.colors.forEach(color => {
             const btn = document.createElement('button');
@@ -219,12 +217,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function drawSticker(ctx) {
-        if (!selectedStickerLayout || !assetsData.stickerLayouts) return;
+        if (!selectedStickerLayout || !assetsData.stickerLayouts) {
+            return;
+        }
     
-        const layoutData = assetsData.stickerLayouts[selectedStickerLayout];
+        let layoutData = assetsData.stickerLayouts[selectedStickerLayout];
         if (!layoutData) {
             console.error(`Sticker layout "${selectedStickerLayout}" not found in assets.json.`);
             return;
+        }
+
+        // [FIX] This checks if the selected sticker is 'ballerinacp' and corrects the typo in the path.
+        if (selectedStickerLayout === 'ballerinacp') {
+            layoutData = layoutData.map(sticker => ({
+                ...sticker,
+                src: sticker.src.replace('/balerinaCappuccino/', '/ballerinaCappuccino/')
+            }));
         }
 
         await Promise.all(layoutData.map(({ src, x, y, size }) => {
@@ -271,19 +279,20 @@ document.addEventListener('DOMContentLoaded', function() {
         return new Promise(async (resolve) => {
             if (!storedImages) return resolve(null);
 
+            const imageArrayLength = storedImages.length;
             const stackedCanvas = document.createElement('canvas');
             const ctx = stackedCanvas.getContext('2d');
 
-            // 2x2 Grid Layout Calculations
-            const columns = 2, rows = 2;
-            const imageGridSize = rows * columns;
-            const canvasWidth = 900, canvasHeight = 1352;
-            const borderWidth = 30, spacing = 12, bottomPadding = 100;
+            // Single Column (Vertical Strip) Layout Calculations
+            const canvasWidth = 592;
+            const canvasHeight = 1352;
+            const borderWidth = 30;
+            const spacing = 12;
+            const bottomPadding = 100;
 
-            const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
-            const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
-            const photoWidth = availableWidth / columns;
-            const photoHeight = availableHeight / rows;
+            const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (imageArrayLength - 1)) - bottomPadding;
+            const photoHeight = availableHeight / imageArrayLength;
+            const photoWidth = canvasWidth - (borderWidth * 2);
 
             stackedCanvas.width = canvasWidth;
             stackedCanvas.height = canvasHeight;
@@ -298,28 +307,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // 2. Draw Photos
-            if (storedImages.length === imageGridSize) {
-                const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
-                    const img = new Image();
-                    img.src = imgData;
-                    img.onload = () => resolve(img);
-                    img.onerror = () => resolve(null);
-                })));
+            const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
+                const img = new Image();
+                img.src = imgData;
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+            })));
 
-                imageElements.forEach((img, index) => {
-                    if (!img) return;
-                    const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
-                    let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
-                    if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; } 
-                    else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
-                    const col = index % columns, row = Math.floor(index / columns);
-                    const x = borderWidth + col * (photoWidth + spacing);
-                    const y = borderWidth + row * (photoHeight + spacing);
-                    clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
-                });
-            }
+            imageElements.forEach((img, index) => {
+                if (!img) return;
+                const imgAspect = img.width / img.height;
+                const targetAspect = photoWidth / photoHeight;
+                let sx, sy, sWidth, sHeight;
+                if (imgAspect > targetAspect) {
+                    sHeight = img.height;
+                    sWidth = img.height * targetAspect;
+                    sx = (img.width - sWidth) / 2;
+                    sy = 0;
+                } else {
+                    sWidth = img.width;
+                    sHeight = img.width / targetAspect;
+                    sx = 0;
+                    sy = (img.height - sHeight) / 2;
+                }
+                const x = borderWidth;
+                const y = borderWidth + index * (photoHeight + spacing);
+                clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+            });
 
-            // 3. Draw Stickers on top of photos but under text
+            // 3. Draw Stickers on top
             await drawSticker(ctx);
             
             // 4. Draw Logo and Date Text
@@ -356,4 +372,4 @@ document.addEventListener('DOMContentLoaded', function() {
     window.redrawCanvas = redrawCanvas;
 
     init();
-})
+});
