@@ -213,8 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function drawSticker(ctx, stackedCanvas) {
         if (!selectedStickerLayout) return;
 
-        // [FIXED] Hardcoded sticker layouts with positions adjusted for the 4-photo (2x2) layout.
-        // This replaces the need to fetch from assets.json for sticker positions.
         const stickerLayouts = {
             'kiss': [{ src: 'assets/stickers/kiss1.png', x: 30, y: 300, size: 170 }],
             'sweet': [
@@ -324,12 +322,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 { src: 'assets/stickers/tabbyCat3.png', x: -5, y: 830, size: 75 }, { src: 'assets/stickers/tabbyCat3.png', x: stackedCanvas.width - 120, y: stackedCanvas.height - 190, size: 65 },
                 { src: 'assets/stickers/tabbyCat7.png', x: 1, y: stackedCanvas.height - 230, size: 120 }
             ],
+            // [FIXED] Corrected typo from 'balerina' to 'ballerina' in all file paths
             'ballerinacappuccino': [
-                { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino3.png', x: 402, y: -2, size: 90 },
-                { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
-                { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino5.png', x: -10, y: 780, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino7.png', x: -10, y: 295, size: 100 },
-                { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino6.png', x: stackedCanvas.width - 115, y: 850, size: 110 }, { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino3.png', x: -5, y: stackedCanvas.height - 200, size: 145 },
-                { src: 'assets/stickers/ballerinaCappuccino/balerinaCappuccino4.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png', x: 1, y: 2, size: 125 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: 402, y: -2, size: 90 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: 25, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png', x: stackedCanvas.width - 120, y: 345, size: 129 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino5.png', x: -10, y: 780, size: 150 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino7.png', x: -10, y: 295, size: 100 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino6.png', x: stackedCanvas.width - 115, y: 850, size: 110 }, { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png', x: -5, y: stackedCanvas.height - 200, size: 145 },
+                { src: 'assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png', x: stackedCanvas.width - 130, y: stackedCanvas.height - 200, size: 125 }
             ],
             'doggywhite': [
                 { src: 'assets/stickers/doggyWhite/doggyWhite3.png', x: 1, y: 230, size: 115 }, { src: 'assets/stickers/doggyWhite/doggyWhite1.png', x: stackedCanvas.width - 130, y: 25, size: 125 },
