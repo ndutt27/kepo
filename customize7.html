@@ -734,10 +734,8 @@
 
             <div id="qrTimer" class="qr-timer-text"></div>
             
-            <div class="qr-actions-container">
-                <button id="downloadDirectBtn" class="neumorphic-btn">
-                    <i class="fas fa-download"></i> Download
-                </button>
+            <div class="qr-actions">
+                <button id="downloadFromModalBtn" class="neumorphic-btn"><i class="fas fa-download"></i> Download</button>
                 <button id="copyLinkBtn" class="neumorphic-btn">
                     <i class="fas fa-copy"></i> Copy Link
                 </button>
@@ -784,7 +782,7 @@
             const downloadBtn = document.getElementById('downloadCopyBtn');
             const qrCodePopupContainer = document.getElementById('qrCodePopupContainer');
             const copyLinkBtn = document.getElementById('copyLinkBtn');
-            const downloadFromModalBtn = document.getElementById('downloadDirectBtn');
+            const downloadFromModalBtn = document.getElementById('downloadFromModalBtn');
             const qrTimerElement = document.getElementById('qrTimer'); // BARU: Elemen timer
 
             // BARU: Fungsi untuk memulai dan menghentikan timer
@@ -805,7 +803,7 @@
                     const minutes = Math.floor(timer / 60);
                     let seconds = timer % 60;
                     seconds = seconds < 10 ? '0' + seconds : seconds;
-
+                    
                     qrTimerElement.innerHTML = `Link kamu kadaluarsa dalam <strong>${minutes}:${seconds}</strong>`;
                     timer--;
                 };
@@ -816,18 +814,18 @@
 
 
             function showModal(modal) { modal.style.display = 'block'; setTimeout(() => modal.classList.add('show'), 10); }
-
+            
             // BARU: Modifikasi fungsi hideModal
-            function hideModal(modal) {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
+            function hideModal(modal) { 
+                modal.classList.remove('show'); 
+                modal.style.display = 'none'; 
                 // Hentikan timer saat modal ditutup
                 if (modal.id === 'qrModal' && qrTimerInterval) {
                     clearInterval(qrTimerInterval);
                     qrTimerElement.style.display = 'none'; // Sembunyikan elemen timer
                 }
             }
-
+            
             if(previewBtn) {
                 previewBtn.addEventListener('click', () => {
                     const finalCanvas = document.querySelector('#photoPreview canvas');
@@ -839,42 +837,7 @@
             }
             if(previewModalCloseBtn) { previewModalCloseBtn.addEventListener('click', () => hideModal(previewModal)); }
             if(qrModalCloseBtn) { qrModalCloseBtn.addEventListener('click', () => hideModal(qrModal)); }
-
-            const shareBtn = document.getElementById('shareBtn');
-
-            if(shareBtn) {
-                shareBtn.addEventListener('click', async () => {
-                    try {
-                        if (typeof redrawCanvas === 'function') {
-                            await redrawCanvas();
-                        }
-
-                        const finalCanvas = document.querySelector('#photoPreview canvas');
-                        if (!finalCanvas) {
-                            alert('Silakan buat gambar terlebih dahulu!');
-                            return;
-                        }
-
-                        const dataUrl = finalCanvas.toDataURL('image/png', 1.0);
-                        const blob = await (await fetch(dataUrl)).blob();
-                        const file = new File([blob], 'pictlord-photobooth.png', { type: blob.type });
-
-                        if (navigator.share && navigator.canShare({ files: [file] })) {
-                            await navigator.share({
-                                files: [file],
-                                title: 'My Pictlord Photobooth!',
-                                text: 'Check out the photo I made with Pictlord!',
-                            });
-                        } else {
-                            alert('Web Share API is not supported in your browser or cannot share files.');
-                        }
-                    } catch (error) {
-                        console.error('Error sharing:', error);
-                        alert('An error occurred while trying to share the image.');
-                    }
-                });
-            }
-
+            
             window.addEventListener('click', (event) => {
                 if (event.target == previewModal) { hideModal(previewModal); }
                 if (event.target == qrModal) { hideModal(qrModal); }
@@ -904,7 +867,7 @@
 
                     const finalCanvas = document.querySelector('#photoPreview canvas');
                     if (!finalCanvas) { alert('Silakan buat gambar terlebih dahulu!'); return; }
-
+                    
                     showModal(qrModal);
                     qrCodePopupContainer.innerHTML = '<i class="fas fa-spinner fa-spin spinner"></i>';
                     
@@ -919,7 +882,7 @@
                         link.download = `pictlord-strip-${Date.now()}.png`;
                         link.href = currentImageData;
                         link.click();
-
+                        
                         currentQrLink = await generateTemporaryLink(currentImageData);
                         const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(currentQrLink)}&ecLevel=H&margin=1&size=180&format=png&qzone=2&color=1c1c1c`;
 
@@ -947,7 +910,7 @@
                     }
                 });
             }
-
+            
             if(downloadFromModalBtn) {
                 downloadFromModalBtn.addEventListener('click', () => {
                     if (currentImageData && !downloadFromModalBtn.disabled) {
