@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-
+    
     // --- Element References ---
     const photoCustomPreview = document.getElementById('photoPreview');
     const frameButtonsContainer = document.getElementById('frame-buttons-container');
@@ -10,10 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
     const logoColorPicker = document.getElementById('logoColorPicker');
     const customBackButton = document.getElementById('customBack');
-    const previewButton = document.getElementById('previewBtn');
-    const shareButton = document.getElementById('shareBtn');
-    const downloadCopyButton = document.getElementById('downloadCopyBtn');
-
 
     // --- State Variables ---
     let assetsData = null;
@@ -29,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Main Initialization ---
     const init = async () => {
         try {
-            // It's better to reference the JS file directly if it's in the same folder structure
             const response = await fetch('assets.json?v=' + Date.now());
             if (!response.ok) throw new Error('Failed to load assets.json');
             assetsData = await response.json();
@@ -39,7 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
             renderStickerButtons();
             renderLogoButtons();
             setupEventListeners();
-            redrawCanvas();
+            
+            setTimeout(redrawCanvas, 100);
 
         } catch (error) {
             console.error("Initialization failed:", error);
@@ -57,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
         colorPickerBtn.className = 'neumorphic-btn buttonFrames';
         frameButtonsContainer.appendChild(colorPickerBtn);
         
-        // Make sure vanilla-picker.min.js is loaded before this script
         if (typeof Picker !== 'undefined') {
             const picker = new Picker({
                 parent: colorPickerBtn, popup: 'bottom', color: '#FFFFFF',
@@ -65,28 +60,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 onDone: (color) => { colorPickerBtn.style.backgroundColor = color.hex; }
             });
             colorPickerBtn.addEventListener('click', () => picker.show());
-        } else {
-            console.error("Vanilla Picker library not loaded.");
-        }
-
+        } else { console.error("Vanilla Picker library not loaded."); }
 
         assetsData.frames.colors.forEach(color => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonFrames';
-            btn.style.backgroundColor = color.value;
+            btn.id = color.id;
             btn.dataset.type = 'color';
             btn.dataset.value = color.value;
-            btn.id = color.id;
             frameButtonsContainer.appendChild(btn);
         });
 
         assetsData.frames.images.forEach(frame => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonBgFrames';
-            // The background image is set by CSS using the ID
+            btn.id = frame.id;
             btn.dataset.type = 'image';
             btn.dataset.src = frame.path;
-            btn.id = frame.id;
             frameButtonsContainer.appendChild(btn);
         });
     };
@@ -113,11 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.dataset.sticker = sticker.layout;
             btn.id = sticker.id;
             btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize"><span class="tooltip-text">${sticker.name}</span>`;
-            if(sticker.id === 'noneSticker') btn.classList.add('active');
+            if(sticker.layout === null) btn.classList.add('active');
             stickerButtonsContainer.appendChild(btn);
         });
     };
-
+    
     const renderLogoButtons = () => {
         if (!assetsData.logos || !logoButtonsContainer) return;
         logoButtonsContainer.innerHTML = '';
@@ -145,10 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
             textColor = e.target.value;
             redrawCanvas();
         });
-        
+
         if (customBackButton) {
             customBackButton.addEventListener('click', () => {
-                // Assuming canvas7.html is the correct page for 4 photos
                 window.location.href = 'canvas7.html';
             });
         }
@@ -156,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleFrameClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
+        if (!btn || btn.id === 'colorPickerBtn') return;
         const type = btn.dataset.type;
         if (type === 'color') setBackground({ type: 'color', value: btn.dataset.value });
         else if (type === 'image') setBackground({ type: 'image', src: btn.dataset.src });
@@ -176,15 +165,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-        const stickerLayout = btn.dataset.sticker;
-        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        if (selectedStickerLayout === stickerLayout || stickerLayout === 'null') {
+        const clickedStickerLayout = btn.dataset.sticker === 'null' ? null : btn.dataset.sticker;
+        if (selectedStickerLayout === clickedStickerLayout) {
             selectedStickerLayout = null;
-            const noneStickerBtn = stickerButtonsContainer.querySelector('#noneSticker');
-            if(noneStickerBtn) noneStickerBtn.classList.add('active');
         } else {
-            selectedStickerLayout = stickerLayout;
-            btn.classList.add('active');
+            selectedStickerLayout = clickedStickerLayout;
+        }
+        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => {
+            const layout = b.dataset.sticker === 'null' ? null : b.dataset.sticker;
+            b.classList.toggle('active', selectedStickerLayout === layout);
+        });
+        if (selectedStickerLayout === null) {
+             const noneBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
+             if(noneBtn) noneBtn.classList.add('active');
         }
         redrawCanvas();
     }
@@ -218,20 +211,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
         console.error("No valid images found in sessionStorage.");
-        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan.</p>';
+        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan. Silakan kembali dan ambil foto baru.</p>';
         return;
     }
 
     async function drawSticker(ctx) {
-        if (!selectedStickerLayout || !assetsData.stickerLayouts) return;
-
-        const layoutData = assetsData.stickerLayouts[selectedStickerLayout];
+        if (!selectedStickerLayout || !assetsData.stickerLayouts) {
+            return;
+        }
+    
+        let layoutData = assetsData.stickerLayouts[selectedStickerLayout];
         if (!layoutData) {
             console.error(`Sticker layout "${selectedStickerLayout}" not found in assets.json.`);
             return;
         }
 
-        const stickerPromises = layoutData.map(({ src, x, y, size }) => {
+        // [FIX] Corrects the typo in the path for the 'ballerinacp' sticker set
+        if (selectedStickerLayout === 'ballerinacp') {
+            layoutData = layoutData.map(sticker => ({
+                ...sticker,
+                src: sticker.src.replace('/balerinaCappuccino/', '/ballerinaCappuccino/')
+            }));
+        }
+
+        await Promise.all(layoutData.map(({ src, x, y, size }) => {
             return new Promise((resolve) => {
                 const stickerImg = new Image();
                 stickerImg.src = src;
@@ -240,12 +243,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     resolve();
                 };
                 stickerImg.onerror = () => {
-                    console.error(`Failed to load sticker image: ${src}`);
-                    resolve(); 
+                    console.error(`Failed to load sticker: ${src}`);
+                    resolve();
                 };
             });
-        });
-        await Promise.all(stickerPromises);
+        }));
     }
 
     function clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, shapeType) {
@@ -266,20 +268,25 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             ctx.rect(dx, dy, dWidth, dHeight);
         }
-        ctx.closePath(); ctx.clip();
+        ctx.closePath();
+        ctx.clip();
         ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
         ctx.restore();
     }
 
     async function redrawCanvas() {
         return new Promise(async (resolve) => {
-            if (!storedImages) return resolve();
+            if (!storedImages) return resolve(null);
+
             const stackedCanvas = document.createElement('canvas');
             const ctx = stackedCanvas.getContext('2d');
+
+            // [CORRECTED] Using 2x2 Grid Layout Calculations
             const columns = 2, rows = 2;
             const imageGridSize = rows * columns;
             const canvasWidth = 900, canvasHeight = 1352;
             const borderWidth = 30, spacing = 12, bottomPadding = 100;
+
             const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
             const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
             const photoWidth = availableWidth / columns;
@@ -287,8 +294,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             stackedCanvas.width = canvasWidth;
             stackedCanvas.height = canvasHeight;
-            ctx.clearRect(0, 0, stackedCanvas.width, stackedCanvas.height);
 
+            // 1. Draw Background
+            ctx.clearRect(0, 0, stackedCanvas.width, stackedCanvas.height);
             if (backgroundType === 'color') {
                 ctx.fillStyle = backgroundColor;
                 ctx.fillRect(0, 0, stackedCanvas.width, stackedCanvas.height);
@@ -296,30 +304,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
             }
 
+            // 2. Draw Photos
             if (storedImages.length === imageGridSize) {
-                const imagePromises = storedImages.map(imgData => new Promise((resolve, reject) => {
+                const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
                     const img = new Image();
-                    img.crossOrigin = "Anonymous"; // Handle potential CORS issues
                     img.src = imgData;
                     img.onload = () => resolve(img);
-                    img.onerror = reject;
-                }));
-                try {
-                    const images = await Promise.all(imagePromises);
-                    images.forEach((img, index) => {
-                        const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
-                        let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
-                        if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; } 
-                        else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
-                        const col = index % columns, row = Math.floor(index / columns);
-                        const x = borderWidth + col * (photoWidth + spacing), y = borderWidth + row * (photoHeight + spacing);
-                        clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
-                    });
-                } catch (error) { console.error("Gagal memuat gambar:", error); }
+                    img.onerror = () => resolve(null);
+                })));
+
+                imageElements.forEach((img, index) => {
+                    if (!img) return;
+                    const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
+                    let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+                    if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; } 
+                    else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
+                    const col = index % columns, row = Math.floor(index / columns);
+                    const x = borderWidth + col * (photoWidth + spacing);
+                    const y = borderWidth + row * (photoHeight + spacing);
+                    clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+                });
             }
 
+            // 3. Draw Stickers on top
             await drawSticker(ctx);
             
+            // 4. Draw Logo and Date Text
             ctx.fillStyle = textColor;
             ctx.font = 'bold 32px Arial, Roboto, sans-serif';
             ctx.textAlign = 'center';
@@ -336,19 +346,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 ctx.font = '18px "Poppins", Arial, Roboto, sans-serif';
                 ctx.fillText(displayText, stackedCanvas.width / 2, stackedCanvas.height - 30);
             }
-
+            
             updatePreview(stackedCanvas);
             currentCanvas = stackedCanvas;
-            resolve();
+            resolve(stackedCanvas);
         });
     }
-
-
+    
     function updatePreview(canvas) {
-        if (!photoCustomPreview) return;
+        if (!photoCustomPreview || !canvas) return;
         photoCustomPreview.innerHTML = '';
         photoCustomPreview.appendChild(canvas);
     }
+
+    // Expose the drawing function to the global window object for other scripts
+    window.redrawCanvas = redrawCanvas;
 
     init();
 });
