@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.">
+    <meta name="keywords" content="photobooth, photobooth website, photobooth website tiktok, online photobooth, tiktok photobooth, webcamtoy, tiktok viral photobooth, picapica, digibooth, pictlord">
+   
+     <title>Pictlord | Photobooth Online Gratis Kapan Saja, Di Mana Saja</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Pictlord",
+          "url": "https://www.pictlord.me",
+          "logo": "https://www.pictlord.me/images/pictlord%20logo.png"
+        },
+        {
+          "@type": "WebSite",
+          "name": "Pictlord",
+          "url": "https://www.pictlord.me",
+          "description": "Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Pictlord"
+          },
+          "inLanguage": "id-ID"
+        },
+        {
+          "@type": "Service",
+          "serviceType": "Online Photobooth",
+          "provider": {
+            "@type": "Organization",
+            "name": "Pictlord"
+          },
+          "name": "Pictlord Online Photobooth",
+          "description": "Layanan photobooth online gratis yang memungkinkan pengguna mengambil foto, mengkustomisasi dengan bingkai, stiker, dan filter, lalu mengunduh hasilnya secara instan tanpa perlu registrasi.",
+          "url": "https://www.pictlord.me/canvas",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Worldwide"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="icon" type="image/png" href="images/pictlord logo.png" />
+    <link rel="apple-touch-icon" href="images/pictlord logo.png">
+    <link rel="canonical" href="https://www.pictlord.me">
+
+    <meta property="og:title" content="Pictlord | Photobooth Online Gratis Kapan Saja, Di Mana Saja">
+    <meta property="og:description" content="Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.">
+    <meta property="og:image" content="images/home-mockup.png">
+    <meta property="og:url" content="https://www.pictlord.me">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Pictlord">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pictlord | Photobooth Online Gratis Kapan Saja, Di Mana Saja">
+    <meta name="twitter:description" content="Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.">
+    <meta name="twitter:image" content="https://www.pictlord.me/assets/home-mockup.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <style>
+        :root {
+            --bg-color: #2c2f36;
+            --bg-darker: #212429;
+            --navbar-bg: rgba(33, 36, 41, 0.4);
+            --navbar-mobile-bg: rgba(44, 47, 54, 0.85);
+            --shadow-dark: #212429;
+            --shadow-light: #373a43;
+            --text-color: #e0e5ec;
+            --text-light: #97a1b3;
+            --primary: #0D9488;
+            --primary-dark: #0f766e;
+            --author-color: #8B5CF6; /* Violet 500 */
+            --user-badge-color: #065f46; /* Green 800 */
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-snappy: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            --border-radius-main: 20px;
+            --border-radius-inner: 12px;
+            --font-primary: 'Inter', sans-serif;
+            --font-secondary: 'Poppins', sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --bg-darker: #e5e7eb;
+            --navbar-bg: rgba(255, 255, 255, 0.5);
+            --navbar-mobile-bg: rgba(240, 242, 245, 0.9);
+            --shadow-dark: #d9dde2;
+            --shadow-light: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-primary); scroll-behavior: smooth; }
+        
+        html { 
+            font-size: 62.5%; 
+            scroll-padding-top: 12rem;
+        }
+
+        body {
+            font-size: 1.6rem; background: var(--bg-color); color: var(--text-color);
+            line-height: 1.7; transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        html, body { overflow-x: hidden; }
+        .container { max-width: 1200px; width: 90%; margin: 0 auto; }
+        
+        .main-header { position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); width: 95%; max-width: 1200px; z-index: 1000; transition: var(--transition-smooth); }
+        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1rem; background: var(--navbar-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 999px; border: 1px solid var(--shadow-light); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+        .navbar-logo { font-size: 2.2rem; font-weight: 700; color: var(--text-color); text-decoration: none; margin-left: 1.5rem; cursor: pointer; font-family: var(--font-secondary); }
+        .navbar-logo .highlight { color: var(--primary); }
+        .navbar-menu { list-style: none; display: flex; align-items: center; gap: 0.5rem; margin: 0; padding: 0; position: relative; }
+        .navbar-menu li { list-style: none; }
+        .navbar-menu a { color: var(--text-light); text-decoration: none; font-size: 1.5rem; font-weight: 500; padding: 8px 16px; border-radius: 999px; display: block; position: relative; z-index: 2; transition: color 0.3s ease; }
+        .navbar-menu a:hover { color: var(--text-color); }
+        .navbar-menu a.current-nav { color: #ffffff; font-weight: 600; }
+        .nav-highlight { position: absolute; top: 0; left: 0; background: var(--primary); border-radius: 999px; z-index: 1; transition: all 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95); }
+        .navbar-right { display: flex; align-items: center; gap: 1.5rem; margin-right: 0.5rem; }
+        .navbar-cta { padding: 10px 22px; border-radius: 999px; font-size: 1.4rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; color: #ffffff; background: var(--primary); transition: var(--transition-smooth); box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3); display: inline-flex; align-items: center; gap: 8px; }
+        .navbar-cta:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .hamburger-menu { display: none; cursor: pointer; width: 40px; height: 40px; justify-content: center; align-items: center; background: transparent; border: none; position: relative; z-index: 1002; }
+        .hamburger-menu .bar { display: block; width: 22px; height: 2px; background-color: var(--text-color); border-radius: 3px; position: absolute; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .bar.top { transform: translateY(-7px); }
+        .bar.bottom { transform: translateY(7px); }
+        .hamburger-menu.active .bar.top { transform: translateY(0) rotate(45deg); }
+        .hamburger-menu.active .bar.middle { transform: scaleX(0); opacity: 0; }
+        .hamburger-menu.active .bar.bottom { transform: translateY(0) rotate(-45deg); }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 28px; border-radius: var(--border-radius-inner); font-size: 1.6rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; color: var(--text-light); background: var(--bg-color); transition: var(--transition-smooth); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); }
+        .btn:hover { color: var(--primary); transform: translateY(-3px); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); }
+        .btn.primary { color: #ffffff; background: var(--primary); }
+        .btn.disabled { opacity: 0.6; pointer-events: none; }
+        .page-section { padding: 8rem 0; overflow-x: hidden; }
+        .section-title { font-size: 4rem; font-weight: 800; text-align: center; margin-bottom: 1.5rem; color: var(--text-color); font-family: var(--font-secondary); }
+        .section-subtitle { font-size: 1.8rem; color: var(--text-light); text-align: center; max-width: 700px; margin: 0 auto 5rem auto; }
+
+        #hero { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 100vh; padding: 12rem 0 6rem 0; position: relative; overflow: hidden; }
+        .hero-glow-bg { position: absolute; top: 50%; left: 50%; width: 40vw; height: 40vw; max-width: 500px; max-height: 500px; background: radial-gradient(circle, rgba(13, 148, 136, 0.4), transparent 70%); border-radius: 50%; filter: blur(100px); transform: translate(-50%, -50%); z-index: 0; animation: pulsate-glow 7s ease-in-out infinite; }
+        @keyframes pulsate-glow { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } }
+        .hero-content { max-width: 800px; position: relative; z-index: 2; }
+        .instagram-badge { display: inline-flex; align-items: center; gap: 1.2rem; text-decoration: none; background-color: rgba(44, 47, 54, 0.25); color: var(--text-color); padding: 1.2rem 2.5rem; border-radius: 999px; font-size: 1.6rem; font-weight: 500; margin-bottom: 2.5rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        [data-theme="light"] .instagram-badge { background-color: rgba(240, 242, 245, 0.25); border-color: rgba(0, 0, 0, 0.1); }
+        .instagram-badge:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); }
+        .badge-text-container { position: relative; height: 1.4em; overflow: hidden; transition: width 0.4s ease-in-out; }
+        .badge-text { position: absolute; left: 50%; transform: translate(-50%, 110%); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s ease-out; white-space: nowrap; }
+        .badge-text.is-visible { transform: translate(-50%, 0); opacity: 1; }
+        .hero-header { font-size: 6.4rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; font-family: var(--font-secondary); }
+        .hero-subheader { font-size: 2rem; color: var(--text-light); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .hero-images-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .hero-images-bg img { position: absolute; width: 15vw; max-width: 180px; min-width: 100px; border-radius: 12px; animation: gentle-float 8s ease-in-out infinite; box-shadow: 0px 10px 30px rgba(0,0,0,0.2); }
+        @keyframes gentle-float { 0%, 100% { transform: translateY(0px) rotate(var(--initial-rotate)); } 50% { transform: translateY(-20px) rotate(var(--final-rotate)); } }
+        .preview-1 { --initial-rotate: -15deg; --final-rotate: -12deg; top: 15%; left: 10%; animation-duration: 10s; }
+        .preview-2 { --initial-rotate: -5deg; --final-rotate: -8deg;  top: 60%; left: 18%; animation-duration: 8s; animation-delay: -2s; }
+        .preview-3 { --initial-rotate: 15deg; --final-rotate: 18deg;  top: 20%; right: 12%; animation-duration: 9s; }
+        .preview-4 { --initial-rotate: 5deg; --final-rotate: 2deg;   top: 65%; right: 15%; animation-duration: 11s; animation-delay: -4s; }
+        
+        .steps-container, .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; }
+        .step-card, .feature-card { transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; }
+        .step-card:hover, .feature-card:hover { transform: translateY(-10px); box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light); }
+        .step-card, .feature-card { background: var(--bg-color); padding: 35px 30px; text-align: center; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); }
+        .step-icon, .feature-icon { font-size: 3rem; margin-bottom: 2rem; color: var(--primary); }
+        .step-card h3, .feature-card h4 { font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-color); }
+        .step-card p, .feature-card p { font-size: 1.5rem; color: var(--text-light); }
+
+        .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; }
+        .action-card { background: var(--bg-color); padding: 35px 30px; text-align: center; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); text-decoration: none; color: var(--text-color); transition: var(--transition-smooth); }
+        .action-card:hover { transform: translateY(-10px); box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light); color: var(--primary); }
+        .action-icon { font-size: 3rem; margin-bottom: 2rem; color: var(--primary); transition: var(--transition-smooth); }
+        .action-card:hover .action-icon { transform: scale(1.2); }
+        .action-card h3 { font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-color); }
+        .action-card p { font-size: 1.5rem; color: var(--text-light); }
+
+        .testimonial-header { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: 0 auto 4rem auto; flex-wrap: wrap; gap: 2rem; }
+        .post-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; max-width: 700px; margin: 0 auto; }
+        .post-card { background: var(--bg-color); padding: 2rem 2.5rem; text-align: left; display: flex; flex-direction: column; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); }
+        .post-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .post-avatar, .comment-avatar { width: 4.5rem; height: 4.5rem; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 2rem; text-transform: uppercase; flex-shrink: 0; object-fit: cover; }
+        .post-user-info { flex-grow: 1; }
+        .post-name { font-weight: 600; color: var(--text-color); font-size: 1.6rem; display: flex; align-items: center; gap: 0.8rem; }
+        .post-timestamp { font-size: 1.3rem; color: var(--text-light); }
+        .post-content { color: var(--text-light); font-size: 1.5rem; margin-bottom: 2rem; white-space: pre-wrap; word-wrap: break-word; }
+        .post-image-container { margin-bottom: 2rem; border-radius: var(--border-radius-inner); overflow: hidden; }
+        .post-image { display: block; width: 100%; height: auto; max-height: 500px; object-fit: cover; cursor: pointer; transition: opacity 0.3s ease; }
+        .post-image:hover { opacity: 0.85; }
+        .post-actions { display: flex; align-items: center; gap: 1rem; border-top: 1px solid var(--shadow-dark); padding-top: 1.5rem; }
+        .post-action-btn { background: none; border: none; color: var(--text-light); cursor: pointer; display: flex; align-items: center; gap: 0.8rem; font-size: 1.4rem; padding: 0.5rem 1rem; border-radius: var(--border-radius-inner); transition: var(--transition-smooth); }
+        .post-action-btn:hover { background-color: var(--shadow-dark); color: var(--text-color); }
+        .post-action-btn.liked { color: var(--primary); font-weight: 600; }
+        .post-action-btn i { font-size: 1.8rem; }
+        .post-action-btn span { font-weight: 500; }
+        
+        /* COMMENT SECTION STYLES */
+        .comments-section { margin-top: 2rem; border-top: 1px solid var(--shadow-dark); padding-top: 2rem; display: none; }
+        .comments-list { display: flex; flex-direction: column; gap: 2.5rem; max-height: 400px; overflow-y: auto; padding-right: 1rem; margin-bottom: 2rem; }
+        .comment-container { position: relative; }
+        .comment-item { display: flex; gap: 1.5rem; }
+        .comment-avatar { width: 4rem; height: 4rem; font-size: 1.6rem; }
+        .comment-body { flex-grow: 1; }
+        .comment-content { background: var(--bg-darker); padding: 1.2rem 1.5rem; border-radius: var(--border-radius-inner); }
+        .comment-user { font-weight: 600; color: var(--text-color); font-size: 1.4rem; display: flex; align-items: center; gap: 0.8rem; }
+        .comment-text { font-size: 1.4rem; color: var(--text-light); margin-top: 0.5rem; }
+        .badge { font-size: 1.0rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; color: white; text-transform: uppercase; line-height: 1.2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .author-badge { background: var(--author-color); }
+        .verified-img { width: 1.5rem; height: 1.5rem; }
+        .replies-container { padding-left: 5.5rem; margin-top: 2rem; display: flex; flex-direction: column; gap: 2rem; }
+        .comment-form { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+        .comment-form .comment-input { flex: 1 1 200px; }
+        .comment-form .comment-name-input { flex: 0 1 150px; }
+        .comment-input, .comment-name-input { background: var(--bg-color); border: none; padding: 1.2rem 1.5rem; border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1.4rem; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
+        .comment-input:focus, .comment-name-input:focus { outline: none; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light), 0 0 0 2px var(--primary); }
+        
+        .reply-mention {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin: 8px 0 4px 0;
+            padding: 4px 8px;
+            background-color: rgba(0,0,0,0.1);
+            border-left: 3px solid var(--author-color);
+            border-radius: 4px;
+        }
+        .reply-mention i {
+            transform: scaleX(-1);
+            font-size: 1.2rem;
+            margin-right: 8px;
+            color: var(--author-color);
+        }
+        .reply-mention strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+        .faq-item { background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); overflow: hidden; transition: var(--transition-smooth); }
+        .faq-item[open] { box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
+        .faq-question { padding: 2rem 2.5rem; font-weight: 600; font-size: 1.7rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question::-webkit-details-marker { display: none; } .faq-arrow { color: var(--primary); font-size: 1.6rem; transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); } .faq-item[open] .faq-arrow { transform: rotate(180deg); }
+        .faq-answer { padding: 0 2.5rem 2rem; color: var(--text-light); font-size: 1.5rem; line-height: 1.8; text-align: left; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; backdrop-filter: blur(5px); }
+        .modal-overlay.is-visible { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--bg-color); padding: 3rem 3.5rem; border-radius: var(--border-radius-main); box-shadow: 10px 10px 30px rgba(0,0,0,0.3); position: relative; max-width: 500px; width: 90%; text-align: left; transform: scale(0.95); opacity: 0; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease; }
+        .modal-close-btn { position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; font-size: 3rem; color: var(--text-light); cursor: pointer; transition: var(--transition-smooth); }
+        .modal-close-btn:hover { color: var(--primary); transform: rotate(90deg); }
+        .form-group { position: relative; margin-bottom: 2.5rem; }
+        .form-input { width: 100%; padding: 14px 16px; border: none; background: var(--bg-color); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1.6rem; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); transition: all 0.2s ease; }
+        .form-label { position: absolute; top: 15px; left: 17px; color: var(--text-light); pointer-events: none; transition: all 0.2s ease; background-color: var(--bg-color); padding: 0 5px; }
+        .form-input:focus { outline: none; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light), 0 0 0 2px var(--primary); }
+        .form-input:focus + .form-label, .form-input:not(:placeholder-shown) + .form-label { top: -10px; left: 12px; font-size: 1.2rem; color: var(--primary); }
+        [data-theme="light"] .form-label { background-color: var(--bg-color); }
+
+        .form-group.file-input-group { margin-bottom: 2rem; }
+        .file-input-label { display: block; width: 100%; padding: 14px 16px; background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); cursor: pointer; text-align: center; color: var(--text-light); font-weight: 500; transition: var(--transition-smooth); }
+        .file-input-label:hover { color: var(--primary); }
+        .file-input-label i { margin-right: 10px; }
+        #testimonial-photo { display: none; }
+        #file-upload-status { font-size: 1.3rem; color: var(--text-light); margin-top: 1rem; text-align: center; }
+        #form-submit-btn-wrapper { text-align: center; }
+        
+        .toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg-color); color: var(--text-color); padding: 16px 25px; border-radius: var(--border-radius-inner); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); border-left: 5px solid var(--primary); z-index: 2000; transform: translateY(150%); opacity: 0; transition: var(--transition-snappy); display: flex; align-items: center; gap: 15px; }
+        .toast-notification.show { transform: translateY(0) translateX(-50%); opacity: 1; } .toast-notification i { font-size: 1.8rem; color: var(--primary); }
+        
+        .main-footer { padding: 4rem 2rem 2rem; background: var(--shadow-dark); text-align: center; }
+        .social-links { display: flex; justify-content: center; gap: 2.5rem; list-style: none; margin-bottom: 2rem; }
+        .social-links a { font-size: 2rem; color: var(--text-light); transition: var(--transition-smooth); }
+        .social-links a:hover { color: var(--primary); transform: translateY(-3px); }
+        .copyright { font-size: 1.3rem; color: var(--text-light); opacity: 0.7; }
+        
+        .theme-toggle-btn { background: var(--bg-color); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; color: var(--text-color); box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light); transition: var(--transition-smooth); }
+        .theme-toggle-btn:hover { color: var(--primary); transform: scale(1.05); }
+        .theme-toggle-btn i.fa-sun { display: none; }
+        [data-theme="light"] .theme-toggle-btn i.fa-moon { display: none; }
+        [data-theme="light"] .theme-toggle-btn i.fa-sun { display: block; }
+        .theme-toggle-btn-mobile-wrapper { display: none; }
+        
+        /* Image Viewer Modal Styles */
+        #image-viewer-modal .modal-content-image-viewer {
+            background: none;
+            box-shadow: none;
+            width: auto;
+            max-width: 95vw;
+            max-height: 95vh;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* Memungkinkan scroll jika gambar lebih besar dari viewport */
+        }
+        #image-viewer-modal #full-view-image {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            border-radius: var(--border-radius-inner);
+            object-fit: contain; /* Memastikan seluruh gambar terlihat */
+        }
+        #image-viewer-modal .modal-close-btn {
+            position: fixed; /* Menggunakan fixed agar posisi relatif terhadap viewport */
+            top: 2rem;
+            right: 2rem;
+            z-index: 1002; /* Di atas gambar */
+        }
+
+
+        @media (max-width: 1024px) {
+            .navbar-menu { position: absolute; top: calc(100% + 1rem); left: 0; right: 0; width: 90%; margin: auto; flex-direction: column; align-items: stretch; padding: 1.5rem; background: var(--navbar-mobile-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius-main); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 1px solid var(--shadow-light); transform: translateY(-20px) scale(0.95); opacity: 0; pointer-events: none; transform-origin: top center; transition: transform 0.3s ease, opacity 0.3s ease; }
+            .navbar-menu a { text-align: center; }
+            .nav-highlight { display: none; }
+            .navbar-menu a.current-nav { background-color: var(--primary); }
+            .navbar-menu.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+            .navbar-cta { display: none; }
+            .hamburger-menu { display: flex; }
+            .navbar-right { gap: 0.5rem; }
+            .navbar-right .theme-toggle-btn { display: none; }
+            .theme-toggle-btn-mobile-wrapper { display: block; margin-top: 1rem; text-align: center; }
+        }
+        @media (max-width: 768px) {
+            html { font-size: 58%; }
+            .hero-header { font-size: 4.8rem; }
+            .section-title { font-size: 3.6rem; }
+            .preview-2, .preview-3 { display: none; }
+            .actions-grid { grid-template-columns: 1fr; } 
+            .main-header { width: 90%; }
+            .navbar { padding: 0.8rem 1rem; }
+            .post-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <nav class="navbar container">
+        <a class="navbar-logo">pict<span class="highlight">lord</span></a>
+        <ul class="navbar-menu" id="navbar-menu">
+            <li><a href="#" class="current-nav">Beranda</a></li>
+            <li><a href="#about">Tentang</a></li>
+            <li><a href="#how-it-works">Cara Kerja</a></li>
+            <li><a href="#features">Fitur</a></li>
+            <li><a href="#testimonials">Testimoni</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Kontak</a></li>
+            <div class="nav-highlight"></div>
+            <li class="theme-toggle-btn-mobile-wrapper"> 
+                <button class="theme-toggle-btn" id="theme-toggle-mobile" aria-label="Ubah Tema">
+                    <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+                </button>
+            </li>
+        </ul>
+        <div class="navbar-right">
+             <a href="canvas" class="navbar-cta">Ambil Foto <i class="fas fa-camera"></i></a>
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
+                <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+            </button>
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka Menu">
+                <span class="bar top"></span><span class="bar middle"></span><span class="bar bottom"></span>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<div class="main-content">
+    <main>
+        <section id="hero">
+            <div class="hero-glow-bg"></div>
+            <div class="hero-images-bg">
+                <img src="/assets/preview-img/preview6.png" alt="Contoh strip photobooth 1" class="preview-1">
+                <img src="/assets/preview-img/preview4.png" alt="Contoh strip photobooth 2" class="preview-2">
+                <img src="/assets/preview-img/preview3.png" alt="Contoh strip photobooth 3" class="preview-3">
+                <img src="/assets/preview-img/preview2.png" alt="Contoh strip photobooth 4" class="preview-4">
+            </div>
+            <div class="container hero-content">
+                <a href="https://instagram.com/off.xlord" target="_blank" class="instagram-badge" data-aos="fade-down">
+                    <i class="fab fa-instagram"></i>
+                    <div class="badge-text-container">
+                        <span class="badge-text is-visible">Ikuti kami di Instagram</span>
+                        <span class="badge-text">Bagikan momenmu & tag kami!</span>
+                    </div>
+                </a>
+                <h1 class="hero-header" data-aos="flip-down" data-aos-delay="200">Abadikan Momen, Ciptakan Kenangan.</h1>
+                <p class="hero-subheader" data-aos="fade-up" data-aos-delay="400">photobooth online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.</p>
+                <a href="layout" class="btn primary" data-aos="zoom-in" data-aos-delay="600">Ambil Foto Sekarang &nbsp; <i class="fas fa-camera"></i></a>
+            </div>
+        </section>
+        
+        <section id="how-it-works" class="page-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-down">Hanya 3 Langkah Mudah</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Proses yang simpel untuk hasil yang maksimal.</p>
+                <div class="steps-container">
+                    <div class="step-card" data-aos="fade-right"><div class="step-icon"><i class="fas fa-camera-retro"></i></div><h3>1. Ambil Foto</h3><p>Aktifkan kameramu, pasang pose terbaikmu, dan biarkan kami menangkap 4 momen spesialmu.</p></div>
+                    <div class="step-card" data-aos="flip-up" data-aos-delay="150"><div class="step-icon"><i class="fas fa-magic-wand-sparkles"></i></div><h3>2. Kreasikan</h3><p>Pilih dari ratusan warna bingkai, filter aesthetic, dan stiker lucu untuk menghias fotomu.</p></div>
+                    <div class="step-card" data-aos="fade-left" data-aos-delay="300"><div class="step-icon"><i class="fas fa-share-alt"></i></div><h3>3. Simpan & Bagikan</h3><p>Unduh strip fotomu dalam kualitas tinggi atau langsung bagikan ke media sosial favoritmu.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quick-actions" class="page-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-down">Mulai Petualangan Fotomu</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Pilih langsung fitur yang ingin kamu gunakan.</p>
+                <div class="actions-grid">
+                    <a href="layout" class="action-card" data-aos="fade-right" data-aos-delay="200">
+                        <div class="action-icon"><i class="fas fa-th-large"></i></div>
+                        <h3>Pilih Layout Foto Kamu</h3>
+                        <p>Lihat semua gaya strip foto yang tersedia sebelum memulai sesi foto.</p>
+                    </a>
+                    <a href="canvas" class="action-card" data-aos="flip-up" data-aos-delay="300">
+                        <div class="action-icon"><i class="fas fa-camera-retro"></i></div>
+                        <h3>Ambil Foto Sekarang</h3>
+                        <p>Langsung aktifkan kamera dan mulai berpose untuk photobooth virtual.</p>
+                    </a>
+                    <a href="customize" class="action-card" data-aos="fade-left" data-aos-delay="400">
+                        <div class="action-icon"><i class="fas fa-magic-wand-sparkles"></i></div>
+                        <h3>Customize Foto Kamu</h3>
+                        <p>Edit fotomu dengan ratusan warna frame, stiker, dan filter favorit.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="page-section">
+            <div class="container">
+               <h2 class="section-title" data-aos="fade-down">Tentang Pictlord</h2>
+               <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Kami adalah alat berbasis peramban yang dapat disesuaikan dan dapat Anda gunakan kapan saja, di mana saja. Pengguna dapat mengambil foto instan bergaya photobooth, memasang bingkai dalam lebih dari 100 warna, menambahkan stiker digital, dan mengunduh strip foto beresolusi tinggi langsung dari perangkat apa pun. Tidak perlu instalasi atau akun. Dirancang untuk performa, kesederhanaan, dan fleksibilitas kreatif, ini adalah alat lengkap untuk menciptakan pengalaman foto yang dapat dibagikan secara daring.</p>
+           </div>
+       </section>
+        
+        <section id="features" class="page-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-down">Fitur Andalan Kami</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Kami menyediakan semua yang Anda butuhkan untuk membuat photobooth yang sempurna.</p>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="flip-left" data-aos-delay="100"><div class="feature-icon"><i class="fas fa-palette"></i></div><h4>Ratusan Warna Bingkai</h4><p>Sesuaikan warna bingkai strip fotomu agar cocok dengan gayamu. Pilihan tak terbatas!</p></div>
+                    <div class="feature-card" data-aos="flip-right" data-aos-delay="200"><div class="feature-icon"><i class="fas fa-icons"></i></div><h4>Filter & Stiker Lucu</h4><p>Tambahkan sentuhan personal dengan koleksi filter aesthetic dan stiker yang terus kami perbarui.</p></div>
+                    <div class="feature-card" data-aos="flip-left" data-aos-delay="300"><div class="feature-icon"><i class="fas fa-bolt"></i></div><h4>Instan & Tanpa Login</h4><p>Tidak perlu mendaftar atau login. Langsung gunakan dan dapatkan hasilnya dalam sekejap.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="page-section">
+            <div class="container">
+                <div class="testimonial-header" data-aos="fade-in">
+                    <div>
+                        <h2 class="section-title" style="text-align: left; margin-bottom: 0;">Apa Kata Mereka?</h2>
+                        <p class="section-subtitle" style="text-align: left; margin: 0; max-width: none;">Lihat momen dan cerita dari komunitas kami.</p>
+                    </div>
+                    <button class="btn" id="add-testimonial-btn" data-aos="zoom-in-left"><i class="fas fa-plus"></i> Buat Postingan</button>
+                </div>
+                <div class="post-grid" id="testimonial-grid">
+                    </div>
+            </div>
+        </section>
+        
+        <section id="faq" class="page-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-down">Tanya Jawab Umum</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Punya pertanyaan? Mungkin jawabannya ada di sini.</p>
+                <div class="faq-container">
+                    <details class="faq-item" data-aos="slide-up"><summary class="faq-question">Apakah layanan ini benar-benar gratis?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Tentu saja! Pictlord 100% gratis untuk digunakan. Anda bisa membuat dan mengunduh photostrip sebanyak yang Anda mau tanpa biaya apa pun.</p></details>
+                    <details class="faq-item" data-aos="slide-up" data-aos-delay="100"><summary class="faq-question">Apakah foto saya aman?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Sangat aman. Kami tidak pernah menyimpan foto Anda di server kami. Semua proses pengambilan dan pengeditan foto dilakukan langsung di browser Anda. Setelah Anda menutup halaman, foto tersebut hilang.</p></details>
+                    <details class="faq-item" data-aos="slide-up" data-aos-delay="200"><summary class="faq-question">Bisakah saya menggunakannya di HP?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Ya! Pictlord dirancang untuk berfungsi dengan baik di semua perangkat, baik itu desktop, tablet, maupun mobile, selama perangkat Anda memiliki kamera dan browser modern.</p></details>
+                    <details class="faq-item" data-aos="slide-up" data-aos-delay="300"><summary class="faq-question">Bagaimana cara mengganti warna bingkai?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Setelah mengambil 4 foto, Anda akan masuk ke halaman editor. Di sana, Anda akan menemukan color picker yang memungkinkan Anda memilih dari jutaan warna untuk bingkai foto Anda.</p></details>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="page-section">
+            <div class="container" style="text-align: center;" data-aos="zoom-out">
+                <h2 class="section-title">Hubungi Kami</h2>
+                <p class="section-subtitle">Punya pertanyaan, saran, atau hanya ingin menyapa? Kami akan senang mendengar dari Anda!</p>
+                <button class="btn primary" id="open-contact-modal-btn"><i class="fas fa-paper-plane"></i> &nbsp; Kirim Pesan</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://instagram.com/off.xlord" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="copyright">&copy; 2025 pictlord. Seluruh Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+</div>
+
+<div class="modal-overlay" id="contact-modal">
+    <div class="modal-content">
+        <button class="modal-close-btn">&times;</button>
+        <h2>Hubungi Kami</h2>
+        <p class="modal-subtitle">Isi form di bawah untuk mengirim pesan kepada kami.</p>
+        <form id="contact-form">
+            <div class="form-group"><input type="text" id="contact-name" class="form-input" placeholder=" " required><label for="contact-name" class="form-label">Nama</label></div>
+            <div class="form-group"><input type="email" id="contact-email" class="form-input" placeholder=" " required><label for="contact-email" class="form-label">Email</label></div>
+            <div class="form-group"><textarea id="contact-message" class="form-input" placeholder=" " required></textarea><label for="contact-message" class="form-label">Pesan Anda</label></div>
+            <div class="modal-button-group"><button type="submit" class="btn primary">Kirim</button></div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="testimonial-modal">
+    <div class="modal-content">
+        <button class="modal-close-btn">&times;</button>
+        <h2>Buat Postingan Baru</h2>
+        <p class="modal-subtitle">Bagikan ceritamu atau hasil fotomu di sini.</p>
+        <form id="testimonial-form">
+            <div class="form-group">
+                <input type="text" id="testimonial-name" class="form-input" placeholder=" " required>
+                <label for="testimonial-name" class="form-label">Nama Anda</label>
+            </div>
+            <div class="form-group">
+                <textarea id="testimonial-text" class="form-input" placeholder=" " rows="4"></textarea>
+                <label for="testimonial-text" class="form-label">Cerita Anda (opsional jika mengunggah foto)</label>
+            </div>
+            <div class="form-group file-input-group">
+                <input type="file" id="testimonial-photo" accept="image/*">
+                <label for="testimonial-photo" class="file-input-label">
+                    <i class="fas fa-image"></i> Tambah Foto (Opsional, max 5MB)
+                </label>
+                <div id="file-upload-status"></div>
+            </div>
+            <div id="form-submit-btn-wrapper">
+                <button type="submit" class="btn primary" id="testimonial-submit-btn">Kirim</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="image-viewer-modal">
+    <button class="modal-close-btn" style="color: white; text-shadow: 0 0 8px rgba(0,0,0,0.8);">&times;</button>
+    <div class="modal-content-image-viewer">
+        <img src="" alt="Testimonial Full View" id="full-view-image">
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-database-compat.js"></script>
+<!-- Memuat konfigurasi dari file eksternal -->
+<script src="image.github.js"></script>
+<script src="fire.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    AOS.init({
+        duration: 800,
+        once: false, 
+        offset: 120,
+        easing: 'ease-out-sine'
+    });
+
+    const uploadImageToGitHub = async (file) => {
+        if (typeof githubConfig === 'undefined' || !githubConfig.token || githubConfig.token.includes('YOUR_GITHUB')) {
+            throw new Error("Konfigurasi GitHub tidak ditemukan atau belum lengkap.");
+        }
+
+        const reader = new FileReader();
+        const fileReadPromise = new Promise((resolve, reject) => {
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+        });
+        reader.readAsDataURL(file);
+        const base64content = await fileReadPromise;
+
+        const { owner, repo, path } = githubConfig;
+        const fileName = `testimonial-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
+        const filePath = `${path}/${fileName}`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `feat: upload user testimonial image ${fileName}`,
+                content: base64content,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`GitHub API Error: ${errorData.message}`);
+        }
+        return `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+    };
+
+    // Inisialisasi Firebase menggunakan variabel firebaseConfig dari fire.js
+    if (typeof firebaseConfig !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+    } else {
+        console.error("Konfigurasi Firebase tidak ditemukan. Pastikan fire.js sudah dimuat dengan benar.");
+    }
+    const database = firebase.database();
+    const testimonialsRef = database.ref('testimonials');
+
+    const body = document.body;
+    const docElement = document.documentElement;
+    const hamburger = document.getElementById('hamburger-menu');
+    const navbarMenu = document.getElementById('navbar-menu');
+    const navLinks = document.querySelectorAll('#navbar-menu a');
+    const themeToggles = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
+    const navHighlight = document.querySelector('.nav-highlight');
+
+    // Shortcut klik 7x di logo
+    const logo = document.querySelector('.navbar-logo');
+    if (logo) {
+        let clickCount = 0;
+        let clickTimer = null;
+
+        logo.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            clickCount++;
+            
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 2000); // Reset jika tidak ada klik selama 2 detik
+
+            if (clickCount === 7) {
+                window.location.href = 'xlord';
+            }
+        });
+    }
+
+    const getAuthorProfile = () => {
+        const savedProfile = localStorage.getItem('pictlord_author_profile');
+        if (savedProfile) {
+            return JSON.parse(savedProfile);
+        }
+        return { name: 'xlord', avatar: '' };
+    };
+    const authorProfile = getAuthorProfile();
+
+    const badgeContainer = document.querySelector('.badge-text-container');
+    if (badgeContainer) {
+        const badgeTexts = badgeContainer.querySelectorAll('.badge-text');
+        if (badgeTexts.length > 1) {
+            let currentTextIndex = 0;
+            setTimeout(() => {
+                const visibleText = badgeContainer.querySelector('.badge-text.is-visible');
+                if (visibleText) badgeContainer.style.width = visibleText.offsetWidth + 'px';
+            }, 100);
+            setInterval(() => {
+                badgeTexts[currentTextIndex].classList.remove('is-visible');
+                currentTextIndex = (currentTextIndex + 1) % badgeTexts.length;
+                badgeTexts[currentTextIndex].classList.add('is-visible');
+                badgeContainer.style.width = badgeTexts[currentTextIndex].offsetWidth + 'px';
+            }, 4000); 
+        }
+    }
+
+    function moveHighlight(target) {
+        if (!navHighlight || !target) return;
+        navHighlight.style.width = `${target.offsetWidth}px`;
+        navHighlight.style.height = `${target.offsetHeight}px`;
+        navHighlight.style.left = `${target.offsetLeft}px`;
+    }
+    
+    if (hamburger && navbarMenu) {
+        const toggleMenu = () => {
+            hamburger.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        };
+        hamburger.addEventListener('click', toggleMenu);
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024 && navbarMenu.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+        });
+    }
+
+    const applyTheme = (theme) => {
+        docElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    };
+    
+    themeToggles.forEach(toggle => {
+        if(toggle) {
+            toggle.addEventListener('click', () => {
+                const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+        }
+    });
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    
+    const sections = document.querySelectorAll('.main-content section[id]');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                navLinks.forEach(link => link.classList.remove('current-nav'));
+                const activeLink = document.querySelector(`.navbar-menu a[href="#${id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('current-nav');
+                    if (window.innerWidth > 1024) {
+                       moveHighlight(activeLink.parentElement);
+                    }
+                }
+            }
+        });
+    }, { rootMargin: '-40% 0px -60% 0px' });
+    
+    sections.forEach(section => observer.observe(section));
+    
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const activeItem = document.querySelector('#navbar-menu a.current-nav');
+        if (activeItem) {
+           moveHighlight(activeItem.parentElement);
+        }
+      }, 100);
+    });
+    
+    const setupModal = (modalId, openBtnId) => {
+        const modal = document.getElementById(modalId);
+        const openBtn = document.getElementById(openBtnId);
+        if (!modal || !openBtn) return { open: ()=>{}, close: ()=>{} };
+        const closeBtns = modal.querySelectorAll('.modal-close-btn');
+        const form = modal.querySelector('form');
+        
+        const open = () => { 
+            modal.classList.add('is-visible'); 
+            setTimeout(() => {
+                const content = modal.querySelector('.modal-content');
+                if (content) content.style.transform = 'scale(1)';
+                content.style.opacity = '1';
+            }, 10);
+            body.style.overflow = 'hidden'; 
+        };
+        const close = () => { 
+            const content = modal.querySelector('.modal-content');
+            if (content) content.style.transform = 'scale(0.95)';
+            content.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('is-visible'); 
+                body.style.overflow = 'auto';
+                form?.reset();
+                const fileStatus = document.getElementById('file-upload-status');
+                if (fileStatus) fileStatus.textContent = '';
+            }, 400);
+        };
+        openBtn.addEventListener('click', open);
+        closeBtns.forEach(btn => btn.addEventListener('click', close));
+        modal.addEventListener('click', e => { if (e.target === modal) close(); });
+        return { open, close, modal };
+    };
+    const contactModal = setupModal('contact-modal', 'open-contact-modal-btn');
+    const testimonialModal = setupModal('testimonial-modal', 'add-testimonial-btn');
+
+    // Image Viewer Modal Logic
+    const imageViewerModal = document.getElementById('image-viewer-modal');
+    const fullViewImage = document.getElementById('full-view-image');
+    const closeImageViewerBtn = imageViewerModal?.querySelector('.modal-close-btn');
+
+    const openImageViewer = (src) => {
+        if (!imageViewerModal || !fullViewImage) return;
+        fullViewImage.src = src;
+        imageViewerModal.classList.add('is-visible');
+        // Menggunakan class yang sama dengan modal lain untuk animasi
+        const content = imageViewerModal.querySelector('.modal-content-image-viewer');
+        setTimeout(() => {
+            if (content) content.style.transform = 'scale(1)';
+            content.style.opacity = '1';
+        }, 10);
+        body.style.overflow = 'hidden';
+    };
+
+    const closeImageViewer = () => {
+        if (!imageViewerModal) return;
+        const content = imageViewerModal.querySelector('.modal-content-image-viewer');
+        if (content) {
+            content.style.transform = 'scale(0.95)';
+            content.style.opacity = '0';
+        }
+        setTimeout(() => {
+            imageViewerModal.classList.remove('is-visible');
+            body.style.overflow = 'auto';
+            if(fullViewImage) fullViewImage.src = ""; // Kosongkan src setelah ditutup
+        }, 400);
+    };
+
+    if (closeImageViewerBtn) closeImageViewerBtn.addEventListener('click', closeImageViewer);
+    if (imageViewerModal) imageViewerModal.addEventListener('click', e => {
+        // Hanya tutup jika klik pada overlay, bukan pada gambar itu sendiri
+        if (e.target === imageViewerModal) {
+            closeImageViewer();
+        }
+    });
+    
+    const showToast = (message, isError = false) => {
+        const container = document.getElementById('toast-container') || body;
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        if(isError) toast.style.borderLeftColor = '#ef4444';
+        toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}" style="color:${isError ? '#ef4444' : 'var(--primary)'}"></i><p>${message}</p>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+        }, 4000);
+    };
+
+    const testimonialGrid = document.getElementById('testimonial-grid');
+    const timeAgo = (timestamp) => {
+        const now = Date.now();
+        const seconds = Math.floor((now - timestamp) / 1000);
+        if (seconds < 60) return "Baru saja";
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return `${minutes} menit lalu`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours} jam lalu`;
+        const days = Math.floor(hours / 24);
+        return `${days} hari lalu`;
+    };
+
+    const createAvatarHTML = (name, avatarUrl, isComment = false) => {
+        const defaultInitial = name ? name.charAt(0).toUpperCase() : 'U';
+        const cssClass = isComment ? 'comment-avatar' : 'post-avatar';
+        if (avatarUrl) {
+            return `<img src="${avatarUrl}" alt="${name}" class="${cssClass}" onerror="this.src='https://placehold.co/100x100/8B5CF6/FFFFFF?text=${defaultInitial}'">`;
+        }
+        return `<div class="${cssClass}" style="${isComment ? 'background-color: var(--bg-darker); color: var(--text-light);' : ''}">${defaultInitial}</div>`;
+    };
+
+    const createCommentHTML = (comment) => {
+        const isAuthor = comment.isDev;
+        const name = isAuthor ? authorProfile.name : (comment.name || 'Anonim');
+        const avatar = isAuthor ? authorProfile.avatar : '';
+        
+        const avatarHTML = createAvatarHTML(name, avatar, true);
+        const userDisplay = isAuthor
+            ? `<div class="comment-user">${name} <img src="https://i.postimg.cc/hGJjPYW5/verified.png" alt="Verified Admin" class="verified-img"> <span class="badge author-badge">Author</span></div>`
+            : `<div class="comment-user">${name}</div>`;
+
+        let repliesHTML = '';
+        if (comment.replies) {
+            repliesHTML = Object.values(comment.replies).sort((a, b) => a.timestamp - b.timestamp).map(reply => {
+                const replyAvatarHTML = createAvatarHTML(authorProfile.name, authorProfile.avatar, true);
+                const replyUserDisplay = `<div class="comment-user">${authorProfile.name} <img src="https://i.postimg.cc/hGJjPYW5/verified.png" alt="Verified Admin" class="verified-img"> <span class="badge author-badge">Author</span></div>`;
+                const replyMentionHTML = `<div class="reply-mention"><i class="fas fa-reply"></i> Membalas <strong>@${comment.name || 'Anonim'}</strong></div>`;
+
+                return `
+                    <div class="comment-item">
+                        ${replyAvatarHTML}
+                        <div class="comment-body">
+                            <div class="comment-content">
+                                ${replyUserDisplay}
+                                ${replyMentionHTML}
+                                <p class="comment-text">${reply.text}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        return `
+            <div class="comment-container">
+                <div class="comment-item">
+                    ${avatarHTML}
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            ${userDisplay}
+                            <p class="comment-text">${comment.text}</p>
+                        </div>
+                    </div>
+                </div>
+                ${repliesHTML ? `<div class="replies-container">${repliesHTML}</div>` : ''}
+            </div>
+        `;
+    };
+
+    const createPostCard = (postData, key, delay = 0) => {
+        const card = document.createElement('div');
+        card.className = 'post-card';
+        card.setAttribute('data-aos', 'fade-up');
+        card.setAttribute('data-aos-delay', delay);
+        card.id = `post-${key}`;
+
+        const avatarHTML = createAvatarHTML(postData.name, null, false);
+        
+        // --- PERUBAHAN BADGE ---
+        // Jika ada badge spesifik di data, gunakan itu.
+        // Jika tidak ada dan post bukan dari author, gunakan badge "User" default.
+        let postBadgeHTML = '';
+        if (postData.badge) {
+            postBadgeHTML = `<span class="badge" style="background-color: ${postData.badge.color || '#777'};">${postData.badge.text}</span>`;
+        } else if (!postData.isDev) {
+            postBadgeHTML = `<span class="badge" style="background-color: var(--user-badge-color);">User</span>`;
+        }
+        // --- AKHIR PERUBAHAN BADGE ---
+
+        const likes = postData.likes || 0;
+        const comments = postData.comments ? Object.values(postData.comments) : [];
+        const commentCount = comments.length;
+        const isLiked = localStorage.getItem(`liked-${key}`) === 'true';
+
+        const commentsHTML = comments.sort((a, b) => a.timestamp - b.timestamp).map(comment => createCommentHTML(comment)).join('');
+
+        card.innerHTML = `
+            <div class="post-header">
+                ${avatarHTML}
+                <div class="post-user-info">
+                    <div class="post-name">${postData.name} ${postBadgeHTML}</div>
+                    <div class="post-timestamp">${timeAgo(postData.timestamp)}</div>
+                </div>
+            </div>
+            ${postData.text ? `<p class="post-content">${postData.text}</p>` : ''}
+            ${postData.imageUrl ? `<div class="post-image-container"><img src="${postData.imageUrl}" alt="Post image by ${postData.name}" class="post-image" loading="lazy"></div>` : ''}
+            <div class="post-actions">
+                <button class="post-action-btn like-btn ${isLiked ? 'liked' : ''}" data-key="${key}">
+                    <i class="fas fa-heart"></i> <span class="like-count">${likes}</span>
+                </button>
+                <button class="post-action-btn comment-toggle-btn" data-key="${key}">
+                    <i class="fas fa-comment"></i> <span>${commentCount}</span>
+                </button>
+                <button class="post-action-btn share-btn" data-key="${key}">
+                    <i class="fas fa-share-square"></i>
+                </button>
+            </div>
+            <div class="comments-section" id="comments-${key}">
+                <div class="comments-list">
+                    ${commentsHTML.length > 0 ? commentsHTML : '<p style="color: var(--text-light); text-align: center; font-size: 1.4rem;">Jadilah yang pertama berkomentar!</p>'}
+                </div>
+                <form class="comment-form" data-key="${key}">
+                    <input type="text" class="comment-name-input" placeholder="Nama Anda..." required>
+                    <input type="text" class="comment-input" placeholder="Tulis komentar..." required>
+                    <button type="submit" class="btn primary" style="padding: 10px 15px; font-size: 1.4rem;">Kirim</button>
+                </form>
+            </div>
+        `;
+        return card;
+    };
+    
+    const loadTestimonials = () => {
+        testimonialsRef.orderByChild('timestamp').limitToLast(10).on('value', (snapshot) => {
+            if (!testimonialGrid) return;
+            testimonialGrid.innerHTML = ''; 
+            let posts = [];
+            snapshot.forEach(childSnapshot => {
+                posts.push({ key: childSnapshot.key, val: childSnapshot.val() });
+            });
+            posts.reverse(); 
+            posts.forEach((post, index) => {
+                testimonialGrid.appendChild(createPostCard(post.val, post.key, index * 100));
+            });
+             setTimeout(() => AOS.refresh(), 100);
+        });
+    };
+    
+    if (testimonialGrid) loadTestimonials();
+    
+    testimonialGrid?.addEventListener('click', e => {
+        const postImage = e.target.closest('.post-image');
+        if (postImage) {
+            e.preventDefault(); // Mencegah perilaku default jika gambar dibungkus <a>
+            openImageViewer(postImage.src);
+            return; // Hentikan eksekusi lebih lanjut agar tidak memicu event lain
+        }
+
+        const likeBtn = e.target.closest('.like-btn');
+        if (likeBtn) {
+            const postKey = likeBtn.dataset.key;
+            const isLiked = localStorage.getItem(`liked-${postKey}`) === 'true';
+            const postLikesRef = testimonialsRef.child(postKey).child('likes');
+            postLikesRef.transaction(currentLikes => isLiked ? (currentLikes || 1) - 1 : (currentLikes || 0) + 1);
+            localStorage.setItem(`liked-${postKey}`, !isLiked);
+            likeBtn.classList.toggle('liked', !isLiked);
+        }
+
+        const commentToggleBtn = e.target.closest('.comment-toggle-btn');
+        if (commentToggleBtn) {
+            const postKey = commentToggleBtn.dataset.key;
+            const commentsSection = document.getElementById(`comments-${postKey}`);
+            if (commentsSection) {
+                const isVisible = commentsSection.style.display === 'block';
+                commentsSection.style.display = isVisible ? 'none' : 'block';
+                if (!isVisible) commentsSection.querySelector('.comment-input').focus();
+            }
+        }
+
+        const shareBtn = e.target.closest('.share-btn');
+        if (shareBtn) {
+            const shareText = "Yuk, komen dan buat photobooth mu sekarang di Pictlord! : https://www.pictlord.me";
+            navigator.clipboard.writeText(shareText).then(() => {
+                showToast('Tautan berhasil disalin ke clipboard!');
+            }).catch(() => showToast('Gagal menyalin tautan.', true));
+        }
+    });
+
+    testimonialGrid?.addEventListener('submit', e => {
+        e.preventDefault();
+        if (e.target.classList.contains('comment-form')) {
+            const form = e.target;
+            const postKey = form.dataset.key;
+            const nameInput = form.querySelector('.comment-name-input');
+            const commentInput = form.querySelector('.comment-input');
+            
+            const name = nameInput.value.trim();
+            const commentText = commentInput.value.trim();
+
+            if (!name || !commentText) {
+                showToast('Nama dan komentar tidak boleh kosong.', true);
+                return;
+            }
+            
+            const newComment = { name, text: commentText, timestamp: firebase.database.ServerValue.TIMESTAMP };
+            testimonialsRef.child(postKey).child('comments').push(newComment);
+            nameInput.value = '';
+            commentInput.value = '';
+        }
+    });
+    
+    const testimonialForm = document.getElementById('testimonial-form');
+    const fileInput = document.getElementById('testimonial-photo');
+    const fileStatus = document.getElementById('file-upload-status');
+    
+    fileInput?.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) {
+            fileStatus.textContent = '';
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            fileStatus.textContent = 'Error: File terlalu besar (> 5MB)';
+            fileStatus.style.color = '#ef4444';
+            fileInput.value = '';
+        } else {
+            fileStatus.textContent = `File dipilih: ${file.name}`;
+            fileStatus.style.color = 'var(--text-light)';
+        }
+    });
+    
+    testimonialForm?.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('testimonial-name').value.trim();
+        const text = document.getElementById('testimonial-text').value.trim();
+        const file = fileInput.files[0];
+
+        if (!name || (!text && !file)) {
+            showToast('Harap isi nama dan cerita atau unggah foto.', true);
+            return;
+        }
+
+        const submitBtn = document.getElementById('testimonial-submit-btn');
+        submitBtn.classList.add('disabled');
+        submitBtn.textContent = 'Mengirim...';
+
+        const postToFirebase = (data) => {
+            testimonialsRef.push(data)
+                .then(() => {
+                    showToast(`Terima kasih, postinganmu berhasil dibuat!`);
+                    testimonialModal.close();
+                })
+                .catch((error) => {
+                    showToast("Gagal menyimpan data postingan.", true);
+                    console.error(error);
+                })
+                .finally(() => {
+                    submitBtn.classList.remove('disabled');
+                    submitBtn.textContent = 'Kirim';
+                });
+        };
+
+        const postData = { name, text, imageUrl: null, likes: 0, timestamp: firebase.database.ServerValue.TIMESTAMP };
+
+        if (file) {
+            submitBtn.textContent = 'Mengunggah gambar...';
+            uploadImageToGitHub(file)
+                .then(publicUrl => {
+                    postData.imageUrl = publicUrl;
+                    submitBtn.textContent = 'Menyimpan data...';
+                    postToFirebase(postData);
+                })
+                .catch(error => {
+                    showToast(`Gagal mengunggah gambar: ${error.message}`, true);
+                    submitBtn.classList.remove('disabled');
+                    submitBtn.textContent = 'Kirim';
+                });
+        } else {
+            postToFirebase(postData);
+        }
+    });
+});
+</script>
+</body>
+</html>

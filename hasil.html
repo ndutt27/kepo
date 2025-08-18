@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pictlord | Foto Anda</title>
+    <meta name="robots" content="noindex">
+    
+    <link rel="icon" type="image/png" href="images/pictlord logo.png" />
+    <link rel="apple-touch-icon" href="images/pictlord logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <style>
+        /* === TEMA & VARIABEL UTAMA === */
+        :root {
+            --bg-color: #2c2f36;
+            --navbar-bg: rgba(33, 36, 41, 0.4);
+            --navbar-mobile-bg: rgba(44, 47, 54, 0.85);
+            --shadow-dark: #212429;
+            --shadow-light: #373a43;
+            --text-color: #e0e5ec;
+            --text-light: #97a1b3;
+            --primary: #0D9488;
+            --primary-dark: #0f766e;
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius-main: 20px;
+            --border-radius-inner: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --navbar-bg: rgba(255, 255, 255, 0.5);
+            --navbar-mobile-bg: rgba(240, 242, 245, 0.9);
+            --shadow-dark: #d9dde2;
+            --shadow-light: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+        }
+
+        /* === GAYA GLOBAL === */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        html { font-size: 62.5%; }
+        body {
+            font-size: 1.6rem; background: var(--bg-color); color: var(--text-color);
+            line-height: 1.7; transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container { max-width: 1200px; width: 90%; margin: 0 auto; }
+        
+        /* === HEADER & NAVBAR === */
+        .main-header {
+            position: sticky; top: 2rem; width: 95%; max-width: 1200px; z-index: 1000; margin: 0 auto;
+        }
+        .navbar {
+            display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1rem;
+            background: var(--navbar-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 999px; border: 1px solid var(--shadow-light); box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .navbar-logo { font-size: 2.2rem; font-weight: 700; color: var(--text-color); text-decoration: none; margin-left: 1.5rem; }
+        .navbar-logo .highlight { color: var(--primary); }
+        .navbar-menu { list-style: none; display: flex; align-items: center; gap: 0.5rem; margin: 0; padding: 0; position: relative; }
+        .navbar-menu li { list-style: none; }
+        .navbar-menu a {
+            color: var(--text-light); text-decoration: none; font-size: 1.5rem; font-weight: 500;
+            padding: 8px 16px; border-radius: 999px; display: block; position: relative; z-index: 2; transition: color 0.3s ease;
+        }
+        .navbar-menu a:hover { color: var(--text-color); }
+        .nav-highlight {
+            position: absolute; top: 0; left: 0; background: var(--primary);
+            border-radius: 999px; z-index: 1; transition: all 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+        .navbar-right { display: flex; align-items: center; gap: 1.5rem; margin-right: 0.5rem; }
+        .theme-toggle-btn {
+            background: var(--bg-color); width: 40px; height: 40px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; border: none; cursor: pointer;
+            color: var(--text-color); box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+            transition: var(--transition-smooth);
+        }
+        .theme-toggle-btn:hover { color: var(--primary); transform: scale(1.05); }
+        .theme-toggle-btn i.fa-sun { display: none; }
+        [data-theme="light"] .theme-toggle-btn i.fa-moon { display: none; }
+        [data-theme="light"] .theme-toggle-btn i.fa-sun { display: block; }
+        .theme-toggle-btn-mobile-wrapper { display: none; }
+        .hamburger-menu { display: none; /* Sembunyikan di halaman ini */ }
+
+        /* === KONTEN DINAMIS (HASIL/ERROR) === */
+        .content-section { padding: 5rem 0; text-align: center; }
+        
+        .asset-group {
+            margin-bottom: 6rem;
+        }
+        .asset-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        .asset-container { margin-bottom: 2rem; }
+        .asset-container img {
+            max-width: 400px;
+            width: 100%;
+            border-radius: var(--border-radius-main);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 4px solid var(--shadow-light);
+        }
+        #gif-container img {
+            max-width: 300px;
+        }
+        #poses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+        }
+        .pose-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .pose-item img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: var(--border-radius-inner);
+        }
+
+        .page-title { font-size: 4rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-color); }
+        .page-subtitle { font-size: 1.8rem; color: var(--text-light); margin-bottom: 4rem; max-width: 550px; margin-left: auto; margin-right: auto; }
+        
+        .action-button {
+            display: inline-flex; align-items: center; gap: 1rem;
+            text-decoration: none; padding: 1rem 2.5rem; background: var(--primary);
+            color: #fff; border-radius: 999px; font-weight: 600;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+            font-size: 1.4rem;
+        }
+        .action-button:hover { background: var(--primary-dark); transform: translateY(-3px); }
+        
+        /* --- FOOTER --- */
+        .main-footer { padding: 4rem 2rem 2rem; background: var(--shadow-dark); text-align: center; margin-top: auto;}
+        .social-links { display: flex; justify-content: center; gap: 2.5rem; list-style: none; margin-bottom: 2rem; }
+        .social-links a { font-size: 2rem; color: var(--text-light); transition: var(--transition-smooth); }
+        .social-links a:hover { color: var(--primary); transform: translateY(-3px); }
+        .copyright { font-size: 1.3rem; color: var(--text-light); opacity: 0.7; }
+
+        @media (max-width: 768px) {
+            html { font-size: 58%; }
+            .page-title { font-size: 3.2rem; }
+            .navbar-menu { display: none; } /* Sembunyikan menu di mobile */
+            .navbar-right .theme-toggle-btn { display: flex; } /* Tampilkan toggle tema desktop */
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header" data-aos="fade-down">
+        <nav class="navbar container">
+            <a href="index" class="navbar-logo">pict<span class="highlight">lord</span></a>
+            <div class="navbar-right">
+                <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
+                    <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="content-section">
+            <div class="container" data-aos="fade-up" data-aos-delay="200">
+                
+                <div id="loading-container">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 5rem; color: var(--primary);"></i>
+                    <h1 id="page-title" class="page-title">Memuat Foto Anda...</h1>
+                    <p id="page-subtitle" class="page-subtitle">Harap tunggu sebentar, kami sedang mengambil data.</p>
+                </div>
+
+                <div id="results-container" style="display: none;">
+                    <h1 class="page-title">Your Files are Ready!</h1>
+                    <p class="page-subtitle">Berikut adalah semua aset yang Anda buat. Unduh satu per satu atau kembali ke halaman ini kapan saja dalam 7 hari ke depan.</p>
+
+                    <!-- Photo Strip -->
+                    <div class="asset-group">
+                        <h2 class="asset-title">Your Strip</h2>
+                        <div id="strip-container" class="asset-container"></div>
+                    </div>
+
+                    <!-- GIF -->
+                    <div class="asset-group">
+                        <h2 class="asset-title">Animated GIF</h2>
+                        <div id="gif-container" class="asset-container"></div>
+                    </div>
+
+                    <!-- Individual Poses -->
+                    <div class="asset-group">
+                        <h2 class="asset-title">Individual Poses</h2>
+                        <div id="poses-container" class="asset-container"></div>
+                    </div>
+                </div>
+                
+                <div id="error-container" style="display: none;">
+                     <div id="error-image-container" class="asset-container">
+                        <img src="404.gif" alt="Animasi Error 404" style="max-width: 250px;">
+                     </div>
+                     <h1 id="error-title" class="page-title"></h1>
+                     <p id="error-subtitle" class="page-subtitle"></p>
+                     <a href="index.html" class="action-button">
+                        <i class="fas fa-home"></i>
+                        <span>Kembali ke Beranda</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://instagram.com/off.xlord" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="copyright">&copy; 2025 pictlord. Seluruh Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // !!! PENTING: GANTI DENGAN KONFIGURASI FIREBASE ANDA SENDIRI !!!
+        const firebaseConfig = {
+    apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+    authDomain: "project-xlord.firebaseapp.com",
+    databaseURL: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "project-xlord",
+    storageBucket: "project-xlord.appspot.com",
+    messagingSenderId: "847461816867",
+    appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
+    measurementId: "G-344KX3B197"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            AOS.init({ duration: 800, once: true, offset: 50 });
+
+            // --- Logika Tema ---
+            const docElement = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            const applyTheme = (theme) => {
+                docElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            };
+
+            if(themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    applyTheme(newTheme);
+                });
+            }
+            applyTheme(localStorage.getItem('theme') || 'dark');
+
+            // --- Logika Pengambilan Data Firebase ---
+            const loadingContainer = document.getElementById('loading-container');
+            const resultsContainer = document.getElementById('results-container');
+            const errorContainer = document.getElementById('error-container');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const imageId = urlParams.get('id');
+
+            function createDownloadButton(href, filename) {
+                const button = document.createElement('a');
+                button.href = href;
+                button.className = 'action-button';
+                button.setAttribute('download', filename);
+                button.innerHTML = `<i class="fas fa-download"></i><span>Download</span>`;
+                return button;
+            }
+
+            function displaySuccess(assets) {
+                loadingContainer.style.display = 'none';
+                resultsContainer.style.display = 'block';
+
+                // Display Strip
+                const stripContainer = document.getElementById('strip-container');
+                const stripImg = document.createElement('img');
+                stripImg.src = assets.strip;
+                stripContainer.appendChild(stripImg);
+                stripContainer.appendChild(createDownloadButton(assets.strip, `pictlord-strip-${Date.now()}.png`));
+
+                // Display GIF
+                const gifContainer = document.getElementById('gif-container');
+                if (assets.gif) {
+                    const gifImg = document.createElement('img');
+                    gifImg.src = assets.gif;
+                    gifContainer.appendChild(gifImg);
+                    gifContainer.appendChild(createDownloadButton(assets.gif, `pictlord-gif-${Date.now()}.gif`));
+                } else {
+                     gifContainer.innerHTML = "<p>Could not generate GIF.</p>";
+                }
+
+                // Display Poses
+                const posesContainer = document.getElementById('poses-container');
+                if (assets.poses && assets.poses.length > 0) {
+                    assets.poses.forEach((poseSrc, index) => {
+                        const poseItem = document.createElement('div');
+                        poseItem.className = 'pose-item';
+
+                        const poseImg = document.createElement('img');
+                        poseImg.src = poseSrc;
+
+                        poseItem.appendChild(poseImg);
+                        poseItem.appendChild(createDownloadButton(poseSrc, `pictlord-pose-${index + 1}-${Date.now()}.jpg`));
+
+                        posesContainer.appendChild(poseItem);
+                    });
+                }
+            }
+
+            function displayError(title, subtitle) {
+                loadingContainer.style.display = 'none';
+                errorContainer.style.display = 'block';
+                document.getElementById('error-title').textContent = title;
+                document.getElementById('error-subtitle').textContent = subtitle;
+            }
+
+            if (!imageId) {
+                displayError("Halaman Tak Ditemukan", "Oops! Link yang Anda tuju sepertinya tidak memiliki ID.");
+                return;
+            }
+
+            const imageRef = database.ref('images/' + imageId);
+            imageRef.once('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    displayError("Link Tidak Ditemukan", "Maaf, kami tidak dapat menemukan data untuk link ini. Mungkin salah ketik atau sudah dihapus.");
+                    return;
+                }
+
+                const storedData = snapshot.val();
+                
+                if (Date.now() > storedData.expiresAt) {
+                    displayError("Link Sudah Kedaluwarsa", "Link ini hanya berlaku selama 7 hari. Silakan buat QR code baru untuk mengunduh gambar Anda.");
+                    imageRef.remove();
+                    return;
+                }
+                
+                // The stored data is the 'assets' object
+                displaySuccess(storedData);
+
+            }).catch(error => {
+                console.error("Error mengambil data dari Firebase:", error);
+                displayError("Gagal Terhubung", "Tidak dapat terhubung ke server. Periksa koneksi internet Anda dan coba lagi.");
+            });
+        });
+    </script>
+
+</body>
+</html>

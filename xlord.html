@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pictlord | Admin page </title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* =================================
+           VARIABLES & GLOBAL STYLES
+           ================================= */
+        :root {
+            --bg-start: #1a1c20;
+            --bg-end: #22252A;
+            --surface-color: #2C2F36;
+            --surface-border: rgba(255, 255, 255, 0.05);
+            --surface-glow: rgba(52, 211, 153, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.25);
+            --text-color: #e4e6eb;
+            --text-light: #a8b3cf;
+            --primary: #34D399; /* Emerald 400 */
+            --primary-light: #6EE7B7; /* Emerald 300 */
+            --danger: #F43F5E; /* Rose 500 */
+            --danger-light: #FB7185; /* Rose 400 */
+            --author-color: #8B5CF6; /* Violet 500 */
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius-main: 20px;
+            --border-radius-inner: 12px;
+            --font-primary: 'Inter', sans-serif;
+            --font-secondary: 'Poppins', sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-start: #F3F4F6;
+            --bg-end: #FFFFFF;
+            --surface-color: #FFFFFF;
+            --surface-border: #E5E7EB;
+            --surface-glow: rgba(52, 211, 153, 0.1);
+            --shadow-color: rgba(99, 102, 113, 0.1);
+            --text-color: #1F2937;
+            --text-light: #6B7280;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { font-size: 62.5%; scroll-behavior: smooth; }
+
+        body {
+            font-size: 1.5rem;
+            font-family: var(--font-primary);
+            background: var(--bg-end);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+        }
+        
+        .container { max-width: 800px; width: 90%; margin: 4rem auto; padding: 2rem 0; }
+
+        /* =================================
+           LOADING SPINNER
+           ================================= */
+        .loader-container { display: flex; justify-content: center; align-items: center; padding: 5rem; }
+        .loader { width: 50px; height: 50px; border: 5px solid var(--surface-border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* =================================
+           THEME TOGGLE
+           ================================= */
+        .theme-toggle-btn { position: fixed; top: 2rem; right: 2rem; background: var(--surface-color); border: 1px solid var(--surface-border); backdrop-filter: blur(10px); width: 4.5rem; height: 4.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-color); box-shadow: 0 4px 15px var(--shadow-color); transition: var(--transition-smooth); z-index: 1000; }
+        .theme-toggle-btn:hover { transform: translateY(-3px) scale(1.05); color: var(--primary); }
+        .theme-toggle-btn i { transition: var(--transition-smooth); position: absolute; font-size: 1.8rem; }
+        .theme-toggle-btn .fa-sun { opacity: 0; transform: scale(0.5) rotate(-90deg); }
+        [data-theme="light"] .theme-toggle-btn .fa-moon { opacity: 0; transform: scale(0.5) rotate(90deg); }
+        [data-theme="light"] .theme-toggle-btn .fa-sun { opacity: 1; transform: scale(1) rotate(0deg); }
+        
+        /* =================================
+           LOGIN FORM
+           ================================= */
+        #login-section { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+        .login-card { background: var(--surface-color); border: 1px solid var(--surface-border); padding: 4rem; width: 100%; max-width: 400px; text-align: center; border-radius: var(--border-radius-main); box-shadow: 0 10px 30px var(--shadow-color); }
+        .login-card .logo { font-weight: 700; color: var(--primary); font-family: var(--font-secondary); }
+        .login-card h1 { font-size: 2.8rem; margin-bottom: 1rem; font-weight: 600; font-family: var(--font-secondary); }
+        .login-card p { color: var(--text-light); margin-bottom: 3rem; font-size: 1.6rem; }
+        .form-group { position: relative; margin-bottom: 2rem; text-align: left;}
+        .form-label { font-size: 1.4rem; font-weight: 500; color: var(--text-light); margin-bottom: 0.8rem; display: block; }
+        .form-input { width: 100%; padding: 14px 14px 14px 45px; border: 1px solid var(--surface-border); background: var(--bg-end); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1.6rem; transition: var(--transition-smooth); }
+        .form-input::placeholder { color: var(--text-light); }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--surface-glow); }
+        .form-group .form-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 1.6rem; transition: var(--transition-smooth); }
+        .form-input:focus + .form-icon { color: var(--primary); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.8rem; padding: 14px 28px; border-radius: var(--border-radius-inner); font-size: 1.6rem; font-weight: 600; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: var(--transition-smooth); width: 100%; font-family: var(--font-secondary); }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary { color: #ffffff; background: var(--primary); box-shadow: 0 4px 15px rgba(52, 211, 153, 0.2); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); background: var(--primary-light); box-shadow: 0 7px 25px rgba(52, 211, 153, 0.3); }
+        #login-error { color: var(--danger); margin-top: 2rem; height: 2rem; font-weight: 500; }
+
+        /* =================================
+           ADMIN PANEL
+           ================================= */
+        #admin-panel { display: none; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 2rem; }
+        .admin-header h1 { font-size: 3.6rem; font-weight: 700; font-family: var(--font-secondary); }
+        .btn-secondary { color: var(--text-light); background: var(--surface-color); border: 1px solid var(--surface-border); }
+        .btn-secondary:hover { color: var(--text-color); background-color: var(--surface-border); }
+        #logout-btn { width: auto; }
+        
+        /* Profile Settings */
+        .profile-settings { background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: var(--border-radius-main); padding: 2.5rem 3rem; margin-bottom: 4rem; }
+        .profile-settings h2 { font-size: 2.2rem; font-family: var(--font-secondary); margin-bottom: 2rem; }
+        .profile-form { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 640px) { .profile-form { grid-template-columns: 1fr 1fr; } .profile-form .form-group:nth-child(3) { grid-column: 1 / -1; } }
+        .btn-save-profile { width: auto; padding: 12px 30px; }
+        .avatar-upload-wrapper { display: flex; align-items: center; gap: 1.5rem; }
+        #avatar-preview { width: 8rem; height: 8rem; border-radius: 50%; object-fit: cover; border: 3px solid var(--surface-border); }
+        #author-avatar-upload { display: none; }
+        .upload-btn { width: auto; }
+        #delete-avatar-btn {
+            background-color: var(--surface-color);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            width: 4.2rem;
+            height: 4.2rem;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+        #delete-avatar-btn:hover { background-color: var(--danger); color: white; transform: scale(1.1); }
+        #delete-avatar-btn.visible { display: flex; }
+
+        #admin-testimonial-grid { display: flex; flex-direction: column; gap: 4rem; }
+        .admin-post-card { background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: var(--border-radius-main); box-shadow: 0 8px 25px var(--shadow-color); padding: 2.5rem 3rem; transition: var(--transition-smooth); }
+        .admin-post-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px var(--shadow-color); }
+        .admin-post-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+        .post-user-info { display: flex; align-items: center; gap: 1.5rem; flex-grow: 1; }
+        .post-avatar, .comment-avatar { width: 4.5rem; height: 4.5rem; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 2rem; text-transform: uppercase; flex-shrink: 0; object-fit: cover; }
+        .post-name-section { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .post-name { font-weight: 600; font-size: 1.7rem; font-family: var(--font-secondary); }
+        .post-timestamp { font-size: 1.3rem; color: var(--text-light); }
+        .admin-post-content { color: var(--text-color); font-size: 1.6rem; margin-bottom: 2.5rem; white-space: pre-wrap; word-wrap: break-word; line-height: 1.7; }
+        .admin-post-image { display: block; max-width: 100%; border-radius: var(--border-radius-inner); margin-bottom: 2.5rem; cursor: pointer; }
+        .btn-icon { background: transparent; border: none; color: var(--text-light); cursor: pointer; font-size: 1.8rem; padding: 8px; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
+        .btn-icon:hover { background: var(--surface-border); }
+        .btn-icon.delete-post-btn:hover { color: var(--danger); }
+        .btn-icon.edit-post-badge-btn:hover { color: var(--primary); }
+
+        /* =================================
+           COMMENTS & REPLIES
+           ================================= */
+        .comments-section { border-top: 1px solid var(--surface-border); padding-top: 2.5rem; margin-top: 2.5rem; }
+        .comments-section h4 { margin-bottom: 2.5rem; font-size: 2rem; font-family: var(--font-secondary); font-weight: 600; }
+        .comments-list { display: flex; flex-direction: column; gap: 3rem; }
+        .comment-container { position: relative; }
+        .comment-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .comment-avatar { width: 4rem; height: 4rem; font-size: 1.6rem; }
+        .comment-body { flex-grow: 1; }
+        .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem; }
+        .comment-user { font-weight: 600; color: var(--text-color); font-size: 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
+        .comment-text { font-size: 1.5rem; color: var(--text-color); word-wrap: break-word; margin-bottom: 1rem; line-height: 1.7; }
+        .comment-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .btn-action { background: transparent; border: none; color: var(--text-light); cursor: pointer; font-size: 1.3rem; padding: 6px 10px; border-radius: 8px; font-weight: 600; transition: var(--transition-smooth); }
+        .btn-action:hover { background: var(--surface-border); color: var(--primary); }
+        .btn-action i { margin-right: 6px; }
+        .replies-container { padding-left: 5.5rem; margin-top: 2.5rem; display: flex; flex-direction: column; gap: 2.5rem; }
+        .comment-reply-form, .badge-form { margin-top: 1.5rem; display: none; }
+        .comment-reply-form.active, .badge-form.active { display: block; }
+        .admin-comment { background: var(--bg-start); border-radius: var(--border-radius-inner); padding: 2rem; }
+        .admin-comment .comment-avatar { background: var(--author-color); color: white; }
+        .admin-user { display: flex; align-items: center; gap: 0.8rem; }
+        .admin-user span:first-child { color: var(--text-color); font-weight: 600; }
+        .badge { font-size: 1.1rem; font-weight: 600; padding: 4px 10px; border-radius: 6px; color: white; text-transform: uppercase; line-height: 1; }
+        .verified-img { width: 1.5rem; height: 1.5rem; }
+
+        /* Badge Form */
+        .badge-form { padding: 1.5rem; background-color: var(--bg-start); border-radius: var(--border-radius-inner); margin-top: 1.5rem; }
+        .badge-form-inner { display: flex; gap: 1rem; align-items: flex-end; }
+        .badge-form .form-group { margin-bottom: 0; flex-grow: 1; }
+        .badge-form .form-input { padding: 10px 15px; font-size: 1.4rem; }
+        .badge-form .color-input { padding: 5px; height: 42px; width: 50px; cursor: pointer; background-color: var(--bg-end); }
+        .badge-form .btn { width: auto; padding: 10px 15px; font-size: 1.4rem; }
+
+        /* Author Composer & Reply Styles */
+        .author-composer { margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--surface-border); }
+        .composer-wrapper { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .composer-input { width: 100%; padding: 12px 16px; border: 1px solid var(--surface-border); background: var(--bg-end); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1.5rem; transition: var(--transition-smooth); resize: vertical; min-height: 50px; }
+        .composer-input:focus { outline: none; border-color: var(--primary); background: var(--bg-start); }
+        .composer-actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
+        .composer-btn { width: auto; padding: 10px 25px; font-size: 1.5rem; }
+
+        /* =================================
+           MODAL
+           ================================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--bg-end); border: 1px solid var(--surface-border); padding: 3rem 4rem; border-radius: var(--border-radius-main); box-shadow: 0 8px 32px 0 var(--shadow-color); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-content h3 { font-size: 2.2rem; margin-bottom: 1rem; font-family: var(--font-secondary); }
+        .modal-content p { color: var(--text-light); margin-bottom: 3rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 1.5rem; }
+        .modal-btn { width: 120px; }
+        .btn-danger { color: #ffffff; background: var(--danger); box-shadow: 0 4px 15px rgba(244, 63, 94, 0.2); }
+        .btn-danger:hover { transform: translateY(-2px); background: var(--danger-light); box-shadow: 0 7px 25px rgba(244, 63, 94, 0.3); }
+
+        /* =================================
+           ASSET MANAGEMENT STYLES
+           ================================= */
+        .asset-section { background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: var(--border-radius-main); padding: 2.5rem 3rem; margin-bottom: 3rem; }
+        .asset-section h2 { font-size: 2.2rem; font-family: var(--font-secondary); margin-bottom: 2rem; border-bottom: 1px solid var(--surface-border); padding-bottom: 1.5rem; }
+        .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 2rem; margin-bottom: 2.5rem; }
+        .asset-card { position: relative; background: var(--bg-end); border-radius: var(--border-radius-inner); padding: 1rem; text-align: center; transition: var(--transition-smooth); border: 1px solid var(--surface-border); }
+        .asset-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px var(--shadow-color); }
+        .asset-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
+        .asset-card .color-swatch { width: 100%; height: 80px; border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--surface-border); }
+        .asset-card p { font-size: 1.3rem; font-weight: 500; word-break: break-all; }
+        .delete-asset-btn { position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3); transition: var(--transition-smooth); }
+        .delete-asset-btn:hover { transform: scale(1.1); background: var(--danger-light); }
+
+        .add-asset-form { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--surface-border); }
+        .add-asset-form h3 { font-size: 1.8rem; font-family: var(--font-secondary); margin-bottom: 1.5rem; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem 2rem; }
+        .add-asset-form .btn { width: auto; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group.align-right { display: flex; justify-content: flex-end; align-items: center; }
+
+        #save-all-changes-btn {
+            position: fixed;
+            bottom: 3rem;
+            right: 3rem;
+            width: auto;
+            padding: 1.5rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.8rem;
+            z-index: 1001;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transform: translateY(200%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #save-all-changes-btn.visible {
+            transform: translateY(0);
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
+        <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+    </button>
+    
+    <div id="login-section">
+        <div class="login-card" data-aos="zoom-in" data-aos-duration="600">
+            <h1>Panel Admin <span class="logo">pictlord</span></h1>
+            <p>Selamat datang kembali, silakan masuk.</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <input type="text" id="username" class="form-input" placeholder="Username" required>
+                    <i class="form-icon fas fa-user"></i>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-input" placeholder="Password" required>
+                    <i class="form-icon fas fa-lock"></i>
+                </div>
+                <button type="submit" class="btn btn-primary">Masuk</button>
+                <p id="login-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="container">
+        <header class="admin-header" data-aos="fade-down">
+            <h1>Kelola Aset</h1>
+            <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+        </header>
+
+        <!-- Frames Management -->
+        <section id="frames-management" class="asset-section" data-aos="fade-up">
+            <h2>Kelola Bingkai (Frames)</h2>
+            <div id="frames-grid" class="asset-grid">
+                <!-- Frame cards will be loaded here -->
+            </div>
+            <form id="add-frame-form" class="add-asset-form">
+                <h3>Tambah Bingkai Baru</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="frame-type" class="form-label">Tipe Bingkai</label>
+                        <select id="frame-type" class="form-input">
+                            <option value="image">Gambar</option>
+                            <option value="color">Warna</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="frame-name-group">
+                        <label for="frame-name" class="form-label">Nama Bingkai</label>
+                        <input type="text" id="frame-name" class="form-input" placeholder="e.g., Pink Glitter">
+                    </div>
+                    <div class="form-group" id="frame-file-group">
+                        <label for="frame-file" class="form-label">File Gambar</label>
+                        <input type="file" id="frame-file" class="form-input" accept="image/png, image/jpeg, image/gif">
+                    </div>
+                    <div class="form-group" id="frame-color-group" style="display: none;">
+                        <label for="frame-color" class="form-label">Pilih Warna</label>
+                        <input type="color" id="frame-color" class="form-input" value="#FFC2D1">
+                    </div>
+                    <div class="form-group align-right">
+                         <button type="submit" class="btn btn-primary">Tambah Bingkai</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Stickers Management -->
+        <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
+            <h2>Kelola Stiker (Stickers)</h2>
+            <div id="stickers-grid" class="asset-grid">
+                <!-- Sticker cards will be loaded here -->
+            </div>
+             <form id="add-sticker-form" class="add-asset-form">
+                <h3>Unggah Stiker Baru</h3>
+                 <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sticker-name" class="form-label">Nama Stiker</label>
+                        <input type="text" id="sticker-name" class="form-input" placeholder="e.g., Cute Cats" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sticker-folder" class="form-label">Nama Folder di GitHub</label>
+                        <input type="text" id="sticker-folder" class="form-input" placeholder="e.g., cute-cats" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="sticker-files" class="form-label">Pilih Gambar Stiker (min. 5)</label>
+                        <input type="file" id="sticker-files" class="form-input" multiple accept="image/png, image/jpeg, image/gif">
+                    </div>
+                    <div class="form-group full-width align-right">
+                         <button type="submit" class="btn btn-primary">Unggah Stiker</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Logos Management -->
+        <section id="logos-management" class="asset-section" data-aos="fade-up" data-aos-delay="200">
+            <h2>Kelola Logo (Englogo)</h2>
+            <div id="logos-grid" class="asset-grid">
+                <!-- Logo cards will be loaded here -->
+            </div>
+             <form id="add-logo-form" class="add-asset-form">
+                <h3>Tambah Logo Baru</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="logo-name" class="form-label">Nama Logo</label>
+                        <input type="text" id="logo-name" class="form-input" placeholder="e.g., KOR" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="logo-value" class="form-label">Teks Logo</label>
+                        <input type="text" id="logo-value" class="form-input" placeholder="e.g., ㅔㅑㅊ시ㅐㄱㅇ" required>
+                    </div>
+                    <div class="form-group align-right">
+                         <button type="submit" class="btn btn-primary">Tambah Logo</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Testimonial Management -->
+        <section class="profile-settings" data-aos="fade-up" data-aos-delay="300">
+            <h2>Profil Author Testimoni</h2>
+            <form id="profile-form" class="profile-form">
+                <div class="form-group">
+                    <label for="author-name" class="form-label">Nama Author</label>
+                    <input type="text" id="author-name" class="form-input" style="padding-left: 14px;" placeholder="e.g., xlord" required>
+                </div>
+                <div class="form-group">
+                    <label for="author-avatar-upload" class="form-label">Avatar Profil</label>
+                    <div class="avatar-upload-wrapper">
+                         <img id="avatar-preview" src="https://placehold.co/100x100/2c2f36/e4e6eb?text=AVATAR" alt="Avatar Preview">
+                         <input type="file" id="author-avatar-upload" accept="image/png, image/jpeg, image/gif">
+                         <label for="author-avatar-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
+                         <button type="button" id="delete-avatar-btn" title="Hapus Avatar"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center;">
+                    <button type="submit" class="btn btn-primary btn-save-profile">Simpan Profil</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="testimonial-management" class="asset-section" data-aos="fade-up" data-aos-delay="400">
+            <h2>Kelola Testimoni</h2>
+            <div id="admin-testimonial-grid">
+                <!-- Testimonials will be loaded here -->
+            </div>
+        </section>
+
+    </div>
+    
+    <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Konfirmasi Tindakan</h3>
+            <p id="modal-message">Apakah Anda yakin?</p>
+            <div class="modal-actions">
+                <button id="modal-cancel-btn" class="btn btn-secondary modal-btn">Batal</button>
+                <button id="modal-confirm-btn" class="btn btn-danger modal-btn">Yakin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-database-compat.js"></script>
+    
+    <!-- AOS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- GitHub Image Config -->
+    <script src="api.git.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="fire.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        AOS.init({ duration: 600, once: true, offset: 50 });
+
+        // --- STATE ---
+        let assetsData = null;
+        let isDataDirty = false;
+        let confirmCallback = null;
+        let authorProfile = { name: 'xlord', avatar: '' };
+        let newAvatarFile = null;
+
+        // --- DOM Elements ---
+        const loginSection = document.getElementById('login-section');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const docElement = document.documentElement;
+        const saveChangesBtn = document.getElementById('save-all-changes-btn');
+        const modal = document.getElementById('confirmation-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+        // Asset Management DOM
+        const framesGrid = document.getElementById('frames-grid');
+        const addFrameForm = document.getElementById('add-frame-form');
+        const frameTypeSelect = document.getElementById('frame-type');
+        const logosGrid = document.getElementById('logos-grid');
+        const addLogoForm = document.getElementById('add-logo-form');
+        const stickersGrid = document.getElementById('stickers-grid');
+        const addStickerForm = document.getElementById('add-sticker-form');
+
+        // Testimonial Management DOM
+        const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
+        const profileForm = document.getElementById('profile-form');
+        const authorNameInput = document.getElementById('author-name');
+        const authorAvatarUpload = document.getElementById('author-avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
+
+        // --- Firebase Refs ---
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const testimonialsRef = database.ref('testimonials');
+
+        // --- MODAL ---
+        const showModal = (message, onConfirm) => {
+            modalMessage.textContent = message;
+            confirmCallback = onConfirm;
+            modal.classList.add('active');
+        };
+        const hideModal = () => {
+            modal.classList.remove('active');
+            confirmCallback = null;
+        };
+        modalConfirmBtn.addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            hideModal();
+        });
+        modalCancelBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
+
+        // --- THEME ---
+        const applyTheme = (theme) => {
+            docElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+        themeToggle.addEventListener('click', () => {
+            const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        // --- DATA MANAGEMENT ---
+        const setDataDirty = (dirty) => {
+            isDataDirty = dirty;
+            saveChangesBtn.classList.toggle('visible', dirty);
+        }
+
+        const loadAssets = async () => {
+            try {
+                const response = await fetch('assets.json?v=' + Date.now()); // Cache-bust
+                if (!response.ok) throw new Error('Network response was not ok');
+                assetsData = await response.json();
+                renderAllAssets();
+            } catch (error) {
+                console.error("Gagal memuat assets.json:", error);
+                alert("Error: Tidak dapat memuat data aset. Periksa konsol untuk detail.");
+            }
+        };
+
+        const renderAllAssets = () => {
+            renderFrames();
+            renderLogos();
+            renderStickers();
+        };
+
+        // --- RENDER FUNCTIONS ---
+        const renderFrames = () => {
+            if (!assetsData || !framesGrid) return;
+            framesGrid.innerHTML = '';
+
+            assetsData.frames.colors.forEach((frame, index) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${frame.value};"></div>
+                    <p>${frame.value}</p>
+                    <button class="delete-asset-btn" data-type="frame-color" data-index="${index}"><i class="fas fa-times"></i></button>
+                `;
+                framesGrid.appendChild(card);
+            });
+
+            assetsData.frames.images.forEach((frame, index) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <img src="${frame.path}" alt="${frame.name}">
+                    <p>${frame.name}</p>
+                    <button class="delete-asset-btn" data-type="frame-image" data-index="${index}"><i class="fas fa-times"></i></button>
+                `;
+                framesGrid.appendChild(card);
+            });
+        };
+
+        const renderLogos = () => {
+            if (!assetsData || !logosGrid) return;
+            logosGrid.innerHTML = '';
+            assetsData.logos.forEach((logo, index) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <div class="logo-preview">${logo.name}</div>
+                    <p>${logo.value}</p>
+                    <button class="delete-asset-btn" data-type="logo" data-index="${index}"><i class="fas fa-times"></i></button>
+                `;
+                logosGrid.appendChild(card);
+            });
+        };
+
+        const renderStickers = () => {
+            if (!assetsData || !stickersGrid) return;
+            stickersGrid.innerHTML = '';
+            // Filter out the "None" sticker
+            const actualStickers = assetsData.stickers.filter(s => s.id !== 'noneSticker');
+            actualStickers.forEach((sticker, index) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <img src="${sticker.icon}" alt="${sticker.name}" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=err'">
+                    <p>${sticker.name}</p>
+                    <button class="delete-asset-btn" data-type="sticker" data-id="${sticker.id}"><i class="fas fa-times"></i></button>
+                `;
+                stickersGrid.appendChild(card);
+            });
+        };
+
+        // --- EVENT HANDLERS ---
+        addFrameForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const type = frameTypeSelect.value;
+            const submitBtn = addFrameForm.querySelector('button[type="submit"]');
+
+            if (type === 'color') {
+                const colorValue = document.getElementById('frame-color').value;
+                const newFrame = { id: `colorFrame${Date.now()}`, value: colorValue };
+                assetsData.frames.colors.push(newFrame);
+                setDataDirty(true);
+                renderFrames();
+                addFrameForm.reset();
+            } else { // Image upload
+                const name = document.getElementById('frame-name').value.trim();
+                const fileInput = document.getElementById('frame-file');
+                const file = fileInput.files[0];
+
+                if (!name || !file) {
+                    alert('Nama Bingkai dan File Gambar harus diisi.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+
+                try {
+                    const filePath = `${githubConfig.assetsPath}/frame-backgrounds/${file.name}`;
+                    const reader = new FileReader();
+                    const fileReadPromise = new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = reject;
+                    });
+                    reader.readAsDataURL(file);
+                    const base64content = await fileReadPromise;
+
+                    const { owner, repo } = githubConfig;
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                    await githubApiRequest(apiUrl, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: `feat: upload frame ${file.name}`,
+                            content: base64content,
+                        }),
+                    });
+
+                    const newFrame = { id: `imageFrame${Date.now()}`, name, path: filePath };
+                    assetsData.frames.images.push(newFrame);
+
+                    setDataDirty(true);
+                    renderFrames();
+                    addFrameForm.reset();
+                    alert(`Bingkai gambar "${name}" berhasil diunggah! Jangan lupa simpan perubahan.`);
+
+                } catch (error) {
+                    console.error("Gagal mengunggah bingkai:", error);
+                    alert(`Gagal mengunggah bingkai: ${error.message}`);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Tambah Bingkai';
+                }
+            }
+        });
+
+        frameTypeSelect.addEventListener('change', () => {
+            const isColor = frameTypeSelect.value === 'color';
+            document.getElementById('frame-name-group').style.display = isColor ? 'none' : 'block';
+            document.getElementById('frame-file-group').style.display = isColor ? 'none' : 'block';
+            document.getElementById('frame-color-group').style.display = isColor ? 'block' : 'none';
+        });
+
+        framesGrid.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-asset-btn')) {
+                const btn = e.target.closest('.delete-asset-btn');
+                const type = btn.dataset.type;
+                const index = parseInt(btn.dataset.index, 10);
+                if (confirm('Anda yakin ingin menghapus aset ini?')) {
+                    if (type === 'frame-color') {
+                        assetsData.frames.colors.splice(index, 1);
+                    } else if (type === 'frame-image') {
+                        assetsData.frames.images.splice(index, 1);
+                    }
+                    setDataDirty(true);
+                    renderFrames();
+                }
+            }
+        });
+
+        addLogoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('logo-name').value.trim();
+            const value = document.getElementById('logo-value').value.trim();
+            if(!name || !value) {
+                alert('Nama dan Teks Logo harus diisi.');
+                return;
+            }
+            const newLogo = { id: `logo${Date.now()}`, name, value };
+            assetsData.logos.push(newLogo);
+            setDataDirty(true);
+            renderLogos();
+            addLogoForm.reset();
+        });
+
+        logosGrid.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-asset-btn')) {
+                const btn = e.target.closest('.delete-asset-btn');
+                const index = parseInt(btn.dataset.index, 10);
+                 if (confirm('Anda yakin ingin menghapus logo ini?')) {
+                    assetsData.logos.splice(index, 1);
+                    setDataDirty(true);
+                    renderLogos();
+                }
+            }
+        });
+
+        stickersGrid.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-asset-btn')) {
+                const btn = e.target.closest('.delete-asset-btn');
+                const stickerId = btn.dataset.id;
+                 if (confirm(`Anda yakin ingin menghapus stiker "${stickerId}"? Ini juga akan menghapus layoutnya.`)) {
+                    const stickerIndex = assetsData.stickers.findIndex(s => s.id === stickerId);
+                    if (stickerIndex > -1) {
+                         const stickerLayout = assetsData.stickers[stickerIndex].layout;
+                        // Hapus stiker dari array stickers
+                        assetsData.stickers.splice(stickerIndex, 1);
+                        // Hapus layout terkait jika ada
+                        if (stickerLayout && assetsData.stickerLayouts[stickerLayout]) {
+                            delete assetsData.stickerLayouts[stickerLayout];
+                        }
+                        setDataDirty(true);
+                        renderStickers();
+                    }
+                }
+            }
+        });
+
+        addStickerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const stickerName = document.getElementById('sticker-name').value.trim();
+            const stickerFolder = document.getElementById('sticker-folder').value.trim().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+            const files = document.getElementById('sticker-files').files;
+
+            if (!stickerName || !stickerFolder) {
+                alert('Nama Stiker dan Nama Folder harus diisi.');
+                return;
+            }
+            if (files.length < 5) {
+                alert('Anda harus mengunggah minimal 5 gambar stiker.');
+                return;
+            }
+
+            const submitBtn = addStickerForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+
+            try {
+                // 1. Upload files to GitHub
+                const uploadedFilePaths = [];
+                for (const file of files) {
+                    const filePath = `${githubConfig.assetsPath}/stickers/${stickerFolder}/${file.name}`;
+                    const reader = new FileReader();
+                    const fileReadPromise = new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = reject;
+                    });
+                    const base64content = await fileReadPromise;
+                    reader.readAsDataURL(file);
+
+                    const { owner, repo } = githubConfig;
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                    await githubApiRequest(apiUrl, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: `feat: upload sticker ${file.name}`,
+                            content: base64content,
+                        }),
+                    });
+                    uploadedFilePaths.push(filePath);
+                }
+
+                // 2. Add sticker to assets.json data
+                const newStickerId = `${stickerFolder}Sticker`;
+                const newSticker = {
+                    id: newStickerId,
+                    name: stickerName,
+                    icon: uploadedFilePaths[0], // Use the first image as the icon
+                    layout: stickerFolder
+                };
+                assetsData.stickers.push(newSticker);
+
+                // 3. Create a new layout based on ballerinacp
+                const baseLayout = JSON.parse(JSON.stringify(assetsData.stickerLayouts.ballerinacp));
+                const newLayout = baseLayout.map((item, index) => {
+                    // Replace the src with the new uploaded image path, cycling if needed
+                    item.src = uploadedFilePaths[index % uploadedFilePaths.length];
+                    return item;
+                });
+                assetsData.stickerLayouts[stickerFolder] = newLayout;
+
+                // 4. Mark data as dirty and re-render
+                setDataDirty(true);
+                renderStickers();
+                addStickerForm.reset();
+                alert(`Stiker "${stickerName}" berhasil diunggah! Jangan lupa simpan perubahan.`);
+
+            } catch (error) {
+                console.error("Gagal mengunggah stiker:", error);
+                alert(`Gagal mengunggah stiker: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Unggah Stiker';
+            }
+        });
+
+        saveChangesBtn.addEventListener('click', async () => {
+            if (!isDataDirty || !assetsData) return;
+
+            saveChangesBtn.disabled = true;
+            saveChangesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+
+            try {
+                await saveAssetsToGithub();
+                setDataDirty(false);
+                alert('Perubahan berhasil disimpan!');
+            } catch (error) {
+                console.error("Gagal menyimpan perubahan:", error);
+                alert(`Gagal menyimpan perubahan: ${error.message}`);
+            } finally {
+                saveChangesBtn.disabled = false;
+                saveChangesBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
+            }
+        });
+
+
+        // --- GITHUB API ---
+        const githubApiRequest = async (url, options) => {
+            if (typeof githubConfig === 'undefined' || !githubConfig.token) {
+                 throw new Error("Konfigurasi GitHub tidak lengkap. Periksa api.git.js");
+            }
+            const { token } = githubConfig;
+            const response = await fetch(url, {
+                ...options,
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    ...options.headers,
+                },
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`GitHub API Error (${response.status}): ${errorData.message}`);
+            }
+            return response;
+        };
+
+        const saveAssetsToGithub = async () => {
+            const { owner, repo } = githubConfig;
+            const filePath = 'assets.json';
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+            let currentSha;
+            try {
+                const fileResponse = await githubApiRequest(apiUrl, { method: 'GET' });
+                const fileData = await fileResponse.json();
+                currentSha = fileData.sha;
+            } catch (error) {
+                 if (error.message.includes("404")) { // File doesn't exist yet
+                    currentSha = null;
+                } else {
+                    throw error; // Other errors
+                }
+            }
+
+            const content = JSON.stringify(assetsData, null, 2);
+            const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+            await githubApiRequest(apiUrl, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: 'feat: update assets.json from admin panel',
+                    content: encodedContent,
+                    sha: currentSha, // Include SHA if updating an existing file
+                }),
+            });
+        };
+
+
+        // --- GITHUB IMAGE DELETION (for Testimonial Avatars) ---
+        const deleteImageFromGithub = async (imageUrl) => {
+            try {
+                const { owner, repo } = githubConfig;
+                const url = new URL(imageUrl);
+                const filePathInRepo = url.pathname.split('/').slice(3).join('/');
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePathInRepo}`;
+
+                const fileResponse = await githubApiRequest(apiUrl, { method: 'GET' });
+                const fileData = await fileResponse.json();
+
+                await githubApiRequest(apiUrl, {
+                    method: 'DELETE',
+                    body: JSON.stringify({
+                        message: `feat: delete image ${fileData.name}`,
+                        sha: fileData.sha,
+                    }),
+                });
+                console.log(`Berhasil dihapus dari GitHub: ${fileData.name}`);
+            } catch (error) {
+                if (!error.message.includes("404")) {
+                    console.error("Error saat menghapus gambar dari GitHub:", error.message);
+                    throw error;
+                } else {
+                    console.log("Gambar tidak ditemukan di GitHub, mungkin sudah dihapus.");
+                }
+            }
+        };
+
+        // --- TESTIMONIAL RENDERING ---
+        const timeAgo = (timestamp) => {
+            const now = Date.now();
+            const seconds = Math.floor((now - timestamp) / 1000);
+            if (seconds < 60) return "Baru saja";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} menit lalu`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} jam lalu`;
+            const days = Math.floor(hours / 24);
+            return `${days} hari lalu`;
+        };
+
+        const createAdminPostCard = (postData, key, index) => {
+            const card = document.createElement('div');
+            card.className = 'admin-post-card';
+            card.id = `post-${key}`;
+            card.setAttribute('data-aos', 'fade-up');
+            card.setAttribute('data-aos-delay', index * 50);
+
+            const comments = postData.comments || {};
+            let commentsHTML = '';
+            const sortedKeys = Object.keys(comments).sort((a, b) => comments[a].timestamp - comments[b].timestamp);
+            sortedKeys.forEach(commentKey => {
+                commentsHTML += createCommentHTML(comments[commentKey], key, commentKey);
+            });
+
+            const postBadge = postData.badge;
+            const postBadgeHTML = postBadge ? `<span class="badge" style="background-color: ${postBadge.color || '#777'};">${postBadge.text}</span>` : '';
+
+            card.innerHTML = `
+                <div class="admin-post-header">
+                    <div class="post-user-info">
+                        <div class="post-avatar">${postData.name ? postData.name.charAt(0).toUpperCase() : 'U'}</div>
+                        <div>
+                            <div class="post-name-section">
+                                <div class="post-name">${postData.name}</div>
+                                ${postBadgeHTML}
+                            </div>
+                            <div class="post-timestamp">${timeAgo(postData.timestamp)}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn-icon edit-post-badge-btn" data-key="${key}" title="Edit Badge Postingan"><i class="fas fa-id-badge"></i></button>
+                        <button class="btn-icon delete-post-btn" data-key="${key}" title="Hapus Postingan"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+
+                <form class="badge-form post-badge-form" data-post-key="${key}">
+                    <div class="badge-form-inner">
+                        <div class="form-group"> <input type="text" class="form-input badge-text-input" placeholder="Teks Badge Postingan" value="${postBadge ? postBadge.text : ''}"> </div>
+                        <div class="form-group"> <input type="color" class="form-input color-input badge-color-input" value="${postBadge ? postBadge.color : '#8B5CF6'}"> </div>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+
+                ${postData.text ? `<p class="admin-post-content">${postData.text}</p>` : ''}
+                ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post image by ${postData.name}" class="admin-post-image" loading="lazy">` : ''}
+
+                <div class="comments-section">
+                    <h4>Komentar (${sortedKeys.length})</h4>
+                    <div class="comments-list" id="comments-list-${key}">${commentsHTML}</div>
+                    <div class="author-composer">
+                         <form class="add-comment-form" data-post-key="${key}">
+                            <div class="composer-wrapper">
+                                ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
+                                <div style="width: 100%;">
+                                    <textarea class="composer-input" placeholder="Tulis komentar sebagai author..." required></textarea>
+                                    <div class="composer-actions"> <button type="submit" class="btn btn-primary composer-btn">Kirim Komentar</button> </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            return card;
+        };
+
+        const createCommentHTML = (comment, postKey, commentKey) => {
+            if (comment.isDev) {
+                return createAdminCommentHTML(comment, postKey, commentKey, false);
+            }
+
+            let repliesHTML = '';
+            if (comment.replies) {
+                const sortedReplies = Object.keys(comment.replies).map(key => ({ key, ...comment.replies[key] })).sort((a, b) => a.timestamp - b.timestamp);
+                sortedReplies.forEach(reply => {
+                    repliesHTML += createAdminCommentHTML(reply, postKey, commentKey, true, reply.key);
+                });
+            }
+
+            const badge = comment.badge;
+            const badgeHTML = badge ? `<span class="badge" style="background-color: ${badge.color || '#777'};">${badge.text}</span>` : '';
+            const userAvatar = `<div class="comment-avatar">${comment.name ? comment.name.charAt(0).toUpperCase() : 'U'}</div>`;
+
+            return `
+                <div class="comment-container">
+                    <div class="comment-item">
+                        ${userAvatar}
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-user">${comment.name} ${badgeHTML}</span>
+                            </div>
+                            <p class="comment-text">${comment.text}</p>
+                            <div class="comment-actions">
+                                <button class="btn-action reply-to-comment-btn" data-comment-key="${commentKey}"><i class="fas fa-reply"></i> Balas</button>
+                                <button class="btn-action badge-comment-btn" data-comment-key="${commentKey}"><i class="fas fa-id-badge"></i> Badge</button>
+                                <button class="btn-action delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i> Hapus</button>
+                            </div>
+
+                            <form class="comment-reply-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
+                                <div class="composer-wrapper">
+                                    ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
+                                    <div style="width: 100%;">
+                                        <textarea class="composer-input" placeholder="Balas komentar ${comment.name}..." required></textarea>
+                                        <div class="composer-actions"> <button type="submit" class="btn btn-primary composer-btn">Kirim</button> </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form class="badge-form comment-badge-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
+                                <div class="badge-form-inner">
+                                    <div class="form-group"> <input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${badge ? badge.text : ''}"> </div>
+                                    <div class="form-group"> <input type="color" class="form-input color-input badge-color-input" value="${badge ? badge.color : '#8B5CF6'}"> </div>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="replies-container">${repliesHTML}</div>
+                </div>
+            `;
+        };
+
+        const createAvatarHTML = (name, avatarUrl, cssClass = 'comment-avatar') => {
+            if (avatarUrl) {
+                return `<img src="${avatarUrl}" alt="${name}" class="${cssClass}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=ERR'">`;
+            }
+            return `<div class="${cssClass}" style="background-color: var(--author-color); color: white;">${name ? name.charAt(0).toUpperCase() : 'A'}</div>`;
+        };
+
+        const createAdminCommentHTML = (comment, postKey, commentKey, isReply = false, replyKey = null) => {
+            const deleteButton = isReply
+                ? `<button class="btn-icon delete-reply-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" data-reply-key="${replyKey}" title="Hapus Balasan"><i class="fas fa-trash"></i></button>`
+                : `<button class="btn-icon delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i></button>`;
+
+            return `
+                <div class="admin-comment">
+                    <div class="comment-item">
+                        ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-user admin-user">
+                                    <span>${authorProfile.name}</span>
+                                    <img src="https://i.postimg.cc/hGJjPYW5/verified.png" alt="Verified Admin" class="verified-img">
+                                    <span class="badge" style="background-color: var(--author-color);">Author</span>
+                                </span>
+                                ${deleteButton}
+                            </div>
+                            <p class="comment-text">${comment.text}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        const loadAdminTestimonials = () => {
+            adminTestimonialGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
+            testimonialsRef.orderByChild('timestamp').on('value', (snapshot) => {
+                adminTestimonialGrid.innerHTML = '';
+                if (!snapshot.exists()) {
+                    adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada testimoni.</p>';
+                    return;
+                }
+                let posts = [];
+                snapshot.forEach(childSnapshot => {
+                    posts.push({ key: childSnapshot.key, val: childSnapshot.val() });
+                });
+                posts.reverse().forEach((post, index) => {
+                    adminTestimonialGrid.appendChild(createAdminPostCard(post.val, post.key, index));
+                });
+                setTimeout(() => { AOS.refresh(true); }, 100);
+            }, (error) => {
+                console.error("Firebase read failed: " + error.code);
+                adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--danger);">Gagal memuat data.</p>';
+            });
+        };
+
+        // --- AUTH & PROFILE ---
+        const saveAuthorProfile = async () => {
+            const newName = authorNameInput.value.trim();
+            let newAvatarUrl = authorProfile.avatar;
+
+            if (newAvatarFile) {
+                if (authorProfile.avatar) {
+                    await deleteImageFromGithub(authorProfile.avatar);
+                }
+
+                const reader = new FileReader();
+                const fileReadPromise = new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                });
+                reader.readAsDataURL(newAvatarFile);
+                const base64content = await fileReadPromise;
+
+                const { owner, repo, adminAvatarPath } = githubConfig;
+                const fileName = `avatar-${Date.now()}.${newAvatarFile.name.split('.').pop()}`;
+                const filePath = `${adminAvatarPath}/${fileName}`;
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                await githubApiRequest(apiUrl, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        message: `feat: upload admin avatar ${fileName}`,
+                        content: base64content,
+                    }),
+                });
+
+                newAvatarUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+            }
+
+            authorProfile.name = newName;
+            authorProfile.avatar = newAvatarUrl;
+
+            localStorage.setItem('pictlord_author_profile', JSON.stringify(authorProfile));
+            newAvatarFile = null;
+            loadAuthorProfile();
+            loadAdminTestimonials();
+        };
+
+        const loadAuthorProfile = () => {
+            const savedProfile = localStorage.getItem('pictlord_author_profile');
+            if (savedProfile) {
+                authorProfile = JSON.parse(savedProfile);
+            }
+            authorNameInput.value = authorProfile.name;
+            avatarPreview.src = authorProfile.avatar || 'https://placehold.co/100x100/2c2f36/e4e6eb?text=AVATAR';
+
+            if (authorProfile.avatar) {
+                deleteAvatarBtn.classList.add('visible');
+            } else {
+                deleteAvatarBtn.classList.remove('visible');
+            }
+        };
+
+        deleteAvatarBtn.addEventListener('click', async () => {
+            if (!authorProfile.avatar) return;
+
+            showModal('Apakah Anda yakin ingin menghapus avatar ini?', async () => {
+                try {
+                    await deleteImageFromGithub(authorProfile.avatar);
+                    authorProfile.avatar = '';
+                    localStorage.setItem('pictlord_author_profile', JSON.stringify(authorProfile));
+                    loadAuthorProfile();
+                    loadAdminTestimonials();
+                    alert('Avatar berhasil dihapus.');
+                } catch (error) {
+                    console.error("Gagal menghapus avatar:", error);
+                    alert(`Gagal menghapus avatar: ${error.message}`);
+                }
+            });
+        });
+
+        authorAvatarUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                newAvatarFile = file;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarPreview.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const saveButton = e.target.querySelector('.btn-save-profile');
+            saveButton.disabled = true;
+            saveButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+            try {
+                await saveAuthorProfile();
+                alert('Profil berhasil disimpan!');
+            } catch (error) {
+                console.error("Gagal menyimpan profil:", error);
+                alert(`Gagal menyimpan profil: ${error.message}`);
+            } finally {
+                saveButton.disabled = false;
+                saveButton.innerHTML = 'Simpan Profil';
+            }
+        });
+
+        // --- EVENT LISTENERS (TESTIMONIALS) ---
+        adminTestimonialGrid.addEventListener('click', (e) => {
+            const deletePostBtn = e.target.closest('.delete-post-btn');
+            if (deletePostBtn) {
+                const postKey = deletePostBtn.dataset.key;
+                showModal('Hapus postingan ini? Jika ada gambar, gambar di GitHub juga akan dihapus.', () => {
+                    testimonialsRef.child(postKey).once('value', async (snapshot) => {
+                        const postData = snapshot.val();
+                        if (postData && postData.imageUrl) {
+                            await deleteImageFromGithub(postData.imageUrl);
+                        }
+                        testimonialsRef.child(postKey).remove();
+                    });
+                });
+                return;
+            }
+
+            const deleteCommentBtn = e.target.closest('.delete-comment-btn');
+            if (deleteCommentBtn) {
+                showModal('Hapus komentar ini dan semua balasannya?', () => {
+                    testimonialsRef.child(deleteCommentBtn.dataset.postKey).child('comments').child(deleteCommentBtn.dataset.commentKey).remove();
+                });
+                return;
+            }
+
+            const deleteReplyBtn = e.target.closest('.delete-reply-btn');
+            if (deleteReplyBtn) {
+                showModal('Hapus balasan ini?', () => {
+                    const { postKey, commentKey, replyKey } = deleteReplyBtn.dataset;
+                    testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').child(replyKey).remove();
+                });
+                return;
+            }
+
+            const toggleForm = (button, formSelector, parentSelector) => {
+                const parent = button.closest(parentSelector);
+                const form = parent.querySelector(formSelector);
+                document.querySelectorAll('.comment-reply-form.active, .badge-form.active').forEach(activeForm => {
+                    if (activeForm !== form) activeForm.classList.remove('active');
+                });
+                form.classList.toggle('active');
+                if (form.classList.contains('active')) {
+                    form.querySelector('input, textarea').focus();
+                }
+            };
+
+            const replyToCommentBtn = e.target.closest('.reply-to-comment-btn');
+            if (replyToCommentBtn) {
+                toggleForm(replyToCommentBtn, '.comment-reply-form', '.comment-body');
+            }
+
+            const badgeCommentBtn = e.target.closest('.badge-comment-btn');
+            if (badgeCommentBtn) {
+                toggleForm(badgeCommentBtn, '.comment-badge-form', '.comment-body');
+            }
+
+            const editPostBadgeBtn = e.target.closest('.edit-post-badge-btn');
+            if (editPostBadgeBtn) {
+                toggleForm(editPostBadgeBtn, '.post-badge-form', '.admin-post-card');
+            }
+        });
+
+        adminTestimonialGrid.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const form = e.target;
+
+            if (form.classList.contains('comment-reply-form')) {
+                const input = form.querySelector('.composer-input');
+                const replyText = input.value.trim();
+                if (!replyText) return;
+                const { postKey, commentKey } = form.dataset;
+                const newReply = { text: replyText, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
+                testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').push(newReply)
+                    .then(() => { input.value = ''; form.classList.remove('active'); });
+            }
+
+            if (form.classList.contains('add-comment-form')) {
+                const input = form.querySelector('.composer-input');
+                const commentText = input.value.trim();
+                if (!commentText) return;
+                const { postKey } = form.dataset;
+                const newComment = { text: commentText, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
+                testimonialsRef.child(postKey).child('comments').push(newComment)
+                    .then(() => { input.value = ''; });
+            }
+
+            if (form.classList.contains('badge-form')) {
+                const text = form.querySelector('.badge-text-input').value.trim();
+                const color = form.querySelector('.badge-color-input').value;
+                const { postKey, commentKey } = form.dataset;
+
+                let badgeRef;
+                if (form.classList.contains('post-badge-form')) {
+                    badgeRef = testimonialsRef.child(postKey).child('badge');
+                } else {
+                    badgeRef = testimonialsRef.child(postKey).child('comments').child(commentKey).child('badge');
+                }
+
+                if (text) {
+                    badgeRef.set({ text, color });
+                } else {
+                    badgeRef.remove();
+                }
+                form.classList.remove('active');
+            }
+        });
+
+        // --- AUTH ---
+        const checkLogin = () => {
+            if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
+                loginSection.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loadAssets();
+                loadAuthorProfile();
+                loadAdminTestimonials();
+            } else {
+                loginSection.style.display = 'flex';
+                adminPanel.style.display = 'none';
+            }
+        };
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if (user === 'xlord' && pass === 'xlord') {
+                sessionStorage.setItem('pictlord_admin_auth', 'true');
+                checkLogin();
+            } else {
+                loginError.textContent = 'Username atau password salah.';
+                setTimeout(() => { loginError.textContent = ''; }, 3000);
+            }
+        });
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('pictlord_admin_auth');
+            setDataDirty(false);
+            checkLogin();
+        });
+
+        // --- INITIALIZATION ---
+        applyTheme(localStorage.getItem('theme') || 'dark');
+        checkLogin();
+    });
+    </script>
+</body>
+</html>
