@@ -282,6 +282,21 @@
         "id": "imageFrame1755382089589",
         "name": "lui",
         "path": "assets/frame-backgrounds/1000003877.jpg"
+      },
+      {
+        "id": "imageFrame1755525947902",
+        "name": "api",
+        "path": "assets/frame-backgrounds/bee2fb23b9611d99c4f4ea45f2f95f0a.jpg"
+      },
+      {
+        "id": "imageFrame1755525964806",
+        "name": "lumut",
+        "path": "assets/frame-backgrounds/c5320c7e31cfb396300074b0a1950052.jpg"
+      },
+      {
+        "id": "imageFrame1755526008426",
+        "name": "sabrut",
+        "path": "assets/frame-backgrounds/2ef8b712a10615c5bf39a7c057ac27e2.jpg"
       }
     ]
   },
