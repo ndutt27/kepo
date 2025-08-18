@@ -795,16 +795,19 @@
         <div class="modal-content qr-modal-content">
             <span class="modal-close-btn">&times;</span>
             <h2 class="qr-title">Get Photos via Email</h2>
-            <p class="qr-subtitle">This feature is coming soon! For now, you can use the QR Code option.</p>
-             <div class="email-form-container" style="display: none;">
+            <p class="qr-subtitle">Enter your email below and we'll automatically send you a link to your photos.</p>
+             <div class="email-form-container">
                 <input type="email" id="emailInput" placeholder="Enter your active email" class="neumorphic-input">
-                <button id="sendEmailBtn" class="neumorphic-btn">Send</button>
+                <button id="sendEmailBtn" class="neumorphic-btn">
+                    <i class="fas fa-paper-plane"></i> Send Email
+                </button>
             </div>
         </div>
     </div>
 
 
     <script src="js/vanilla-picker.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -925,10 +928,58 @@
                 showModal(emailModal);
             });
 
-            document.getElementById('sendEmailBtn')?.addEventListener('click', () => {
-                alert('This feature is coming soon!');
-            });
+            document.getElementById('sendEmailBtn')?.addEventListener('click', handleEmailGeneration);
 
+            // --- Email Generation (EmailJS) ---
+            async function handleEmailGeneration() {
+                const emailInput = document.getElementById('emailInput');
+                const toEmail = emailInput.value;
+                const sendBtn = document.getElementById('sendEmailBtn');
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(toEmail)) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+
+                const originalBtnHTML = sendBtn.innerHTML;
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+                try {
+                    const finalCanvas = document.querySelector('#photoPreview canvas');
+                    if (!finalCanvas) throw new Error('Preview canvas not found.');
+
+                    const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
+                    if (!storedImages || storedImages.length === 0) throw new Error('No images found in session.');
+
+                    const imageData = finalCanvas.toDataURL('image/png', 1.0);
+                    const gifData = await createGif(storedImages);
+
+                    const assets = { strip: imageData, gif: gifData, poses: storedImages };
+                    const temporaryLink = await generateTemporaryLink(assets);
+
+                    const templateParams = {
+                        to_email: toEmail,
+                        download_link: temporaryLink,
+                    };
+
+                    await emailjs.send('service_pp6klaw', 'template_2axtgkw', templateParams, '5JSemJ-zdavtHIFew');
+
+                    sendBtn.innerHTML = '<i class="fas fa-check"></i> Email Sent!';
+                    setTimeout(() => {
+                        hideModal(emailModal);
+                        sendBtn.disabled = false;
+                        sendBtn.innerHTML = originalBtnHTML;
+                    }, 2500);
+
+                } catch (error) {
+                    console.error('Failed to send email:', error);
+                    alert(`Failed to send email. Error: ${error.text || error.message}`);
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = originalBtnHTML;
+                }
+            }
 
             // --- GIF Creation ---
             async function createGif(imagesToUse) {
