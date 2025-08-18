@@ -1118,7 +1118,7 @@
                 const dataToStore = { ...assets, expiresAt: expirationTime };
                 const shortId = generateShortId(5);
                 await database.ref('images/' + shortId).set(dataToStore);
-                return `${window.location.origin}/hasil.html?id=${shortId}`;
+                return `${window.location.origin}/soft-file?id=${shortId}`;
             }
 
             document.getElementById('downloadDirectBtn')?.addEventListener('click', () => {
