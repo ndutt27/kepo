@@ -198,7 +198,7 @@ exports.handler = async (event) => {
                 
                 <!-- Main Call-to-Action Button -->
                 <div class="button-container">
-                    <a href="{{download_link}}" class="button">Lihat & Unduh Foto</a>
+                    <a href="{{DONWLOAD_LINK}}" class="button">UNDUH SEKARANG</a>
                 </div>
 
                 <!-- Expiration Warning -->
