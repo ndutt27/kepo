@@ -1,11 +1,6 @@
 # Konfigurasi untuk Netlify Functions
 [functions]
-  # Direktori ini relatif terhadap direktori dasar (root) proyek.
-  directory = "netlify/functions/"
-
-# Pengaturan spesifik untuk fungsi send-email untuk memastikan
-# template HTML disertakan dalam paket deploy.
-[[functions.send-email]]
-  # Nama fungsi harus cocok dengan nama file (tanpa .js)
-  # Menggunakan wildcard '*' juga bisa untuk menerapkan ke semua fungsi.
-  included_files = ["netlify/functions/email-template.html"]
+  # Memastikan semua file .html di dalam direktori fungsi
+  # disertakan dalam paket deploy untuk setiap fungsi.
+  # Ini akan menyelesaikan masalah "Could not load email template".
+  included_files = ["netlify/functions/*.html"]
