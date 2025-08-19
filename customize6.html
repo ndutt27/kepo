@@ -529,7 +529,6 @@
     </div>
     
     <script src="js/vanilla-picker.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
@@ -624,7 +623,7 @@
 
             document.getElementById('sendEmailBtn')?.addEventListener('click', handleEmailGeneration);
 
-            // --- Email Generation (EmailJS) ---
+            // --- Email Generation (Resend via Netlify Function) ---
             async function handleEmailGeneration() {
                 const emailInput = document.getElementById('emailInput');
                 const toEmail = emailInput.value;
@@ -641,25 +640,34 @@
                 sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
                 try {
+                    // This part remains the same, it generates the assets and the temporary link
                     const finalCanvas = document.querySelector('#photoPreview canvas');
                     if (!finalCanvas) throw new Error('Preview canvas not found.');
-
                     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
                     if (!storedImages || storedImages.length === 0) throw new Error('No images found in session.');
-
                     const imageData = finalCanvas.toDataURL('image/png', 1.0);
                     const gifData = await createGif(storedImages);
-
                     const assets = { strip: imageData, gif: gifData, poses: storedImages };
                     const temporaryLink = await generateTemporaryLink(assets);
 
-                    const templateParams = {
-                        to_email: toEmail,
-                        download_link: temporaryLink,
-                    };
+                    // NEW: Call our Netlify function
+                    const response = await fetch('/.netlify/functions/send-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            to_email: toEmail,
+                            download_link: temporaryLink,
+                        }),
+                    });
 
-                    await emailjs.send('service_pp6klaw', 'template_2axtgkw', templateParams, '5JSemJ-zdavtHIFew');
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'The server responded with an error.');
+                    }
 
+                    // Success
                     sendBtn.innerHTML = '<i class="fas fa-check"></i> Email Sent!';
                     setTimeout(() => {
                         hideModal(emailModal);
@@ -669,7 +677,7 @@
 
                 } catch (error) {
                     console.error('Failed to send email:', error);
-                    alert(`Failed to send email. Error: ${error.text || error.message}`);
+                    alert(`Failed to send email. Error: ${error.message}`);
                     sendBtn.disabled = false;
                     sendBtn.innerHTML = originalBtnHTML;
                 }
