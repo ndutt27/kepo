@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const thumb = document.createElement('div');
             thumb.classList.add('frame-thumbnail');
+            thumb.setAttribute('aria-label', `Pilihan Bingkai Foto ${i}`);
             thumb.style.backgroundImage = `url(${frameSrc})`;
             thumb.dataset.src = frameSrc;
 
