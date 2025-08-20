@@ -15,13 +15,13 @@
         {
           "@type": "Organization",
           "name": "Pictlord",
-          "url": "https://www.pictlord.me",
-          "logo": "https://www.pictlord.me/images/pictlord%20logo.png"
+          "url": "https://www.pictlord.web.id",
+          "logo": "https://www.pictlord.web.id/images/pictlord%20logo.png"
         },
         {
           "@type": "WebSite",
           "name": "Pictlord",
-          "url": "https://www.pictlord.me",
+          "url": "https://www.pictlord.web.id",
           "description": "Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.",
           "publisher": {
             "@type": "Organization",
@@ -38,7 +38,7 @@
           },
           "name": "Pictlord Online Photobooth",
           "description": "Layanan photobooth online gratis yang memungkinkan pengguna mengambil foto, mengkustomisasi dengan bingkai, stiker, dan filter, lalu mengunduh hasilnya secara instan tanpa perlu registrasi.",
-          "url": "https://www.pictlord.me/canvas",
+          "url": "https://www.pictlord.web.id/canvas",
           "areaServed": {
             "@type": "Country",
             "name": "Worldwide"
@@ -50,19 +50,19 @@
 
     <link rel="icon" type="image/png" href="images/pictlord logo.png" />
     <link rel="apple-touch-icon" href="images/pictlord logo.png">
-    <link rel="canonical" href="https://www.pictlord.me">
+    <link rel="canonical" href="https://www.pictlord.web.id">
 
     <meta property="og:title" content="Pictlord | Photobooth Online Gratis Kapan Saja, Di Mana Saja">
     <meta property="og:description" content="Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.">
     <meta property="og:image" content="images/home-mockup.png">
-    <meta property="og:url" content="https://www.pictlord.me">
+    <meta property="og:url" content="https://www.pictlord.web.id">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Pictlord">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Pictlord | Photobooth Online Gratis Kapan Saja, Di Mana Saja">
     <meta name="twitter:description" content="Ambil foto instan bergaya photobooth secara online. Kustomisasi dengan lebih dari 100 warna bingkai, tambahkan stiker dan frame, lalu unduh strip foto berkualitas tinggi secara instan.">
-    <meta name="twitter:image" content="https://www.pictlord.me/assets/home-mockup.png">
+    <meta name="twitter:image" content="https://www.pictlord.web.id/assets/home-mockup.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -342,7 +342,9 @@
 
 <header class="main-header">
     <nav class="navbar container">
-        <a class="navbar-logo">pict<span class="highlight">lord</span></a>
+        <a href="https://www.pictlord.web.id" class="navbar-logo">
+            <img src="images/pictlord logo.png" alt="Pictlord Logo" style="height: 35px; vertical-align: middle;">
+        </a>
         <ul class="navbar-menu" id="navbar-menu">
             <li><a href="#" class="current-nav">Beranda</a></li>
             <li><a href="#about">Tentang</a></li>
@@ -1001,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const shareBtn = e.target.closest('.share-btn');
         if (shareBtn) {
-            const shareText = "Yuk, komen dan buat photobooth mu sekarang di Pictlord! : https://www.pictlord.me";
+            const shareText = "Yuk, komen dan buat photobooth mu sekarang di Pictlord! : https://www.pictlord.web.id";
             navigator.clipboard.writeText(shareText).then(() => {
                 showToast('Tautan berhasil disalin ke clipboard!');
             }).catch(() => showToast('Gagal menyalin tautan.', true));

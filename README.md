@@ -4,7 +4,7 @@
 
 **Pictlord** adalah aplikasi photobooth online gratis yang memungkinkan Anda mengambil foto instan bergaya photobooth kapan saja dan di mana saja. Kustomisasi foto Anda dengan ratusan warna bingkai, tambahkan stiker dan filter, lalu unduh strip foto berkualitas tinggi secara instan tanpa perlu registrasi.
 
-**Kunjungi Situs Web: [Pictlord.me](https://www.pictlord.me/)**
+**Kunjungi Situs Web: [Pictlord.web.id](https://www.pictlord.web.id/)**
 
 ---
 
@@ -42,7 +42,7 @@ Proyek ini dibangun menggunakan teknologi web modern, dengan fokus pada performa
 
 ## 🚀 Cara Menggunakan
 
-1.  Buka situs web [Pictlord.me](https://www.pictlord.me/).
+1.  Buka situs web [Pictlord.web.id](https://www.pictlord.web.id/).
 2.  Klik tombol **"Ambil Foto Sekarang"**.
 3.  Izinkan akses ke kamera Anda.
 4.  Ambil empat pose terbaik Anda.
