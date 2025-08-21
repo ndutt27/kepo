@@ -1214,45 +1214,20 @@
             const shareBtn = document.getElementById('shareBtn');
             if (shareBtn) {
                 shareBtn.addEventListener('click', async () => {
-                    if (typeof window.drawFinalImage !== 'function') {
-                        alert('Gambar belum siap untuk dibagikan. Mohon tunggu sebentar.');
-                        return;
-                    }
-                    
-                    const originalBtnHTML = shareBtn.innerHTML;
-                    shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
-                    shareBtn.disabled = true;
-
+                    const shareData = {
+                        title: 'Pictlord Photobooth',
+                        text: 'bingung nyari? photobooth online free dimana dan kapan aja tenang pictlord 📸solusinya 😎',
+                        url: window.location.origin
+                    };
+            
                     try {
-                        const finalCanvas = await window.drawFinalImage();
-                        if (!finalCanvas) throw new Error("Gagal membuat canvas untuk dibagikan.");
-
-                        const imageData = finalCanvas.toDataURL('image/png', 1.0);
-                        const shareUrl = await generateTemporaryLink(imageData);
-
-                        const shareData = {
-                            title: 'Pictlord Photobooth',
-                            text: 'bingung nyari? photobooth online free dimana dan kapan aja tenang pictlord 📸solusinya 😎',
-                            url: shareUrl // Share the direct image link
-                        };
-
                         if (navigator.share) {
-                             await navigator.share(shareData);
-                             console.log('Link berhasil dibagikan!');
+                            await navigator.share(shareData);
                         } else {
-                            // Fallback for desktop/unsupported browsers: open the QR modal
-                            alert('Browser Anda tidak mendukung fitur berbagi. Silakan gunakan tombol "Get QR / Download".');
-                            document.getElementById('downloadCopyBtn').click();
+                            alert('Browser Anda tidak mendukung fitur share. Silakan salin link secara manual.');
                         }
-
                     } catch (err) {
-                        console.error('Error saat berbagi:', err);
-                        if (err.name !== 'AbortError') {
-                            alert(`Gagal membuat link untuk dibagikan. Silakan coba lagi.`);
-                        }
-                    } finally {
-                        shareBtn.innerHTML = originalBtnHTML;
-                        shareBtn.disabled = false;
+                        console.error('Error saat sharing:', err);
                     }
                 });
             }
