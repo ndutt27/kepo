@@ -226,6 +226,8 @@
         .asset-card { position: relative; background: var(--bg-end); border-radius: var(--border-radius-inner); padding: 1rem; text-align: center; transition: var(--transition-smooth); border: 1px solid var(--surface-border); }
         .asset-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px var(--shadow-color); }
         .asset-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
+        #temp-links-grid .asset-card img { object-fit: contain; background-color: #f0f0f0; }
+        [data-theme="dark"] #temp-links-grid .asset-card img { background-color: var(--bg-start); }
         .asset-card .color-swatch { width: 100%; height: 80px; border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--surface-border); }
         .asset-card p { font-size: 1.3rem; font-weight: 500; word-break: break-all; }
         .delete-asset-btn { position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3); transition: var(--transition-smooth); }
@@ -406,6 +408,14 @@
             </div>
         </section>
 
+        <!-- Temporary Links Management -->
+        <section id="temp-links-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
+            <h2>Kelola Link 7 Hari</h2>
+            <div id="temp-links-grid" class="asset-grid">
+                <!-- Temp link cards will be loaded here -->
+            </div>
+        </section>
+
     </div>
     
     <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
@@ -482,6 +492,10 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const testimonialsRef = database.ref('testimonials');
+        const tempImagesRef = database.ref('images');
+
+        // Temp Links DOM
+        const tempLinksGrid = document.getElementById('temp-links-grid');
 
         // --- MODAL ---
         const showModal = (message, onConfirm) => {
@@ -657,6 +671,24 @@
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = 'Tambah Bingkai';
                 }
+            }
+        });
+
+        tempLinksGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('.delete-asset-btn[data-type="temp-link"]');
+            if (btn) {
+                const linkKey = btn.dataset.key;
+                showModal(`Anda yakin ingin menghapus link dengan ID "${linkKey}"? Tindakan ini tidak dapat dibatalkan.`, () => {
+                    tempImagesRef.child(linkKey).remove()
+                        .then(() => {
+                            console.log(`Link ${linkKey} berhasil dihapus.`);
+                            // The 'on' listener in loadTempLinks will handle the UI update automatically
+                        })
+                        .catch((error) => {
+                            console.error(`Gagal menghapus link ${linkKey}:`, error);
+                            alert(`Gagal menghapus link: ${error.message}`);
+                        });
+                });
             }
         });
 
@@ -1315,6 +1347,59 @@
             }
         });
 
+        // --- TEMP LINKS MANAGEMENT ---
+        const createTempLinkCard = (key, data) => {
+            const card = document.createElement('div');
+            card.className = 'asset-card';
+            card.setAttribute('data-aos', 'fade-up');
+            
+            const expiresDate = new Date(data.expiresAt);
+            const isExpired = expiresDate < new Date();
+            const formattedDate = expiresDate.toLocaleString('id-ID', {
+                day: '2-digit', month: 'short', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+
+            card.innerHTML = `
+                <img src="${data.strip}" alt="Strip for ${key}">
+                <p><strong>ID:</strong> ${key}</p>
+                <p style="font-size: 1.2rem; ${isExpired ? 'color: var(--danger);' : ''}">
+                    Expires: ${formattedDate}
+                </p>
+                <button class="delete-asset-btn" data-type="temp-link" data-key="${key}" title="Hapus Link"><i class="fas fa-times"></i></button>
+            `;
+            return card;
+        };
+
+        const loadTempLinks = () => {
+            if (!tempLinksGrid) return;
+            tempLinksGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
+
+            tempImagesRef.on('value', (snapshot) => {
+                tempLinksGrid.innerHTML = '';
+                if (!snapshot.exists()) {
+                    tempLinksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light); grid-column: 1 / -1;">Tidak ada link sementara yang ditemukan.</p>';
+                    return;
+                }
+                
+                let links = [];
+                snapshot.forEach(childSnapshot => {
+                    links.push({ key: childSnapshot.key, val: childSnapshot.val() });
+                });
+
+                // Sort by expiration date, newest first
+                links.sort((a, b) => b.val.expiresAt - a.val.expiresAt);
+
+                links.forEach(link => {
+                    tempLinksGrid.appendChild(createTempLinkCard(link.key, link.val));
+                });
+                setTimeout(() => { AOS.refresh(true); }, 100);
+            }, (error) => {
+                console.error("Firebase read failed (temp links): " + error.code);
+                tempLinksGrid.innerHTML = '<p style="text-align: center; color: var(--danger); grid-column: 1 / -1;">Gagal memuat data link.</p>';
+            });
+        };
+
         // --- AUTH ---
         const checkLogin = () => {
             if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
@@ -1323,6 +1408,7 @@
                 loadAssets();
                 loadAuthorProfile();
                 loadAdminTestimonials();
+                loadTempLinks(); // Load temporary links
             } else {
                 loginSection.style.display = 'flex';
                 adminPanel.style.display = 'none';
