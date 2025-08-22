@@ -231,6 +231,16 @@
         .delete-asset-btn { position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3); transition: var(--transition-smooth); }
         .delete-asset-btn:hover { transform: scale(1.1); background: var(--danger-light); }
 
+        .link-card-info { font-size: 1.2rem; color: var(--text-light); margin-top: 1rem; text-align: left; padding: 0 0.5rem; line-height: 1.5; }
+        .link-card-info p { margin-bottom: 0.5rem; }
+        .link-card-info strong { color: var(--text-color); font-weight: 600; }
+        .link-card-actions { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; }
+        .link-card-btn { width: 38px; height: 38px; border-radius: 50%; padding: 0; font-size: 1.4rem; flex-shrink: 0; }
+        .link-card-btn.edit-link-btn:hover { color: var(--primary); }
+        .link-card-btn.delete-link-btn:hover { color: var(--danger); }
+        .link-card.expired { opacity: 0.65; }
+        .link-card.expired img { filter: grayscale(80%); }
+
         .add-asset-form { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--surface-border); }
         .add-asset-form h3 { font-size: 1.8rem; font-family: var(--font-secondary); margin-bottom: 1.5rem; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem 2rem; }
@@ -406,6 +416,14 @@
             </div>
         </section>
 
+        <!-- Links Management -->
+        <section id="links-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
+            <h2>Kelola Tautan (Links)</h2>
+            <div id="links-grid" class="asset-grid">
+                <div class="loader-container"><div class="loader"></div></div>
+            </div>
+        </section>
+
     </div>
     
     <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
@@ -418,6 +436,24 @@
             <div class="modal-actions">
                 <button id="modal-cancel-btn" class="btn btn-secondary modal-btn">Batal</button>
                 <button id="modal-confirm-btn" class="btn btn-danger modal-btn">Yakin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Link Modal -->
+    <div id="edit-link-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Ubah Tanggal Kedaluwarsa</h3>
+            <p id="edit-link-id-display" style="font-weight: 500; margin-bottom: 2rem; color: var(--text-light);"></p>
+            <form id="edit-link-form" style="margin-bottom: 2rem;">
+                 <div class="form-group" style="text-align: left;">
+                    <label for="expires-at-input" class="form-label">Tanggal & Waktu Kedaluwarsa Baru</label>
+                    <input type="datetime-local" id="expires-at-input" class="form-input" style="padding-left: 14px; padding-right: 14px;" required>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button id="edit-link-cancel-btn" class="btn btn-secondary modal-btn">Batal</button>
+                <button id="edit-link-confirm-btn" class="btn btn-primary modal-btn">Simpan</button>
             </div>
         </div>
     </div>
@@ -478,10 +514,20 @@
         const avatarPreview = document.getElementById('avatar-preview');
         const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
 
+        // Link Management DOM
+        const linksGrid = document.getElementById('links-grid');
+        const editLinkModal = document.getElementById('edit-link-modal');
+        const editLinkIdDisplay = document.getElementById('edit-link-id-display');
+        const editLinkForm = document.getElementById('edit-link-form');
+        const expiresAtInput = document.getElementById('expires-at-input');
+        const editLinkCancelBtn = document.getElementById('edit-link-cancel-btn');
+        const editLinkConfirmBtn = document.getElementById('edit-link-confirm-btn');
+
         // --- Firebase Refs ---
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const testimonialsRef = database.ref('testimonials');
+        const linksRef = database.ref('images');
 
         // --- MODAL ---
         const showModal = (message, onConfirm) => {
@@ -1315,6 +1361,110 @@
             }
         });
 
+        // --- LINK MANAGEMENT ---
+        const formatLinkDate = (timestamp) => {
+            if (!timestamp) return 'N/A';
+            const date = new Date(timestamp);
+            return date.toLocaleString('id-ID', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        };
+
+        const createLinkCard = (key, linkData) => {
+            const card = document.createElement('div');
+            card.className = 'asset-card link-card';
+            const isExpired = Date.now() > linkData.expiresAt;
+            if (isExpired) {
+                card.classList.add('expired');
+            }
+
+            card.innerHTML = `
+                <img src="${linkData.strip}" alt="Image Strip ${key}" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=no+preview'">
+                <div class="link-card-info">
+                    <p><strong>ID:</strong> ${key}</p>
+                    <p><strong>Expires:</strong> ${formatLinkDate(linkData.expiresAt)}</p>
+                </div>
+                <div class="link-card-actions">
+                     <button class="btn-icon link-card-btn edit-link-btn" data-key="${key}" title="Ubah Tanggal Kedaluwarsa"><i class="fas fa-calendar-alt"></i></button>
+                     <button class="btn-icon link-card-btn delete-link-btn" data-key="${key}" title="Hapus Tautan"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            return card;
+        };
+        
+        const loadLinks = () => {
+            linksGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
+            linksRef.on('value', (snapshot) => {
+                linksGrid.innerHTML = '';
+                if (!snapshot.exists()) {
+                    linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada tautan yang dibuat.</p>';
+                    return;
+                }
+                const links = [];
+                snapshot.forEach(childSnapshot => {
+                    links.push({ key: childSnapshot.key, val: childSnapshot.val() });
+                });
+                // Sort by expiration date, newest first
+                links.sort((a, b) => b.val.expiresAt - a.val.expiresAt);
+
+                links.forEach(link => {
+                    linksGrid.appendChild(createLinkCard(link.key, link.val));
+                });
+            }, (error) => {
+                console.error("Firebase links read failed: " + error.code);
+                linksGrid.innerHTML = '<p style="text-align: center; color: var(--danger);">Gagal memuat data tautan.</p>';
+            });
+        };
+
+        linksGrid.addEventListener('click', (e) => {
+            const deleteBtn = e.target.closest('.delete-link-btn');
+            if (deleteBtn) {
+                const linkKey = deleteBtn.dataset.key;
+                showModal(`Anda yakin ingin menghapus tautan dengan ID "${linkKey}"? Tindakan ini tidak dapat diurungkan.`, () => {
+                    linksRef.child(linkKey).remove()
+                        .then(() => alert(`Tautan ${linkKey} berhasil dihapus.`))
+                        .catch(err => alert(`Gagal menghapus tautan: ${err.message}`));
+                });
+                return;
+            }
+
+            const editBtn = e.target.closest('.edit-link-btn');
+            if (editBtn) {
+                const linkKey = editBtn.dataset.key;
+                linksRef.child(linkKey).once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        alert('Tautan tidak ditemukan.');
+                        return;
+                    }
+                    const linkData = snapshot.val();
+                    editLinkIdDisplay.textContent = `Mengubah tautan dengan ID: ${linkKey}`;
+                    
+                    // Convert timestamp to yyyy-MM-ddThh:mm format
+                    const date = new Date(linkData.expiresAt);
+                    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                    expiresAtInput.value = date.toISOString().slice(0,16);
+
+                    editLinkModal.classList.add('active');
+                    
+                    editLinkConfirmBtn.onclick = () => {
+                        const newDate = new Date(expiresAtInput.value);
+                        const newTimestamp = newDate.getTime();
+                        linksRef.child(linkKey).child('expiresAt').set(newTimestamp)
+                            .then(() => {
+                                alert('Tanggal kedaluwarsa berhasil diperbarui.');
+                                editLinkModal.classList.remove('active');
+                            })
+                            .catch(err => alert(`Gagal memperbarui: ${err.message}`));
+                    };
+                });
+            }
+        });
+        
+        editLinkCancelBtn.addEventListener('click', () => editLinkModal.classList.remove('active'));
+        editLinkModal.addEventListener('click', (e) => { if(e.target === editLinkModal) editLinkModal.classList.remove('active'); });
+
+
         // --- AUTH ---
         const checkLogin = () => {
             if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
@@ -1323,6 +1473,7 @@
                 loadAssets();
                 loadAuthorProfile();
                 loadAdminTestimonials();
+                loadLinks();
             } else {
                 loginSection.style.display = 'flex';
                 adminPanel.style.display = 'none';
