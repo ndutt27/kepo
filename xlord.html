@@ -524,7 +524,9 @@
         const editLinkConfirmBtn = document.getElementById('edit-link-confirm-btn');
 
         // --- Firebase Refs ---
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const database = firebase.database();
         const testimonialsRef = database.ref('testimonials');
         const linksRef = database.ref('images');
