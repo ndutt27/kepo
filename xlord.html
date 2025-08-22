@@ -264,8 +264,6 @@
         #save-all-changes-btn.visible {
             transform: translateY(0);
         }
-
-
     </style>
 </head>
 <body>
@@ -302,9 +300,7 @@
         <!-- Frames Management -->
         <section id="frames-management" class="asset-section" data-aos="fade-up">
             <h2>Kelola Bingkai (Frames)</h2>
-            <div id="frames-grid" class="asset-grid">
-                <!-- Frame cards will be loaded here -->
-            </div>
+            <div id="frames-grid" class="asset-grid"></div>
             <form id="add-frame-form" class="add-asset-form">
                 <h3>Tambah Bingkai Baru</h3>
                 <div class="form-grid">
@@ -337,9 +333,7 @@
         <!-- Stickers Management -->
         <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
             <h2>Kelola Stiker (Stickers)</h2>
-            <div id="stickers-grid" class="asset-grid">
-                <!-- Sticker cards will be loaded here -->
-            </div>
+            <div id="stickers-grid" class="asset-grid"></div>
              <form id="add-sticker-form" class="add-asset-form">
                 <h3>Unggah Stiker Baru</h3>
                  <div class="form-grid">
@@ -365,9 +359,7 @@
         <!-- Logos Management -->
         <section id="logos-management" class="asset-section" data-aos="fade-up" data-aos-delay="200">
             <h2>Kelola Logo (Englogo)</h2>
-            <div id="logos-grid" class="asset-grid">
-                <!-- Logo cards will be loaded here -->
-            </div>
+            <div id="logos-grid" class="asset-grid"></div>
              <form id="add-logo-form" class="add-asset-form">
                 <h3>Tambah Logo Baru</h3>
                 <div class="form-grid">
@@ -411,17 +403,13 @@
 
         <section id="testimonial-management" class="asset-section" data-aos="fade-up" data-aos-delay="400">
             <h2>Kelola Testimoni</h2>
-            <div id="admin-testimonial-grid">
-                <!-- Testimonials will be loaded here -->
-            </div>
+            <div id="admin-testimonial-grid"></div>
         </section>
 
         <!-- Links Management -->
         <section id="links-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
             <h2>Kelola Tautan (Links)</h2>
-            <div id="links-grid" class="asset-grid">
-                <div class="loader-container"><div class="loader"></div></div>
-            </div>
+            <div id="links-grid" class="asset-grid"></div>
         </section>
 
     </div>
@@ -469,11 +457,24 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         // PENTING: Ganti dengan konfigurasi Firebase Anda dari project settings
-        var _0x4f17fg=(300656^300662)+(684593^684594);const firebaseConfig={'\u0061\u0070\u0069\u004B\u0065\u0079':"\u0041\u0049\u007A\u0061\u0053\u0079\u0043\u0043\u0061\u004C\u0058\u006F\u0061\u0048\u0046\u004F\u0075\u0058\u0052\u006E\u0048\u0041\u0076\u0051\u007A\u0067\u0039\u0052\u0030\u0063\u0031\u0074\u0066\u0073\u0054\u0073\u0054\u0042\u0055",'\u0061\u0075\u0074\u0068\u0044\u006F\u006D\u0061\u0069\u006E':"\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u002D\u0078\u006C\u006F\u0072\u0064\u002E\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u0061\u0070\u0070\u002E\u0063\u006F\u006D",'\u0064\u0061\u0074\u0061\u0062\u0061\u0073\u0065\u0055\u0052\u004C':"\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u002D\u0078\u006C\u006F\u0072\u0064\u002D\u0064\u0065\u0066\u0061\u0075\u006C\u0074\u002D\u0072\u0074\u0064\u0062\u002E\u0061\u0073\u0069\u0061\u002D\u0073\u006F\u0075\u0074\u0068\u0065\u0061\u0073\u0074\u0031\u002E\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u0064\u0061\u0074\u0061\u0062\u0061\u0073\u0065\u002E\u0061\u0070\u0070","projectId":"\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u002D\u0078\u006C\u006F\u0072\u0064",'\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u0042\u0075\u0063\u006B\u0065\u0074':"\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u002D\u0078\u006C\u006F\u0072\u0064\u002E\u0061\u0070\u0070\u0073\u0070\u006F\u0074\u002E\u0063\u006F\u006D",'\u006D\u0065\u0073\u0073\u0061\u0067\u0069\u006E\u0067\u0053\u0065\u006E\u0064\u0065\u0072\u0049\u0064':"\u0038\u0034\u0037\u0034\u0036\u0031\u0038\u0031\u0036\u0038\u0036\u0037",'\u0061\u0070\u0070\u0049\u0064':"\u0031\u003A\u0038\u0034\u0037\u0034\u0036\u0031\u0038\u0031\u0036\u0038\u0036\u0037\u003A\u0077\u0065\u0062\u003A\u0031\u0037\u0030\u0037\u0031\u0062\u0061\u0031\u0034\u0066\u0066\u0065\u0036\u0061\u0036\u0030\u0039\u0039\u0065\u0066\u0039\u0036",'\u006D\u0065\u0061\u0073\u0075\u0072\u0065\u006D\u0065\u006E\u0074\u0049\u0064':"G-344KX3B197"};_0x4f17fg=(234516^234518)+(129660^129652);
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
         // PENTING: Ganti dengan konfigurasi GitHub Anda
-        var _0x91fg=(926467^926471)+(810789^810791);const githubConfig={'\u0074\u006F\u006B\u0065\u006E':"\u0067\u0068\u0070\u005F\u0032\u0047\u0030\u006C\u0049\u0044\u0032\u0033\u0069\u0034\u0036\u0035\u0030\u0069\u0066\u0043\u0030\u0079\u0052\u006C\u0078\u0033\u0031\u0059\u0069\u006A\u006D\u0074\u0075\u0074\u0030\u004D\u0052\u0039\u0045\u0038",'\u006F\u0077\u006E\u0065\u0072':"\u006E\u0064\u0075\u0074\u0074\u0032\u0037","repo":"\u006B\u0065\u0070\u006F",'\u0070\u0061\u0074\u0068':"profil","adminAvatarPath":"\u0069\u006D\u0061\u0067\u0065\u002D\u0061\u0064\u006D\u0069\u006E",'\u0061\u0073\u0073\u0065\u0074\u0073\u0050\u0061\u0074\u0068':"\u0061\u0073\u0073\u0065\u0074\u0073"};_0x91fg=603159^603159;
-
+        const githubConfig = {
+            token: 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN', // Token dengan izin 'repo'
+            owner: 'YOUR_GITHUB_USERNAME',
+            repo: 'YOUR_REPOSITORY_NAME',
+            assetsPath: 'path/to/your/assets', // e.g., 'public/assets'
+            adminAvatarPath: 'path/to/your/avatars' // e.g., 'public/assets/avatars'
+        };
 
         AOS.init({ duration: 600, once: true, offset: 50 });
 
@@ -483,6 +484,7 @@
         let confirmCallback = null;
         let authorProfile = { name: 'xlord', avatar: '' };
         let newAvatarFile = null;
+        let firebaseApp = null;
 
         // --- DOM Elements ---
         const loginSection = document.getElementById('login-section');
@@ -497,8 +499,6 @@
         const modalMessage = document.getElementById('modal-message');
         const modalConfirmBtn = document.getElementById('modal-confirm-btn');
         const modalCancelBtn = document.getElementById('modal-cancel-btn');
-
-        // Asset Management DOM
         const framesGrid = document.getElementById('frames-grid');
         const addFrameForm = document.getElementById('add-frame-form');
         const frameTypeSelect = document.getElementById('frame-type');
@@ -506,43 +506,43 @@
         const addLogoForm = document.getElementById('add-logo-form');
         const stickersGrid = document.getElementById('stickers-grid');
         const addStickerForm = document.getElementById('add-sticker-form');
-
-        // Testimonial Management DOM
         const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
         const profileForm = document.getElementById('profile-form');
         const authorNameInput = document.getElementById('author-name');
         const authorAvatarUpload = document.getElementById('author-avatar-upload');
         const avatarPreview = document.getElementById('avatar-preview');
         const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
-
-        // Link Management DOM
         const linksGrid = document.getElementById('links-grid');
         const editLinkModal = document.getElementById('edit-link-modal');
         const editLinkIdDisplay = document.getElementById('edit-link-id-display');
-        const editLinkForm = document.getElementById('edit-link-form');
         const expiresAtInput = document.getElementById('expires-at-input');
         const editLinkCancelBtn = document.getElementById('edit-link-cancel-btn');
         const editLinkConfirmBtn = document.getElementById('edit-link-confirm-btn');
 
         // --- Firebase Refs ---
         let database, testimonialsRef, linksRef;
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            database = firebase.database();
-            testimonialsRef = database.ref('testimonials');
-            linksRef = database.ref('images');
-        } catch (error) {
-            console.error("Firebase Initialization Failed:", error);
-            const errorMsg = `<p style="text-align: center; color: var(--danger); padding: 2rem;">Inisialisasi Firebase gagal. Periksa `firebaseConfig` di dalam kode.</p>`;
-            document.getElementById('frames-management').innerHTML = errorMsg;
-            document.getElementById('stickers-management').innerHTML = errorMsg;
-            document.getElementById('logos-management').innerHTML = errorMsg;
-            document.getElementById('testimonial-management').innerHTML = errorMsg;
-            document.getElementById('links-management').innerHTML = errorMsg;
-        }
 
+        function initializeFirebase() {
+            try {
+                // Validasi konfigurasi dasar
+                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    throw new Error("Konfigurasi Firebase tidak lengkap. Silakan isi 'firebaseConfig'.");
+                }
+                if (!firebase.apps.length) {
+                    firebaseApp = firebase.initializeApp(firebaseConfig);
+                } else {
+                    firebaseApp = firebase.app();
+                }
+                database = firebase.database();
+                testimonialsRef = database.ref('testimonials');
+                linksRef = database.ref('images');
+                return true;
+            } catch (error) {
+                console.error("Firebase Initialization Failed:", error.message);
+                loginError.textContent = "Error: Gagal koneksi ke Firebase. Periksa konsol (F12).";
+                return false;
+            }
+        }
 
         // --- MODAL ---
         const showModal = (message, onConfirm) => {
@@ -599,7 +599,6 @@
         const renderFrames = () => {
             if (!assetsData || !framesGrid) return;
             framesGrid.innerHTML = '';
-
             assetsData.frames.colors.forEach((frame, index) => {
                 const card = document.createElement('div');
                 card.className = 'asset-card';
@@ -610,12 +609,11 @@
                 `;
                 framesGrid.appendChild(card);
             });
-
             assetsData.frames.images.forEach((frame, index) => {
                 const card = document.createElement('div');
                 card.className = 'asset-card';
                 card.innerHTML = `
-                    <img src="${frame.path}" alt="${frame.name}">
+                    <img src="${frame.path}" alt="${frame.name}" onerror="this.style.display='none'; this.nextElementSibling.textContent='Gagal memuat gambar';">
                     <p>${frame.name}</p>
                     <button class="delete-asset-btn" data-type="frame-image" data-index="${index}"><i class="fas fa-times"></i></button>
                 `;
@@ -630,7 +628,7 @@
                 const card = document.createElement('div');
                 card.className = 'asset-card';
                 card.innerHTML = `
-                    <div class="logo-preview">${logo.name}</div>
+                    <div class="logo-preview" style="font-size: 2rem; padding: 2rem 0;">${logo.name}</div>
                     <p>${logo.value}</p>
                     <button class="delete-asset-btn" data-type="logo" data-index="${index}"><i class="fas fa-times"></i></button>
                 `;
@@ -641,9 +639,8 @@
         const renderStickers = () => {
             if (!assetsData || !stickersGrid) return;
             stickersGrid.innerHTML = '';
-            // Filter out the "None" sticker
             const actualStickers = assetsData.stickers.filter(s => s.id !== 'noneSticker');
-            actualStickers.forEach((sticker, index) => {
+            actualStickers.forEach((sticker) => {
                 const card = document.createElement('div');
                 card.className = 'asset-card';
                 card.innerHTML = `
@@ -660,7 +657,6 @@
             e.preventDefault();
             const type = frameTypeSelect.value;
             const submitBtn = addFrameForm.querySelector('button[type="submit"]');
-
             if (type === 'color') {
                 const colorValue = document.getElementById('frame-color').value;
                 const newFrame = { id: `colorFrame${Date.now()}`, value: colorValue };
@@ -668,49 +664,28 @@
                 setDataDirty(true);
                 renderFrames();
                 addFrameForm.reset();
-            } else { // Image upload
+            } else {
                 const name = document.getElementById('frame-name').value.trim();
                 const fileInput = document.getElementById('frame-file');
                 const file = fileInput.files[0];
-
                 if (!name || !file) {
                     alert('Nama Bingkai dan File Gambar harus diisi.');
                     return;
                 }
-
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
-
                 try {
                     const filePath = `${githubConfig.assetsPath}/frame-backgrounds/${file.name}`;
-                    const reader = new FileReader();
-                    const fileReadPromise = new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result.split(',')[1]);
-                        reader.onerror = reject;
-                    });
-                    reader.readAsDataURL(file); // FIX: Start reading before awaiting
-                    const base64content = await fileReadPromise;
-
-                    const { owner, repo } = githubConfig;
-                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-                    await githubApiRequest(apiUrl, {
+                    const base64content = await toBase64(file);
+                    await githubApiRequest(`https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}`, {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: `feat: upload frame ${file.name}`,
-                            content: base64content,
-                        }),
+                        body: JSON.stringify({ message: `feat: upload frame ${file.name}`, content: base64content }),
                     });
-
-                    const newFrame = { id: `imageFrame${Date.now()}`, name, path: filePath };
-                    assetsData.frames.images.push(newFrame);
-
+                    assetsData.frames.images.push({ id: `imageFrame${Date.now()}`, name, path: filePath });
                     setDataDirty(true);
                     renderFrames();
                     addFrameForm.reset();
                     alert(`Bingkai gambar "${name}" berhasil diunggah! Jangan lupa simpan perubahan.`);
-
                 } catch (error) {
                     console.error("Gagal mengunggah bingkai:", error);
                     alert(`Gagal mengunggah bingkai: ${error.message}`);
@@ -728,20 +703,35 @@
             document.getElementById('frame-color-group').style.display = isColor ? 'block' : 'none';
         });
 
-        framesGrid.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-asset-btn')) {
-                const btn = e.target.closest('.delete-asset-btn');
+        document.body.addEventListener('click', (e) => {
+            const btn = e.target.closest('.delete-asset-btn');
+            if (btn) {
                 const type = btn.dataset.type;
                 const index = parseInt(btn.dataset.index, 10);
-                showModal('Anda yakin ingin menghapus aset ini?', () => {
-                    if (type === 'frame-color') {
-                        assetsData.frames.colors.splice(index, 1);
-                    } else if (type === 'frame-image') {
-                        assetsData.frames.images.splice(index, 1);
-                    }
-                    setDataDirty(true);
-                    renderFrames();
-                });
+                const id = btn.dataset.id;
+                
+                if (type === 'frame-color' || type === 'frame-image' || type === 'logo') {
+                    showModal('Anda yakin ingin menghapus aset ini?', () => {
+                        if (type === 'frame-color') assetsData.frames.colors.splice(index, 1);
+                        if (type === 'frame-image') assetsData.frames.images.splice(index, 1);
+                        if (type === 'logo') assetsData.logos.splice(index, 1);
+                        setDataDirty(true);
+                        renderAllAssets();
+                    });
+                } else if (type === 'sticker') {
+                    showModal(`Anda yakin ingin menghapus stiker "${id}"? Ini juga akan menghapus layoutnya.`, () => {
+                        const stickerIndex = assetsData.stickers.findIndex(s => s.id === id);
+                        if (stickerIndex > -1) {
+                            const stickerLayout = assetsData.stickers[stickerIndex].layout;
+                            assetsData.stickers.splice(stickerIndex, 1);
+                            if (stickerLayout && assetsData.stickerLayouts[stickerLayout]) {
+                                delete assetsData.stickerLayouts[stickerLayout];
+                            }
+                            setDataDirty(true);
+                            renderStickers();
+                        }
+                    });
+                }
             }
         });
 
@@ -749,48 +739,11 @@
             e.preventDefault();
             const name = document.getElementById('logo-name').value.trim();
             const value = document.getElementById('logo-value').value.trim();
-            if(!name || !value) {
-                alert('Nama dan Teks Logo harus diisi.');
-                return;
-            }
-            const newLogo = { id: `logo${Date.now()}`, name, value };
-            assetsData.logos.push(newLogo);
+            if(!name || !value) return alert('Nama dan Teks Logo harus diisi.');
+            assetsData.logos.push({ id: `logo${Date.now()}`, name, value });
             setDataDirty(true);
             renderLogos();
             addLogoForm.reset();
-        });
-
-        logosGrid.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-asset-btn')) {
-                const btn = e.target.closest('.delete-asset-btn');
-                const index = parseInt(btn.dataset.index, 10);
-                 showModal('Anda yakin ingin menghapus logo ini?', () => {
-                    assetsData.logos.splice(index, 1);
-                    setDataDirty(true);
-                    renderLogos();
-                });
-            }
-        });
-
-        stickersGrid.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-asset-btn')) {
-                const btn = e.target.closest('.delete-asset-btn');
-                const stickerId = btn.dataset.id;
-                 showModal(`Anda yakin ingin menghapus stiker "${stickerId}"? Ini juga akan menghapus layoutnya.`, () => {
-                    const stickerIndex = assetsData.stickers.findIndex(s => s.id === stickerId);
-                    if (stickerIndex > -1) {
-                         const stickerLayout = assetsData.stickers[stickerIndex].layout;
-                        // Hapus stiker dari array stickers
-                        assetsData.stickers.splice(stickerIndex, 1);
-                        // Hapus layout terkait jika ada
-                        if (stickerLayout && assetsData.stickerLayouts[stickerLayout]) {
-                            delete assetsData.stickerLayouts[stickerLayout];
-                        }
-                        setDataDirty(true);
-                        renderStickers();
-                    }
-                });
-            }
         });
 
         addStickerForm.addEventListener('submit', async (e) => {
@@ -799,71 +752,43 @@
             const stickerFolder = document.getElementById('sticker-folder').value.trim().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
             const files = document.getElementById('sticker-files').files;
 
-            if (!stickerName || !stickerFolder) {
-                alert('Nama Stiker dan Nama Folder harus diisi.');
-                return;
-            }
-            if (files.length < 5) {
-                alert('Anda harus mengunggah minimal 5 gambar stiker.');
-                return;
-            }
+            if (!stickerName || !stickerFolder) return alert('Nama Stiker dan Nama Folder harus diisi.');
+            if (files.length < 5) return alert('Anda harus mengunggah minimal 5 gambar stiker.');
 
             const submitBtn = addStickerForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
 
             try {
-                // 1. Upload files to GitHub
                 const uploadedFilePaths = [];
                 for (const file of files) {
                     const filePath = `${githubConfig.assetsPath}/stickers/${stickerFolder}/${file.name}`;
-                    const reader = new FileReader();
-                    const fileReadPromise = new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result.split(',')[1]);
-                        reader.onerror = reject;
-                    });
-                    reader.readAsDataURL(file); // FIX: Start reading before awaiting
-                    const base64content = await fileReadPromise;
-
-                    const { owner, repo } = githubConfig;
-                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-                    await githubApiRequest(apiUrl, {
+                    const base64content = await toBase64(file);
+                    await githubApiRequest(`https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}`, {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: `feat: upload sticker ${file.name}`,
-                            content: base64content,
-                        }),
+                        body: JSON.stringify({ message: `feat: upload sticker ${file.name}`, content: base64content }),
                     });
                     uploadedFilePaths.push(filePath);
                 }
 
-                // 2. Add sticker to assets.json data
                 const newStickerId = `${stickerFolder}Sticker`;
-                const newSticker = {
+                assetsData.stickers.push({
                     id: newStickerId,
                     name: stickerName,
-                    icon: uploadedFilePaths[0], // Use the first image as the icon
+                    icon: uploadedFilePaths[0],
                     layout: stickerFolder
-                };
-                assetsData.stickers.push(newSticker);
-
-                // 3. Create a new layout based on ballerinacp
-                const baseLayout = JSON.parse(JSON.stringify(assetsData.stickerLayouts.ballerinacp));
-                const newLayout = baseLayout.map((item, index) => {
-                    // Replace the src with the new uploaded image path, cycling if needed
-                    item.src = uploadedFilePaths[index % uploadedFilePaths.length];
-                    return item;
                 });
-                assetsData.stickerLayouts[stickerFolder] = newLayout;
 
-                // 4. Mark data as dirty and re-render
+                const baseLayout = JSON.parse(JSON.stringify(assetsData.stickerLayouts.ballerinacp));
+                assetsData.stickerLayouts[stickerFolder] = baseLayout.map((item, index) => ({
+                    ...item,
+                    src: uploadedFilePaths[index % uploadedFilePaths.length]
+                }));
+
                 setDataDirty(true);
                 renderStickers();
                 addStickerForm.reset();
                 alert(`Stiker "${stickerName}" berhasil diunggah! Jangan lupa simpan perubahan.`);
-
             } catch (error) {
                 console.error("Gagal mengunggah stiker:", error);
                 alert(`Gagal mengunggah stiker: ${error.message}`);
@@ -875,10 +800,8 @@
 
         saveChangesBtn.addEventListener('click', async () => {
             if (!isDataDirty || !assetsData) return;
-
             saveChangesBtn.disabled = true;
             saveChangesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-
             try {
                 await saveAssetsToGithub();
                 setDataDirty(false);
@@ -892,18 +815,25 @@
             }
         });
 
+        // --- UTILITY ---
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+        });
 
         // --- GITHUB API ---
         const githubApiRequest = async (url, options) => {
-            if (typeof githubConfig === 'undefined' || !githubConfig.token || githubConfig.token === 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN') {
-                 throw new Error("Konfigurasi GitHub tidak lengkap. Periksa `githubConfig` di dalam kode.");
+            if (!githubConfig.token || githubConfig.token === 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN') {
+                 throw new Error("Konfigurasi GitHub tidak lengkap. Periksa `githubConfig`.");
             }
-            const { token } = githubConfig;
             const response = await fetch(url, {
                 ...options,
                 headers: {
-                    'Authorization': `token ${token}`,
+                    'Authorization': `token ${githubConfig.token}`,
                     'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
                     ...options.headers,
                 },
             });
@@ -911,82 +841,61 @@
                 const errorData = await response.json();
                 throw new Error(`GitHub API Error (${response.status}): ${errorData.message}`);
             }
-            return response;
+            return response.json();
         };
 
         const saveAssetsToGithub = async () => {
-            const { owner, repo } = githubConfig;
             const filePath = 'assets.json';
-            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
+            const apiUrl = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}`;
             let currentSha;
             try {
-                const fileResponse = await githubApiRequest(apiUrl, { method: 'GET' });
-                const fileData = await fileResponse.json();
+                const fileData = await githubApiRequest(apiUrl, { method: 'GET' });
                 currentSha = fileData.sha;
             } catch (error) {
-                 if (error.message.includes("404")) { // File doesn't exist yet
-                    currentSha = null;
-                } else {
-                    throw error; // Other errors
-                }
+                if (!error.message.includes("404")) throw error;
             }
-
             const content = JSON.stringify(assetsData, null, 2);
             const encodedContent = btoa(unescape(encodeURIComponent(content)));
-
             await githubApiRequest(apiUrl, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: 'feat: update assets.json from admin panel',
                     content: encodedContent,
-                    sha: currentSha, // Include SHA if updating an existing file
+                    sha: currentSha,
                 }),
             });
         };
 
-
-        // --- GITHUB IMAGE DELETION (for Testimonial Avatars) ---
         const deleteImageFromGithub = async (imageUrl) => {
             try {
-                const { owner, repo } = githubConfig;
                 const url = new URL(imageUrl);
                 const filePathInRepo = url.pathname.split('/').slice(3).join('/');
-                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePathInRepo}`;
-
-                const fileResponse = await githubApiRequest(apiUrl, { method: 'GET' });
-                const fileData = await fileResponse.json();
-
+                const apiUrl = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePathInRepo}`;
+                const fileData = await githubApiRequest(apiUrl, { method: 'GET' });
                 await githubApiRequest(apiUrl, {
                     method: 'DELETE',
-                    body: JSON.stringify({
-                        message: `feat: delete image ${fileData.name}`,
-                        sha: fileData.sha,
-                    }),
+                    body: JSON.stringify({ message: `feat: delete image ${fileData.name}`, sha: fileData.sha }),
                 });
                 console.log(`Berhasil dihapus dari GitHub: ${fileData.name}`);
             } catch (error) {
-                if (!error.message.includes("404")) {
+                if (error.message.includes("404")) {
+                    console.log("Gambar tidak ditemukan di GitHub, mungkin sudah dihapus.");
+                } else {
                     console.error("Error saat menghapus gambar dari GitHub:", error.message);
                     throw error;
-                } else {
-                    console.log("Gambar tidak ditemukan di GitHub, mungkin sudah dihapus.");
                 }
             }
         };
 
         // --- TESTIMONIAL RENDERING ---
         const timeAgo = (timestamp) => {
-            const now = Date.now();
-            const seconds = Math.floor((now - timestamp) / 1000);
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
             if (seconds < 60) return "Baru saja";
             const minutes = Math.floor(seconds / 60);
             if (minutes < 60) return `${minutes} menit lalu`;
             const hours = Math.floor(minutes / 60);
             if (hours < 24) return `${hours} jam lalu`;
-            const days = Math.floor(hours / 24);
-            return `${days} hari lalu`;
+            return `${Math.floor(hours / 24)} hari lalu`;
         };
 
         const createAdminPostCard = (postData, key, index) => {
@@ -995,133 +904,100 @@
             card.id = `post-${key}`;
             card.setAttribute('data-aos', 'fade-up');
             card.setAttribute('data-aos-delay', index * 50);
-
             const comments = postData.comments || {};
-            let commentsHTML = '';
             const sortedKeys = Object.keys(comments).sort((a, b) => comments[a].timestamp - comments[b].timestamp);
-            sortedKeys.forEach(commentKey => {
-                commentsHTML += createCommentHTML(comments[commentKey], key, commentKey);
-            });
-
-            const postBadge = postData.badge;
-            const postBadgeHTML = postBadge ? `<span class="badge" style="background-color: ${postBadge.color || '#777'};">${postBadge.text}</span>` : '';
-
+            const commentsHTML = sortedKeys.map(commentKey => createCommentHTML(comments[commentKey], key, commentKey)).join('');
+            const postBadgeHTML = postData.badge ? `<span class="badge" style="background-color: ${postData.badge.color || '#777'};">${postData.badge.text}</span>` : '';
             card.innerHTML = `
                 <div class="admin-post-header">
                     <div class="post-user-info">
                         <div class="post-avatar">${postData.name ? postData.name.charAt(0).toUpperCase() : 'U'}</div>
                         <div>
-                            <div class="post-name-section">
-                                <div class="post-name">${postData.name}</div>
-                                ${postBadgeHTML}
-                            </div>
+                            <div class="post-name-section"><div class="post-name">${postData.name}</div>${postBadgeHTML}</div>
                             <div class="post-timestamp">${timeAgo(postData.timestamp)}</div>
                         </div>
                     </div>
                     <div>
-                        <button class="btn-icon edit-post-badge-btn" data-key="${key}" title="Edit Badge Postingan"><i class="fas fa-id-badge"></i></button>
+                        <button class="btn-icon edit-post-badge-btn" data-key="${key}" title="Edit Badge"><i class="fas fa-id-badge"></i></button>
                         <button class="btn-icon delete-post-btn" data-key="${key}" title="Hapus Postingan"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
-
                 <form class="badge-form post-badge-form" data-post-key="${key}">
                     <div class="badge-form-inner">
-                        <div class="form-group"> <input type="text" class="form-input badge-text-input" placeholder="Teks Badge Postingan" value="${postBadge ? postBadge.text : ''}"> </div>
-                        <div class="form-group"> <input type="color" class="form-input color-input badge-color-input" value="${postBadge ? postBadge.color : '#8B5CF6'}"> </div>
+                        <div class="form-group"><input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${postData.badge ? postData.badge.text : ''}"></div>
+                        <div class="form-group"><input type="color" class="form-input color-input badge-color-input" value="${postData.badge ? postData.badge.color : '#8B5CF6'}"></div>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
-
                 ${postData.text ? `<p class="admin-post-content">${postData.text}</p>` : ''}
-                ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post image by ${postData.name}" class="admin-post-image" loading="lazy">` : ''}
-
+                ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post image" class="admin-post-image" loading="lazy">` : ''}
                 <div class="comments-section">
                     <h4>Komentar (${sortedKeys.length})</h4>
-                    <div class="comments-list" id="comments-list-${key}">${commentsHTML}</div>
+                    <div class="comments-list">${commentsHTML}</div>
                     <div class="author-composer">
                          <form class="add-comment-form" data-post-key="${key}">
                             <div class="composer-wrapper">
                                 ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
                                 <div style="width: 100%;">
                                     <textarea class="composer-input" placeholder="Tulis komentar sebagai author..." required></textarea>
-                                    <div class="composer-actions"> <button type="submit" class="btn btn-primary composer-btn">Kirim Komentar</button> </div>
+                                    <div class="composer-actions"><button type="submit" class="btn btn-primary composer-btn">Kirim</button></div>
                                 </div>
                             </div>
                         </form>
                     </div>
-                </div>
-            `;
+                </div>`;
             return card;
         };
 
         const createCommentHTML = (comment, postKey, commentKey) => {
-            if (comment.isDev) {
-                return createAdminCommentHTML(comment, postKey, commentKey, false);
-            }
-
-            let repliesHTML = '';
-            if (comment.replies) {
-                const sortedReplies = Object.keys(comment.replies).map(key => ({ key, ...comment.replies[key] })).sort((a, b) => a.timestamp - b.timestamp);
-                sortedReplies.forEach(reply => {
-                    repliesHTML += createAdminCommentHTML(reply, postKey, commentKey, true, reply.key);
-                });
-            }
-
-            const badge = comment.badge;
-            const badgeHTML = badge ? `<span class="badge" style="background-color: ${badge.color || '#777'};">${badge.text}</span>` : '';
-            const userAvatar = `<div class="comment-avatar">${comment.name ? comment.name.charAt(0).toUpperCase() : 'U'}</div>`;
-
+            if (comment.isDev) return createAdminCommentHTML(comment, postKey, commentKey, false);
+            const replies = comment.replies || {};
+            const sortedReplies = Object.keys(replies).map(key => ({ key, ...replies[key] })).sort((a, b) => a.timestamp - b.timestamp);
+            const repliesHTML = sortedReplies.map(reply => createAdminCommentHTML(reply, postKey, commentKey, true, reply.key)).join('');
+            const badgeHTML = comment.badge ? `<span class="badge" style="background-color: ${comment.badge.color || '#777'};">${comment.badge.text}</span>` : '';
             return `
                 <div class="comment-container">
                     <div class="comment-item">
-                        ${userAvatar}
+                        <div class="comment-avatar">${comment.name ? comment.name.charAt(0).toUpperCase() : 'U'}</div>
                         <div class="comment-body">
-                            <div class="comment-header">
-                                <span class="comment-user">${comment.name} ${badgeHTML}</span>
-                            </div>
+                            <div class="comment-header"><span class="comment-user">${comment.name} ${badgeHTML}</span></div>
                             <p class="comment-text">${comment.text}</p>
                             <div class="comment-actions">
-                                <button class="btn-action reply-to-comment-btn" data-comment-key="${commentKey}"><i class="fas fa-reply"></i> Balas</button>
-                                <button class="btn-action badge-comment-btn" data-comment-key="${commentKey}"><i class="fas fa-id-badge"></i> Badge</button>
-                                <button class="btn-action delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i> Hapus</button>
+                                <button class="btn-action reply-to-comment-btn"><i class="fas fa-reply"></i> Balas</button>
+                                <button class="btn-action badge-comment-btn"><i class="fas fa-id-badge"></i> Badge</button>
+                                <button class="btn-action delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}"><i class="fas fa-trash"></i> Hapus</button>
                             </div>
-
                             <form class="comment-reply-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
                                 <div class="composer-wrapper">
                                     ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
                                     <div style="width: 100%;">
                                         <textarea class="composer-input" placeholder="Balas komentar ${comment.name}..." required></textarea>
-                                        <div class="composer-actions"> <button type="submit" class="btn btn-primary composer-btn">Kirim</button> </div>
+                                        <div class="composer-actions"><button type="submit" class="btn btn-primary composer-btn">Kirim</button></div>
                                     </div>
                                 </div>
                             </form>
-
                             <form class="badge-form comment-badge-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
                                 <div class="badge-form-inner">
-                                    <div class="form-group"> <input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${badge ? badge.text : ''}"> </div>
-                                    <div class="form-group"> <input type="color" class="form-input color-input badge-color-input" value="${badge ? badge.color : '#8B5CF6'}"> </div>
+                                    <div class="form-group"><input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${comment.badge ? comment.badge.text : ''}"></div>
+                                    <div class="form-group"><input type="color" class="form-input color-input badge-color-input" value="${comment.badge ? comment.badge.color : '#8B5CF6'}"></div>
                                     <button type="submit" class="btn btn-primary">Simpan</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="replies-container">${repliesHTML}</div>
-                </div>
-            `;
+                </div>`;
         };
 
         const createAvatarHTML = (name, avatarUrl, cssClass = 'comment-avatar') => {
-            if (avatarUrl) {
-                return `<img src="${avatarUrl}" alt="${name}" class="${cssClass}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=ERR'">`;
-            }
-            return `<div class="${cssClass}" style="background-color: var(--author-color); color: white;">${name ? name.charAt(0).toUpperCase() : 'A'}</div>`;
+            return avatarUrl ? `<img src="${avatarUrl}" alt="${name}" class="${cssClass}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=ERR'">`
+                             : `<div class="${cssClass}" style="background-color: var(--author-color); color: white;">${name ? name.charAt(0).toUpperCase() : 'A'}</div>`;
         };
 
         const createAdminCommentHTML = (comment, postKey, commentKey, isReply = false, replyKey = null) => {
             const deleteButton = isReply
                 ? `<button class="btn-icon delete-reply-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" data-reply-key="${replyKey}" title="Hapus Balasan"><i class="fas fa-trash"></i></button>`
                 : `<button class="btn-icon delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i></button>`;
-
             return `
                 <div class="admin-comment">
                     <div class="comment-item">
@@ -1138,8 +1014,7 @@
                             <p class="comment-text">${comment.text}</p>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         };
 
         const loadAdminTestimonials = () => {
@@ -1151,17 +1026,15 @@
                     adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada testimoni.</p>';
                     return;
                 }
-                let posts = [];
-                snapshot.forEach(childSnapshot => {
-                    posts.push({ key: childSnapshot.key, val: childSnapshot.val() });
-                });
+                const posts = [];
+                snapshot.forEach(child => posts.push({ key: child.key, val: child.val() }));
                 posts.reverse().forEach((post, index) => {
                     adminTestimonialGrid.appendChild(createAdminPostCard(post.val, post.key, index));
                 });
-                setTimeout(() => { AOS.refresh(true); }, 100);
+                setTimeout(() => AOS.refresh(true), 100);
             }, (error) => {
-                console.error("Firebase read failed: " + error.code);
-                adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--danger);">Gagal memuat data.</p>';
+                console.error("Firebase read failed:", error);
+                adminTestimonialGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Gagal memuat data testimoni.</p>`;
             });
         };
 
@@ -1169,63 +1042,34 @@
         const saveAuthorProfile = async () => {
             const newName = authorNameInput.value.trim();
             let newAvatarUrl = authorProfile.avatar;
-
             if (newAvatarFile) {
-                if (authorProfile.avatar) {
-                    await deleteImageFromGithub(authorProfile.avatar);
-                }
-
-                const reader = new FileReader();
-                const fileReadPromise = new Promise((resolve, reject) => {
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.onerror = reject;
-                });
-                reader.readAsDataURL(newAvatarFile); // FIX: Start reading before awaiting
-                const base64content = await fileReadPromise;
-
-                const { owner, repo, adminAvatarPath } = githubConfig;
+                if (authorProfile.avatar) await deleteImageFromGithub(authorProfile.avatar);
+                const base64content = await toBase64(newAvatarFile);
                 const fileName = `avatar-${Date.now()}.${newAvatarFile.name.split('.').pop()}`;
-                const filePath = `${adminAvatarPath}/${fileName}`;
-                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-                await githubApiRequest(apiUrl, {
+                const filePath = `${githubConfig.adminAvatarPath}/${fileName}`;
+                await githubApiRequest(`https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}`, {
                     method: 'PUT',
-                    body: JSON.stringify({
-                        message: `feat: upload admin avatar ${fileName}`,
-                        content: base64content,
-                    }),
+                    body: JSON.stringify({ message: `feat: upload admin avatar ${fileName}`, content: base64content }),
                 });
-
-                newAvatarUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+                newAvatarUrl = `https://raw.githubusercontent.com/${githubConfig.owner}/${githubConfig.repo}/main/${filePath}`;
             }
-
-            authorProfile.name = newName;
-            authorProfile.avatar = newAvatarUrl;
-
+            authorProfile = { name: newName, avatar: newAvatarUrl };
             localStorage.setItem('pictlord_author_profile', JSON.stringify(authorProfile));
             newAvatarFile = null;
             loadAuthorProfile();
-            loadAdminTestimonials();
+            loadAdminTestimonials(); // Refresh testimonials to show new avatar
         };
 
         const loadAuthorProfile = () => {
             const savedProfile = localStorage.getItem('pictlord_author_profile');
-            if (savedProfile) {
-                authorProfile = JSON.parse(savedProfile);
-            }
+            if (savedProfile) authorProfile = JSON.parse(savedProfile);
             authorNameInput.value = authorProfile.name;
             avatarPreview.src = authorProfile.avatar || 'https://placehold.co/100x100/2c2f36/e4e6eb?text=AVATAR';
-
-            if (authorProfile.avatar) {
-                deleteAvatarBtn.classList.add('visible');
-            } else {
-                deleteAvatarBtn.classList.remove('visible');
-            }
+            deleteAvatarBtn.classList.toggle('visible', !!authorProfile.avatar);
         };
 
-        deleteAvatarBtn.addEventListener('click', async () => {
+        deleteAvatarBtn.addEventListener('click', () => {
             if (!authorProfile.avatar) return;
-
             showModal('Apakah Anda yakin ingin menghapus avatar ini?', async () => {
                 try {
                     await deleteImageFromGithub(authorProfile.avatar);
@@ -1235,7 +1079,6 @@
                     loadAdminTestimonials();
                     alert('Avatar berhasil dihapus.');
                 } catch (error) {
-                    console.error("Gagal menghapus avatar:", error);
                     alert(`Gagal menghapus avatar: ${error.message}`);
                 }
             });
@@ -1245,11 +1088,7 @@
             const file = e.target.files[0];
             if (file) {
                 newAvatarFile = file;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    avatarPreview.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
+                avatarPreview.src = URL.createObjectURL(file);
             }
         });
 
@@ -1262,7 +1101,6 @@
                 await saveAuthorProfile();
                 alert('Profil berhasil disimpan!');
             } catch (error) {
-                console.error("Gagal menyimpan profil:", error);
                 alert(`Gagal menyimpan profil: ${error.message}`);
             } finally {
                 saveButton.disabled = false;
@@ -1270,109 +1108,111 @@
             }
         });
 
-        // --- EVENT LISTENERS (TESTIMONIALS) ---
-        adminTestimonialGrid.addEventListener('click', (e) => {
-            const deletePostBtn = e.target.closest('.delete-post-btn');
-            if (deletePostBtn) {
-                const postKey = deletePostBtn.dataset.key;
-                showModal('Hapus postingan ini? Jika ada gambar, gambar di GitHub juga akan dihapus.', () => {
-                    testimonialsRef.child(postKey).once('value', async (snapshot) => {
-                        const postData = snapshot.val();
-                        if (postData && postData.imageUrl) {
-                            await deleteImageFromGithub(postData.imageUrl);
-                        }
-                        testimonialsRef.child(postKey).remove();
-                    });
-                });
-                return;
-            }
+        // --- EVENT DELEGATION (TESTIMONIALS & LINKS) ---
+        document.body.addEventListener('click', (e) => {
+            const target = e.target;
+            const postCard = target.closest('.admin-post-card');
+            const commentBody = target.closest('.comment-body');
 
-            const deleteCommentBtn = e.target.closest('.delete-comment-btn');
-            if (deleteCommentBtn) {
-                showModal('Hapus komentar ini dan semua balasannya?', () => {
-                    testimonialsRef.child(deleteCommentBtn.dataset.postKey).child('comments').child(deleteCommentBtn.dataset.commentKey).remove();
-                });
-                return;
-            }
-
-            const deleteReplyBtn = e.target.closest('.delete-reply-btn');
-            if (deleteReplyBtn) {
-                showModal('Hapus balasan ini?', () => {
-                    const { postKey, commentKey, replyKey } = deleteReplyBtn.dataset;
-                    testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').child(replyKey).remove();
-                });
-                return;
-            }
-
-            const toggleForm = (button, formSelector, parentSelector) => {
-                const parent = button.closest(parentSelector);
+            // Toggle forms
+            const toggleForm = (button, formSelector, parent) => {
+                if (!parent) return;
                 const form = parent.querySelector(formSelector);
-                document.querySelectorAll('.comment-reply-form.active, .badge-form.active').forEach(activeForm => {
-                    if (activeForm !== form) activeForm.classList.remove('active');
-                });
-                form.classList.toggle('active');
-                if (form.classList.contains('active')) {
-                    form.querySelector('input, textarea').focus();
+                if (!form) return;
+                const isActive = form.classList.contains('active');
+                document.querySelectorAll('.comment-reply-form.active, .badge-form.active').forEach(f => f.classList.remove('active'));
+                if (!isActive) {
+                    form.classList.add('active');
+                    form.querySelector('input, textarea')?.focus();
                 }
             };
 
-            const replyToCommentBtn = e.target.closest('.reply-to-comment-btn');
-            if (replyToCommentBtn) {
-                toggleForm(replyToCommentBtn, '.comment-reply-form', '.comment-body');
+            if (target.closest('.reply-to-comment-btn')) toggleForm(target, '.comment-reply-form', commentBody);
+            if (target.closest('.badge-comment-btn')) toggleForm(target, '.comment-badge-form', commentBody);
+            if (target.closest('.edit-post-badge-btn')) toggleForm(target, '.post-badge-form', postCard);
+
+            // Delete actions
+            const deletePostBtn = target.closest('.delete-post-btn');
+            if (deletePostBtn) {
+                const postKey = deletePostBtn.dataset.key;
+                showModal('Hapus postingan ini? Gambar di GitHub juga akan dihapus.', () => {
+                    testimonialsRef.child(postKey).once('value', async (snapshot) => {
+                        const postData = snapshot.val();
+                        if (postData?.imageUrl) await deleteImageFromGithub(postData.imageUrl);
+                        testimonialsRef.child(postKey).remove();
+                    });
+                });
             }
 
-            const badgeCommentBtn = e.target.closest('.badge-comment-btn');
-            if (badgeCommentBtn) {
-                toggleForm(badgeCommentBtn, '.comment-badge-form', '.comment-body');
+            const deleteCommentBtn = target.closest('.delete-comment-btn');
+            if (deleteCommentBtn) {
+                const { postKey, commentKey } = deleteCommentBtn.dataset;
+                showModal('Hapus komentar ini dan semua balasannya?', () => {
+                    testimonialsRef.child(postKey).child('comments').child(commentKey).remove();
+                });
+            }
+            
+            const deleteReplyBtn = target.closest('.delete-reply-btn');
+            if (deleteReplyBtn) {
+                const { postKey, commentKey, replyKey } = deleteReplyBtn.dataset;
+                showModal('Hapus balasan ini?', () => {
+                    testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').child(replyKey).remove();
+                });
             }
 
-            const editPostBadgeBtn = e.target.closest('.edit-post-badge-btn');
-            if (editPostBadgeBtn) {
-                toggleForm(editPostBadgeBtn, '.post-badge-form', '.admin-post-card');
+            // Link actions
+            const deleteLinkBtn = target.closest('.delete-link-btn');
+            if (deleteLinkBtn) {
+                const linkKey = deleteLinkBtn.dataset.key;
+                showModal(`Anda yakin ingin menghapus tautan ID "${linkKey}"?`, () => {
+                    linksRef.child(linkKey).remove().catch(err => alert(`Gagal menghapus: ${err.message}`));
+                });
+            }
+
+            const editLinkBtn = target.closest('.edit-link-btn');
+            if (editLinkBtn) {
+                const linkKey = editLinkBtn.dataset.key;
+                linksRef.child(linkKey).once('value', (snapshot) => {
+                    if (!snapshot.exists()) return alert('Tautan tidak ditemukan.');
+                    const linkData = snapshot.val();
+                    editLinkIdDisplay.textContent = `Mengubah tautan ID: ${linkKey}`;
+                    const date = new Date(linkData.expiresAt);
+                    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                    expiresAtInput.value = date.toISOString().slice(0, 16);
+                    editLinkModal.classList.add('active');
+                    editLinkConfirmBtn.onclick = () => {
+                        const newTimestamp = new Date(expiresAtInput.value).getTime();
+                        linksRef.child(linkKey).child('expiresAt').set(newTimestamp)
+                            .then(() => editLinkModal.classList.remove('active'))
+                            .catch(err => alert(`Gagal memperbarui: ${err.message}`));
+                    };
+                });
             }
         });
 
-        adminTestimonialGrid.addEventListener('submit', (e) => {
+        document.body.addEventListener('submit', (e) => {
             e.preventDefault();
             const form = e.target;
-
-            if (form.classList.contains('comment-reply-form')) {
+            if (form.matches('.comment-reply-form, .add-comment-form')) {
                 const input = form.querySelector('.composer-input');
-                const replyText = input.value.trim();
-                if (!replyText) return;
+                const text = input.value.trim();
+                if (!text) return;
                 const { postKey, commentKey } = form.dataset;
-                const newReply = { text: replyText, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
-                testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').push(newReply)
-                    .then(() => { input.value = ''; form.classList.remove('active'); });
-            }
-
-            if (form.classList.contains('add-comment-form')) {
-                const input = form.querySelector('.composer-input');
-                const commentText = input.value.trim();
-                if (!commentText) return;
-                const { postKey } = form.dataset;
-                const newComment = { text: commentText, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
-                testimonialsRef.child(postKey).child('comments').push(newComment)
-                    .then(() => { input.value = ''; });
-            }
-
-            if (form.classList.contains('badge-form')) {
+                const newEntry = { text, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
+                const ref = commentKey ? testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies')
+                                       : testimonialsRef.child(postKey).child('comments');
+                ref.push(newEntry).then(() => {
+                    input.value = '';
+                    form.classList.remove('active');
+                });
+            } else if (form.matches('.badge-form')) {
                 const text = form.querySelector('.badge-text-input').value.trim();
                 const color = form.querySelector('.badge-color-input').value;
                 const { postKey, commentKey } = form.dataset;
-
-                let badgeRef;
-                if (form.classList.contains('post-badge-form')) {
-                    badgeRef = testimonialsRef.child(postKey).child('badge');
-                } else {
-                    badgeRef = testimonialsRef.child(postKey).child('comments').child(commentKey).child('badge');
-                }
-
-                if (text) {
-                    badgeRef.set({ text, color });
-                } else {
-                    badgeRef.remove();
-                }
+                const ref = commentKey ? testimonialsRef.child(postKey).child('comments').child(commentKey).child('badge')
+                                       : testimonialsRef.child(postKey).child('badge');
+                if (text) ref.set({ text, color });
+                else ref.remove();
                 form.classList.remove('active');
             }
         });
@@ -1380,32 +1220,23 @@
         // --- LINK MANAGEMENT ---
         const formatLinkDate = (timestamp) => {
             if (!timestamp) return 'N/A';
-            const date = new Date(timestamp);
-            return date.toLocaleString('id-ID', {
-                year: 'numeric', month: 'short', day: 'numeric',
-                hour: '2-digit', minute: '2-digit'
-            });
+            return new Date(timestamp).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
         };
 
         const createLinkCard = (key, linkData) => {
             const card = document.createElement('div');
-            card.className = 'asset-card link-card';
             const isExpired = Date.now() > linkData.expiresAt;
-            if (isExpired) {
-                card.classList.add('expired');
-            }
-
+            card.className = `asset-card link-card ${isExpired ? 'expired' : ''}`;
             card.innerHTML = `
-                <img src="${linkData.strip}" alt="Image Strip ${key}" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=no+preview'">
+                <img src="${linkData.strip}" alt="Strip ${key}" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=no+preview'">
                 <div class="link-card-info">
                     <p><strong>ID:</strong> ${key}</p>
                     <p><strong>Expires:</strong> ${formatLinkDate(linkData.expiresAt)}</p>
                 </div>
                 <div class="link-card-actions">
-                     <button class="btn-icon link-card-btn edit-link-btn" data-key="${key}" title="Ubah Tanggal Kedaluwarsa"><i class="fas fa-calendar-alt"></i></button>
+                     <button class="btn-icon link-card-btn edit-link-btn" data-key="${key}" title="Ubah Tanggal"><i class="fas fa-calendar-alt"></i></button>
                      <button class="btn-icon link-card-btn delete-link-btn" data-key="${key}" title="Hapus Tautan"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
+                </div>`;
             return card;
         };
         
@@ -1415,108 +1246,59 @@
             linksRef.on('value', (snapshot) => {
                 linksGrid.innerHTML = '';
                 if (!snapshot.exists()) {
-                    linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada tautan yang dibuat.</p>';
+                    linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada tautan.</p>';
                     return;
                 }
                 const links = [];
-                snapshot.forEach(childSnapshot => {
-                    links.push({ key: childSnapshot.key, val: childSnapshot.val() });
-                });
-                // Sort by expiration date, newest first
-                links.sort((a, b) => b.val.expiresAt - a.val.expiresAt);
-
-                links.forEach(link => {
-                    linksGrid.appendChild(createLinkCard(link.key, link.val));
-                });
+                snapshot.forEach(child => links.push({ key: child.key, val: child.val() }));
+                links.sort((a, b) => (b.val.expiresAt || 0) - (a.val.expiresAt || 0));
+                links.forEach(link => linksGrid.appendChild(createLinkCard(link.key, link.val)));
             }, (error) => {
-                console.error("Firebase links read failed: " + error.code);
-                linksGrid.innerHTML = '<p style="text-align: center; color: var(--danger);">Gagal memuat data tautan.</p>';
+                console.error("Firebase links read failed:", error);
+                linksGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Gagal memuat data tautan.</p>`;
             });
         };
-
-        linksGrid.addEventListener('click', (e) => {
-            const deleteBtn = e.target.closest('.delete-link-btn');
-            if (deleteBtn) {
-                const linkKey = deleteBtn.dataset.key;
-                showModal(`Anda yakin ingin menghapus tautan dengan ID "${linkKey}"? Tindakan ini tidak dapat diurungkan.`, () => {
-                    linksRef.child(linkKey).remove()
-                        .then(() => alert(`Tautan ${linkKey} berhasil dihapus.`))
-                        .catch(err => alert(`Gagal menghapus tautan: ${err.message}`));
-                });
-                return;
-            }
-
-            const editBtn = e.target.closest('.edit-link-btn');
-            if (editBtn) {
-                const linkKey = editBtn.dataset.key;
-                linksRef.child(linkKey).once('value', (snapshot) => {
-                    if (!snapshot.exists()) {
-                        alert('Tautan tidak ditemukan.');
-                        return;
-                    }
-                    const linkData = snapshot.val();
-                    editLinkIdDisplay.textContent = `Mengubah tautan dengan ID: ${linkKey}`;
-                    
-                    // Convert timestamp to yyyy-MM-ddThh:mm format
-                    const date = new Date(linkData.expiresAt);
-                    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-                    expiresAtInput.value = date.toISOString().slice(0,16);
-
-                    editLinkModal.classList.add('active');
-                    
-                    editLinkConfirmBtn.onclick = () => {
-                        const newDate = new Date(expiresAtInput.value);
-                        const newTimestamp = newDate.getTime();
-                        linksRef.child(linkKey).child('expiresAt').set(newTimestamp)
-                            .then(() => {
-                                alert('Tanggal kedaluwarsa berhasil diperbarui.');
-                                editLinkModal.classList.remove('active');
-                            })
-                            .catch(err => alert(`Gagal memperbarui: ${err.message}`));
-                    };
-                });
-            }
-        });
         
         editLinkCancelBtn.addEventListener('click', () => editLinkModal.classList.remove('active'));
         editLinkModal.addEventListener('click', (e) => { if(e.target === editLinkModal) editLinkModal.classList.remove('active'); });
 
-
         // --- AUTH ---
-        const checkLogin = () => {
-            if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
+        function showAdminPanel() {
+            if (initializeFirebase()) {
                 loginSection.style.display = 'none';
                 adminPanel.style.display = 'block';
                 loadAssets();
                 loadAuthorProfile();
                 loadAdminTestimonials();
                 loadLinks();
-            } else {
-                loginSection.style.display = 'flex';
-                adminPanel.style.display = 'none';
             }
-        };
+        }
+
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
             if (user === 'xlord' && pass === 'xlord') {
                 sessionStorage.setItem('pictlord_admin_auth', 'true');
-                checkLogin();
+                showAdminPanel();
             } else {
                 loginError.textContent = 'Username atau password salah.';
                 setTimeout(() => { loginError.textContent = ''; }, 3000);
             }
         });
+
         logoutBtn.addEventListener('click', () => {
             sessionStorage.removeItem('pictlord_admin_auth');
             setDataDirty(false);
-            checkLogin();
+            adminPanel.style.display = 'none';
+            loginSection.style.display = 'flex';
         });
 
         // --- INITIALIZATION ---
         applyTheme(localStorage.getItem('theme') || 'dark');
-        checkLogin();
+        if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
+            showAdminPanel();
+        }
     });
     </script>
 </body>
