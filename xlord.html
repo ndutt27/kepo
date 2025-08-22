@@ -465,14 +465,28 @@
     <!-- AOS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
-    <!-- GitHub Image Config -->
-    <script src="api.git.js"></script>
-
-    <!-- Firebase Config -->
-    <script src="fire.js"></script>
-    
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+        // PENTING: Ganti dengan konfigurasi Firebase Anda dari project settings
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // PENTING: Ganti dengan konfigurasi GitHub Anda
+        const githubConfig = {
+            token: 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN', // Token dengan izin 'repo'
+            owner: 'YOUR_GITHUB_USERNAME',
+            repo: 'YOUR_REPOSITORY_NAME',
+            assetsPath: 'path/to/your/assets', // e.g., 'public/assets'
+            adminAvatarPath: 'path/to/your/avatars' // e.g., 'public/assets/avatars'
+        };
 
         AOS.init({ duration: 600, once: true, offset: 50 });
 
@@ -524,12 +538,24 @@
         const editLinkConfirmBtn = document.getElementById('edit-link-confirm-btn');
 
         // --- Firebase Refs ---
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        let database, testimonialsRef, linksRef;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            database = firebase.database();
+            testimonialsRef = database.ref('testimonials');
+            linksRef = database.ref('images');
+        } catch (error) {
+            console.error("Firebase Initialization Failed:", error);
+            const errorMsg = `<p style="text-align: center; color: var(--danger); padding: 2rem;">Inisialisasi Firebase gagal. Periksa `firebaseConfig` di dalam kode.</p>`;
+            document.getElementById('frames-management').innerHTML = errorMsg;
+            document.getElementById('stickers-management').innerHTML = errorMsg;
+            document.getElementById('logos-management').innerHTML = errorMsg;
+            document.getElementById('testimonial-management').innerHTML = errorMsg;
+            document.getElementById('links-management').innerHTML = errorMsg;
         }
-        const database = firebase.database();
-        const testimonialsRef = database.ref('testimonials');
-        const linksRef = database.ref('images');
+
 
         // --- MODAL ---
         const showModal = (message, onConfirm) => {
@@ -675,7 +701,7 @@
                         reader.onload = () => resolve(reader.result.split(',')[1]);
                         reader.onerror = reject;
                     });
-                    reader.readAsDataURL(file);
+                    reader.readAsDataURL(file); // FIX: Start reading before awaiting
                     const base64content = await fileReadPromise;
 
                     const { owner, repo } = githubConfig;
@@ -720,7 +746,7 @@
                 const btn = e.target.closest('.delete-asset-btn');
                 const type = btn.dataset.type;
                 const index = parseInt(btn.dataset.index, 10);
-                if (confirm('Anda yakin ingin menghapus aset ini?')) {
+                showModal('Anda yakin ingin menghapus aset ini?', () => {
                     if (type === 'frame-color') {
                         assetsData.frames.colors.splice(index, 1);
                     } else if (type === 'frame-image') {
@@ -728,7 +754,7 @@
                     }
                     setDataDirty(true);
                     renderFrames();
-                }
+                });
             }
         });
 
@@ -751,11 +777,11 @@
             if (e.target.closest('.delete-asset-btn')) {
                 const btn = e.target.closest('.delete-asset-btn');
                 const index = parseInt(btn.dataset.index, 10);
-                 if (confirm('Anda yakin ingin menghapus logo ini?')) {
+                 showModal('Anda yakin ingin menghapus logo ini?', () => {
                     assetsData.logos.splice(index, 1);
                     setDataDirty(true);
                     renderLogos();
-                }
+                });
             }
         });
 
@@ -763,7 +789,7 @@
             if (e.target.closest('.delete-asset-btn')) {
                 const btn = e.target.closest('.delete-asset-btn');
                 const stickerId = btn.dataset.id;
-                 if (confirm(`Anda yakin ingin menghapus stiker "${stickerId}"? Ini juga akan menghapus layoutnya.`)) {
+                 showModal(`Anda yakin ingin menghapus stiker "${stickerId}"? Ini juga akan menghapus layoutnya.`, () => {
                     const stickerIndex = assetsData.stickers.findIndex(s => s.id === stickerId);
                     if (stickerIndex > -1) {
                          const stickerLayout = assetsData.stickers[stickerIndex].layout;
@@ -776,7 +802,7 @@
                         setDataDirty(true);
                         renderStickers();
                     }
-                }
+                });
             }
         });
 
@@ -809,8 +835,8 @@
                         reader.onload = () => resolve(reader.result.split(',')[1]);
                         reader.onerror = reject;
                     });
+                    reader.readAsDataURL(file); // FIX: Start reading before awaiting
                     const base64content = await fileReadPromise;
-                    reader.readAsDataURL(file);
 
                     const { owner, repo } = githubConfig;
                     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
@@ -882,8 +908,8 @@
 
         // --- GITHUB API ---
         const githubApiRequest = async (url, options) => {
-            if (typeof githubConfig === 'undefined' || !githubConfig.token) {
-                 throw new Error("Konfigurasi GitHub tidak lengkap. Periksa api.git.js");
+            if (typeof githubConfig === 'undefined' || !githubConfig.token || githubConfig.token === 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN') {
+                 throw new Error("Konfigurasi GitHub tidak lengkap. Periksa `githubConfig` di dalam kode.");
             }
             const { token } = githubConfig;
             const response = await fetch(url, {
@@ -1130,6 +1156,7 @@
         };
 
         const loadAdminTestimonials = () => {
+            if (!testimonialsRef) return;
             adminTestimonialGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
             testimonialsRef.orderByChild('timestamp').on('value', (snapshot) => {
                 adminTestimonialGrid.innerHTML = '';
@@ -1166,7 +1193,7 @@
                     reader.onload = () => resolve(reader.result.split(',')[1]);
                     reader.onerror = reject;
                 });
-                reader.readAsDataURL(newAvatarFile);
+                reader.readAsDataURL(newAvatarFile); // FIX: Start reading before awaiting
                 const base64content = await fileReadPromise;
 
                 const { owner, repo, adminAvatarPath } = githubConfig;
@@ -1396,6 +1423,7 @@
         };
         
         const loadLinks = () => {
+            if (!linksRef) return;
             linksGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
             linksRef.on('value', (snapshot) => {
                 linksGrid.innerHTML = '';
