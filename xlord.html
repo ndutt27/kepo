@@ -243,7 +243,7 @@
         .delete-asset-btn { position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3); transition: var(--transition-smooth); }
         .delete-asset-btn:hover { transform: scale(1.1); background: var(--danger-light); }
         
-        /* --- NEW: Link Management Styles --- */
+        /* --- UPDATED: Link Management Styles --- */
         #links-grid {
             display: flex;
             flex-direction: column;
@@ -252,23 +252,29 @@
         }
         .link-card-item {
             display: flex;
-            align-items: center;
-            gap: 2rem;
+            flex-direction: column;
+            gap: 1.5rem;
             background: var(--bg-end);
             border: 1px solid var(--surface-border);
             border-radius: var(--border-radius-inner);
-            padding: 1.5rem;
+            padding: 2rem;
             transition: var(--transition-smooth);
         }
         .link-card-item:hover {
             border-color: var(--primary);
             box-shadow: 0 5px 15px var(--surface-glow);
         }
+        .link-card-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
         .link-card-preview img {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
             border-radius: 8px;
+            flex-shrink: 0;
         }
         .link-card-details {
             flex-grow: 1;
@@ -278,6 +284,9 @@
             color: var(--text-light);
             margin-bottom: 0.8rem;
         }
+        .link-card-details p:last-child {
+            margin-bottom: 0;
+        }
         .link-card-details strong {
             color: var(--text-color);
             font-weight: 600;
@@ -286,32 +295,42 @@
         }
         .link-card-details span {
             font-family: monospace;
+            word-break: break-all;
         }
         .link-card-actions {
             display: flex;
+            justify-content: flex-end;
             gap: 1rem;
+            border-top: 1px solid var(--surface-border);
+            padding-top: 1.5rem;
+            margin-top: auto;
         }
         .link-card-btn {
-            width: 42px;
-            height: 42px;
-            font-size: 1.6rem;
-            border-radius: 50%;
+            width: auto;
+            padding: 8px 16px;
+            font-size: 1.4rem;
+            font-weight: 500;
+            border-radius: var(--border-radius-inner);
+            text-decoration: none; /* For the 'a' tag */
         }
-        .link-card-btn.view-link-btn {
+        a.link-card-btn {
             color: var(--text-light);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            background-color: var(--surface-color);
+            border: 1px solid var(--surface-border);
         }
-        .link-card-btn.view-link-btn:hover {
-            color: var(--info-color);
-            background-color: rgba(56, 189, 248, 0.1);
+        a.link-card-btn:hover {
+            color: var(--text-color);
+            background-color: var(--surface-border);
         }
-        .link-card-btn.edit-link-btn:hover { color: var(--primary); }
-        .link-card-btn.delete-link-btn:hover { color: var(--danger); }
+        .btn-danger.link-card-btn {
+            background-color: var(--danger);
+            color: white;
+        }
+        .btn-danger.link-card-btn:hover {
+            background-color: var(--danger-light);
+        }
         .link-card-item.expired {
-            opacity: 0.6;
+            opacity: 0.7;
         }
         .link-card-item.expired .link-card-preview img {
             filter: grayscale(1);
@@ -1299,17 +1318,19 @@
             const isExpired = Date.now() > linkData.expiresAt;
             card.className = `link-card-item ${isExpired ? 'expired' : ''}`;
             card.innerHTML = `
-                <div class="link-card-preview">
-                    <img src="${linkData.strip}" alt="Strip ${key}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=preview'">
-                </div>
-                <div class="link-card-details">
-                    <p><strong>ID:</strong> <span>${key}</span></p>
-                    <p><strong>Kedaluwarsa:</strong> <span>${formatLinkDate(linkData.expiresAt)}</span></p>
+                <div class="link-card-header">
+                    <div class="link-card-preview">
+                        <img src="${linkData.strip}" alt="Strip ${key}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=preview'">
+                    </div>
+                    <div class="link-card-details">
+                        <p><strong>ID:</strong> <span>${key}</span></p>
+                        <p><strong>Kedaluwarsa:</strong> <span>${formatLinkDate(linkData.expiresAt)}</span></p>
+                    </div>
                 </div>
                 <div class="link-card-actions">
-                     <a href="${linkData.strip}" target="_blank" class="btn-icon link-card-btn view-link-btn" title="Lihat Gambar"><i class="fas fa-eye"></i></a>
-                     <button class="btn-icon link-card-btn edit-link-btn" data-key="${key}" title="Ubah Tanggal"><i class="fas fa-calendar-alt"></i></button>
-                     <button class="btn-icon link-card-btn delete-link-btn" data-key="${key}" title="Hapus Tautan"><i class="fas fa-trash"></i></button>
+                     <a href="https://www.pictlord.me/soft-file?id=${key}" target="_blank" class="btn btn-secondary link-card-btn"><i class="fas fa-eye"></i> Lihat</a>
+                     <button class="btn btn-secondary link-card-btn edit-link-btn" data-key="${key}"><i class="fas fa-calendar-alt"></i> Ubah</button>
+                     <button class="btn btn-danger link-card-btn delete-link-btn" data-key="${key}"><i class="fas fa-trash"></i> Hapus</button>
                 </div>`;
             return card;
         };
