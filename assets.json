@@ -481,6 +481,11 @@
       "id": "cnLogo",
       "name": "CN",
       "value": "照相亭"
+    },
+    {
+      "id": "logo1755904213515",
+      "name": "pho",
+      "value": "photobooth"
     }
   ],
   "stickerLayouts": {
