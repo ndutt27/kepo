@@ -436,11 +436,11 @@
         </section>
 
         <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
-            <h2>Kelola Stiker (Stickers)</h2>
+            <h2>Kelola Stiker Ori</h2>
             <div id="stickers-grid" class="asset-grid">
                 </div>
              <form id="add-sticker-form" class="add-asset-form">
-                <h3>Unggah Stiker Baru</h3>
+                <h3>Unggah Stiker Ori Baru</h3>
                  <div class="form-grid">
                     <div class="form-group">
                         <label for="sticker-name" class="form-label">Nama Stiker</label>
@@ -456,6 +456,24 @@
                     </div>
                     <div class="form-group full-width align-right">
                          <button type="submit" class="btn btn-primary">Unggah Stiker</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section id="custom-stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="150">
+            <h2>Kelola Stiker Kustom</h2>
+            <div id="custom-stickers-grid" class="asset-grid">
+            </div>
+            <form id="add-custom-sticker-form" class="add-asset-form">
+                <h3>Unggah Stiker Kustom Baru</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="custom-sticker-files" class="form-label">Pilih File Stiker (bisa lebih dari satu)</label>
+                        <input type="file" id="custom-sticker-files" class="form-input" multiple accept="image/png, image/jpeg, image/gif">
+                    </div>
+                    <div class="form-group full-width align-right">
+                        <button type="submit" class="btn btn-primary">Unggah Stiker Kustom</button>
                     </div>
                 </div>
             </form>
@@ -628,6 +646,8 @@
         const addLogoForm = document.getElementById('add-logo-form');
         const stickersGrid = document.getElementById('stickers-grid');
         const addStickerForm = document.getElementById('add-sticker-form');
+        const customStickersGrid = document.getElementById('custom-stickers-grid');
+        const addCustomStickerForm = document.getElementById('add-custom-sticker-form');
 
         // Testimonial Management DOM
         const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
@@ -700,6 +720,7 @@
             renderFrames();
             renderLogos();
             renderStickers();
+            renderCustomStickers();
         };
 
         // --- RENDER FUNCTIONS ---
@@ -977,6 +998,100 @@
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Unggah Stiker';
+            }
+        });
+
+        const renderCustomStickers = () => {
+            if (!assetsData || !customStickersGrid) return;
+            if (!assetsData.customStickers) {
+                assetsData.customStickers = [];
+            }
+            customStickersGrid.innerHTML = '';
+            assetsData.customStickers.forEach((sticker) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <img src="${sticker.src}" alt="Custom Sticker" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=err'">
+                    <p>${sticker.id}</p>
+                    <button class="delete-asset-btn" data-type="custom-sticker" data-id="${sticker.id}"><i class="fas fa-times"></i></button>
+                `;
+                customStickersGrid.appendChild(card);
+            });
+        };
+
+        customStickersGrid.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-asset-btn')) {
+                const btn = e.target.closest('.delete-asset-btn');
+                const stickerId = btn.dataset.id;
+                if (confirm(`Anda yakin ingin menghapus stiker kustom "${stickerId}"?`)) {
+                    const stickerIndex = assetsData.customStickers.findIndex(s => s.id === stickerId);
+                    if (stickerIndex > -1) {
+                        assetsData.customStickers.splice(stickerIndex, 1);
+                        setDataDirty(true);
+                        renderCustomStickers();
+                    }
+                }
+            }
+        });
+
+        addCustomStickerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const files = document.getElementById('custom-sticker-files').files;
+            const submitBtn = addCustomStickerForm.querySelector('button[type="submit"]');
+
+            if (files.length === 0) {
+                alert('Silakan pilih setidaknya satu file stiker untuk diunggah.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+
+            try {
+                if (!assetsData.customStickers) {
+                    assetsData.customStickers = [];
+                }
+
+                for (const file of files) {
+                    const filePath = `${githubConfig.assetsPath}/stickers/custom/${file.name}`;
+                    const reader = new FileReader();
+                    const fileReadPromise = new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = reject;
+                    });
+                    reader.readAsDataURL(file);
+                    const base64content = await fileReadPromise;
+
+                    const { owner, repo } = githubConfig;
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                    await githubApiRequest(apiUrl, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: `feat: upload custom sticker ${file.name}`,
+                            content: base64content,
+                        }),
+                    });
+
+                    const newSticker = {
+                        id: `custom-sticker-${Date.now()}`,
+                        src: filePath
+                    };
+                    assetsData.customStickers.push(newSticker);
+                }
+
+                setDataDirty(true);
+                renderCustomStickers();
+                addCustomStickerForm.reset();
+                alert(`${files.length} stiker kustom berhasil diunggah! Jangan lupa simpan perubahan.`);
+
+            } catch (error) {
+                console.error("Gagal mengunggah stiker kustom:", error);
+                alert(`Gagal mengunggah stiker kustom: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Unggah Stiker Kustom';
             }
         });
 

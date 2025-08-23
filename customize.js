@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const frameButtonsContainer = document.getElementById('frame-buttons-container');
     const shapeButtonsContainer = document.getElementById('shape-buttons-container');
     const stickerButtonsContainer = document.getElementById('sticker-buttons-container');
+    const customStickerButtonsContainer = document.getElementById('custom-sticker-buttons-container');
     const logoButtonsContainer = document.getElementById('logo-buttons-container');
     const dateCheckbox = document.getElementById('dateCheckbox');
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
@@ -20,6 +21,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundImage = null;
     let textColor = '#E28585';
 
+    let fabricCanvas = null; // Will hold the fabric.js canvas instance
+    const canvasWidth = 592;
+    const canvasHeight = 1352;
+
     // --- Main Initialization ---
     const init = async () => {
         try {
@@ -27,15 +32,40 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) throw new Error('Failed to load assets.json');
             assetsData = await response.json();
 
+            // Create the canvas element
+            const canvasEl = document.createElement('canvas');
+            canvasEl.id = 'photo-canvas';
+            // Set logical size
+            canvasEl.width = canvasWidth;
+            canvasEl.height = canvasHeight;
+
+            // Append to DOM
+            photoCustomPreview.innerHTML = ''; // Clear previous content
+            photoCustomPreview.appendChild(canvasEl);
+
+            // Initialize Fabric.js canvas
+            fabricCanvas = new fabric.Canvas('photo-canvas');
+
+            // Set display size
+            const previewWidth = (window.innerWidth <= 768) ? 150 : 230;
+            const scale = previewWidth / canvasWidth;
+            fabricCanvas.setDimensions({
+                width: previewWidth,
+                height: canvasHeight * scale
+            });
+            fabricCanvas.setZoom(scale);
+
+
             renderFrameButtons();
             renderShapeButtons();
             renderStickerButtons();
+            renderCustomStickerButtons();
             renderLogoButtons();
 
             setupEventListeners();
 
-            // Initial draw after a short delay to ensure everything is ready
-            setTimeout(redrawCanvas, 100);
+            // Initial draw
+            await redrawCanvas();
 
         } catch (error) {
             console.error("Initialization failed:", error);
@@ -118,11 +148,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
+    const renderCustomStickerButtons = () => {
+        if (!assetsData.customStickers || !customStickerButtonsContainer) return;
+        customStickerButtonsContainer.innerHTML = '';
+        assetsData.customStickers.forEach(sticker => {
+            const btn = document.createElement('button');
+            btn.className = 'neumorphic-btn buttonStickers';
+            btn.dataset.src = sticker.src;
+            btn.innerHTML = `<img src="${sticker.src}" alt="Custom Sticker" class="stickerIconSize">`;
+            customStickerButtonsContainer.appendChild(btn);
+        });
+    };
+
     // --- Event Handling ---
     const setupEventListeners = () => {
         frameButtonsContainer.addEventListener('click', handleFrameClick);
         shapeButtonsContainer.addEventListener('click', handleShapeClick);
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
+        customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
 
         dateCheckbox.addEventListener('change', redrawCanvas);
@@ -132,6 +175,27 @@ document.addEventListener('DOMContentLoaded', function() {
             redrawCanvas();
         });
     };
+
+    function handleCustomStickerClick(e) {
+        const btn = e.target.closest('.neumorphic-btn');
+        if (!btn) return;
+
+        const stickerSrc = btn.dataset.src;
+        fabric.Image.fromURL(stickerSrc, (img) => {
+            img.scaleToWidth(150); // Initial size
+            img.set({
+                left: (canvasWidth - img.getScaledWidth()) / 2,
+                top: (canvasHeight - img.getScaledHeight()) / 2,
+                borderColor: '#E28585',
+                cornerColor: '#E28585',
+                cornerSize: 12,
+                transparentCorners: false
+            });
+            fabricCanvas.add(img);
+            fabricCanvas.setActiveObject(img);
+            fabricCanvas.renderAll();
+        }, { crossOrigin: 'anonymous' });
+    }
 
     function handleFrameClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
@@ -163,20 +227,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const clickedStickerLayout = btn.dataset.sticker === 'null' ? null : btn.dataset.sticker;
 
-        // If the same sticker is clicked, deselect it. Otherwise, select the new one.
         if (selectedStickerLayout === clickedStickerLayout) {
             selectedStickerLayout = null;
         } else {
             selectedStickerLayout = clickedStickerLayout;
         }
 
-        // Update active states
         stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => {
             const layout = b.dataset.sticker === 'null' ? null : b.dataset.sticker;
             b.classList.toggle('active', selectedStickerLayout === layout);
         });
         
-        // Ensure 'none' is active if nothing is selected
         if (selectedStickerLayout === null) {
              const noneBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
              if(noneBtn) noneBtn.classList.add('active');
@@ -276,14 +337,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function redrawCanvas() {
-        if (!storedImages) return null;
+        if (!storedImages || !fabricCanvas) return null;
+
+        // Create a temporary canvas for the background
+        const bgCanvas = document.createElement('canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        bgCanvas.width = canvasWidth;
+        bgCanvas.height = canvasHeight;
 
         const imageArrayLength = storedImages.length;
-        const stackedCanvas = document.createElement('canvas');
-        const ctx = stackedCanvas.getContext('2d');
-
-        const canvasWidth = 592;
-        const canvasHeight = 1352;
         const borderWidth = 30;
         const spacing = 12;
         const bottomPadding = 100;
@@ -292,25 +354,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const photoHeight = availableHeight / imageArrayLength;
         const photoWidth = canvasWidth - (borderWidth * 2);
 
-        stackedCanvas.width = canvasWidth;
-        stackedCanvas.height = canvasHeight;
-
-        // 1. Draw Background
-        ctx.clearRect(0, 0, stackedCanvas.width, stackedCanvas.height);
+        // 1. Draw Background on temp canvas
         if (backgroundType === 'color') {
-            ctx.fillStyle = backgroundColor;
-            ctx.fillRect(0, 0, stackedCanvas.width, stackedCanvas.height);
+            bgCtx.fillStyle = backgroundColor;
+            bgCtx.fillRect(0, 0, canvasWidth, canvasHeight);
         } else if (backgroundType === 'image' && backgroundImage && backgroundImage.complete) {
-            ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
+            bgCtx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         }
         
-        // 2. Draw Logo Text
-        ctx.fillStyle = textColor;
-        ctx.font = 'bold 32px Arial, Roboto, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(selectedText, stackedCanvas.width / 2, stackedCanvas.height - 55);
+        // 2. Draw Logo Text on temp canvas
+        bgCtx.fillStyle = textColor;
+        bgCtx.font = 'bold 32px Arial, Roboto, sans-serif';
+        bgCtx.textAlign = 'center';
+        bgCtx.fillText(selectedText, canvasWidth / 2, canvasHeight - 55);
 
-        // 3. Draw Date and Time Text
+        // 3. Draw Date and Time Text on temp canvas
         if (dateCheckbox.checked || dateTimeCheckbox.checked) {
             const currentDate = new Date();
             let displayText = '';
@@ -319,12 +377,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const timeString = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 displayText += (dateCheckbox.checked ? ' ' : '') + timeString;
             }
-            ctx.fillStyle = textColor; 
-            ctx.font = '18px "DM Sans", Arial, Roboto, sans-serif';
-            ctx.fillText(displayText, stackedCanvas.width / 2, stackedCanvas.height - 30);
+            bgCtx.fillStyle = textColor;
+            bgCtx.font = '18px "DM Sans", Arial, Roboto, sans-serif';
+            bgCtx.fillText(displayText, canvasWidth / 2, canvasHeight - 30);
         }
 
-        // 4. Draw Photos
+        // 4. Draw Photos on temp canvas
         const imageElements = await Promise.all(storedImages.map(imgData => {
             return new Promise(resolve => {
                 const img = new Image();
@@ -352,34 +410,46 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const x = borderWidth;
             const y = borderWidth + index * (photoHeight + spacing);
-            clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+            clipAndDrawImage(bgCtx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
         });
 
-        // 5. Draw Stickers on top
-        await drawSticker(ctx);
+        // 5. Draw Original Stickers on temp canvas
+        await drawSticker(bgCtx);
         
-        // 6. Update the preview on the page
-        updatePreview(stackedCanvas);
+        // 6. Set the temp canvas as the background of the fabric canvas
+        fabricCanvas.setBackgroundImage(new fabric.Image(bgCanvas), fabricCanvas.renderAll.bind(fabricCanvas));
 
-        // 7. Return the canvas element so other scripts can use it
-        return stackedCanvas;
+        // 7. Return the fabric canvas element
+        return fabricCanvas.getElement();
     }
     
-    function updatePreview(canvas) {
-        if (!photoCustomPreview) return;
-        photoCustomPreview.innerHTML = '';
-        canvas.style.width = (window.innerWidth <= 768) ? "150px" : "230px";
-        if (backgroundColor === '#FFFFFF' && backgroundType === 'color') {
-            canvas.style.border = '1px solid #ccc';
-        } else {
-            canvas.style.border = 'none';
-        }
-        photoCustomPreview.appendChild(canvas);
+    function updatePreview() {
+        // This function is now handled by the fabric.js setup in init()
     }
 
     // --- Expose the drawing function to the global window object ---
-    // This allows the script in customize.html to call it.
-    window.drawFinalImage = redrawCanvas;
+    window.drawFinalImage = async () => {
+        if (!fabricCanvas) return null;
+        // The toDataURL method of fabric canvas now includes the background
+        const dataURL = fabricCanvas.toDataURL({
+            format: 'png',
+            quality: 1.0
+        });
+        // Since the preview in the modal expects a canvas element in some parts of the original code,
+        // let's return a canvas with the final image drawn on it.
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = canvasWidth;
+        finalCanvas.height = canvasHeight;
+        const ctx = finalCanvas.getContext('2d');
+        const img = new Image();
+        return new Promise(resolve => {
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                resolve(finalCanvas);
+            };
+            img.src = dataURL;
+        });
+    };
 
     // --- Start the app ---
     init();
