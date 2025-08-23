@@ -524,8 +524,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="popup-text" class="form-label">Teks Popup (Kosongkan jika hanya gambar)</label>
-                    <textarea id="popup-text" class="form-input" rows="4" style="padding: 14px;" placeholder="Masukkan teks untuk popup..."></textarea>
+                    <label for="popup-text" class="form-label">Teks/HTML Popup</label>
+                    <textarea id="popup-text" class="form-input" rows="4" style="padding: 14px;" placeholder="Masukkan teks atau kode HTML untuk popup..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="popup-image-upload" class="form-label">Gambar Popup</label>
@@ -533,6 +533,7 @@
                          <img id="popup-image-preview" src="https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR" alt="Popup Image Preview" style="width: 150px; height: 150px; border-radius: var(--border-radius-inner); object-fit: cover; border: 3px solid var(--surface-border);">
                          <input type="file" id="popup-image-upload" accept="image/png, image/jpeg, image/gif" style="display: none;">
                          <label for="popup-image-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
+                         <button type="button" id="delete-popup-image-btn" class="btn-danger" style="width: auto; padding: 0 15px; border-radius: var(--border-radius-inner); display: none;"><i class="fas fa-trash"></i> Hapus Gambar</button>
                     </div>
                 </div>
                 <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; margin-top: 3rem;">
@@ -615,7 +616,9 @@
         const popupText = document.getElementById('popup-text');
         const popupImageUpload = document.getElementById('popup-image-upload');
         const popupImagePreview = document.getElementById('popup-image-preview');
+        const deletePopupImageBtn = document.getElementById('delete-popup-image-btn');
         let newPopupImageFile = null;
+        let popupImageWasDeleted = false;
         const authorNameInput = document.getElementById('author-name');
         const authorAvatarUpload = document.getElementById('author-avatar-upload');
         const avatarPreview = document.getElementById('avatar-preview');
@@ -1032,13 +1035,14 @@
         // --- POPUP MANAGEMENT ---
         const loadPopupConfig = async () => {
             try {
-                const response = await fetch('popup.json?v=' + Date.now()); // Cache-bust
+                const response = await fetch('popup.json?v=' + Date.now());
                 if (!response.ok) {
                     if (response.status === 404) {
                         console.log('popup.json not found, using default values.');
                         popupEnabled.checked = false;
                         popupText.value = '';
                         popupImagePreview.src = 'https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR';
+                        deletePopupImageBtn.style.display = 'none';
                         return;
                     }
                     throw new Error('Network response was not ok');
@@ -1046,7 +1050,17 @@
                 const popupData = await response.json();
                 popupEnabled.checked = popupData.isEnabled;
                 popupText.value = popupData.text;
-                popupImagePreview.src = popupData.imageUrl || 'https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR';
+                const imageUrl = popupData.imageUrl;
+                popupImagePreview.src = imageUrl || 'https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR';
+                
+                // Show delete button only if there is a real image
+                if (imageUrl && !imageUrl.startsWith('https://placehold.co')) {
+                    deletePopupImageBtn.style.display = 'inline-flex';
+                } else {
+                    deletePopupImageBtn.style.display = 'none';
+                }
+                popupImageWasDeleted = false;
+
             } catch (error) {
                 console.error("Gagal memuat popup.json:", error);
                 alert("Error: Tidak dapat memuat konfigurasi popup.");
@@ -1060,7 +1074,14 @@
 
             try {
                 let imageUrl = popupImagePreview.src;
+                
+                // Handle deletion
+                if (popupImageWasDeleted && imageUrl.includes('githubusercontent')) {
+                    await deleteImageFromGithub(imageUrl);
+                    imageUrl = '';
+                }
 
+                // Handle new upload
                 if (newPopupImageFile) {
                     const reader = new FileReader();
                     const fileReadPromise = new Promise((resolve, reject) => {
@@ -1085,10 +1106,8 @@
                     const responseData = await response.json();
                     imageUrl = responseData.content.download_url;
                     if (!imageUrl) {
-                        // Fallback for enterprise or other environments that might not have download_url
                         imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
                     }
-                    newPopupImageFile = null;
                 }
 
                 const newPopupData = {
@@ -1109,9 +1128,7 @@
                 } catch (error) {
                     if (error.message.includes("404")) {
                         currentSha = null;
-                    } else {
-                        throw error;
-                    }
+                    } else { throw error; }
                 }
 
                 const content = JSON.stringify(newPopupData, null, 2);
@@ -1128,6 +1145,9 @@
                 });
 
                 alert('Pengaturan popup berhasil disimpan!');
+                newPopupImageFile = null;
+                popupImageWasDeleted = false;
+                loadPopupConfig(); // Reload to reflect the new state
 
             } catch (error) {
                 console.error("Gagal menyimpan pengaturan popup:", error);
@@ -1473,11 +1493,22 @@
             const file = e.target.files[0];
             if (file) {
                 newPopupImageFile = file;
+                popupImageWasDeleted = false; // A new upload cancels a pending deletion
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     popupImagePreview.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
+                deletePopupImageBtn.style.display = 'inline-flex';
+            }
+        });
+
+        deletePopupImageBtn.addEventListener('click', () => {
+            if (confirm('Anda yakin ingin menghapus gambar popup? Perubahan akan disimpan saat Anda menekan tombol "Simpan".')) {
+                newPopupImageFile = null;
+                popupImageWasDeleted = true;
+                popupImagePreview.src = 'https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR';
+                deletePopupImageBtn.style.display = 'none';
             }
         });
 
