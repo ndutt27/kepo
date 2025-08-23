@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${formattedDate} ${isExpired ? ' <strong>(Expired)</strong>' : ''}
                 </td>
                 <td class="action-buttons">
-                    <a href="https://www.pictlord.me/soft-file?id=${link.id}" target="_blank" class="btn-icon btn-view" title="Lihat Halaman"><i class="fas fa-eye"></i></a>
+                    <a href="https://www.pictlord.web.id/soft-file?id=${link.id}" target="_blank" class="btn-icon btn-view" title="Lihat Halaman"><i class="fas fa-eye"></i></a>
                     <button class="btn-icon btn-edit" data-id="${link.id}" title="Edit Tanggal Kadaluarsa"><i class="fas fa-calendar-alt"></i></button>
                     <button class="btn-icon btn-delete" data-id="${link.id}" title="Hapus Link"><i class="fas fa-trash"></i></button>
                 </td>
