@@ -798,7 +798,7 @@
                     qrCodePopupContainer.appendChild(qrImage);
                     copyLinkBtn.disabled = false;
                     downloadDirectBtn.disabled = false;
-                    startQrTimer(604799);
+                    startQrTimer(86399);
 
                 } catch (error) {
                     console.error('An error occurred in the download/QR process:', error);
@@ -867,7 +867,7 @@
             }
 
             async function generateTemporaryLink(assets) {
-                const expirationTime = Date.now() + (10080 * 60 * 1000);
+                const expirationTime = Date.now() + (1440 * 60 * 1000);
                 const dataToStore = { ...assets, expiresAt: expirationTime };
                 const shortId = generateShortId(5);
                 await database.ref('images/' + shortId).set(dataToStore);
