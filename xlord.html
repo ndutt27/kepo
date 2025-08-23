@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pictlord | Admin page </title>
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- AOS (Animate On Scroll) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
@@ -334,6 +331,43 @@
         .slider.round:before {
           border-radius: 50%;
         }
+        
+        /* NEW STYLES FOR POPUP LAYOUT */
+        .popup-image-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .popup-image-preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 150px;
+            height: 150px;
+            border-radius: var(--border-radius-inner);
+            border: 3px solid var(--surface-border);
+            overflow: hidden;
+        }
+
+        .popup-image-preview-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .popup-delete-btn {
+            width: auto;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius-inner);
+        }
 
     </style>
 </head>
@@ -368,12 +402,10 @@
             <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Keluar</button>
         </header>
 
-        <!-- Frames Management -->
         <section id="frames-management" class="asset-section" data-aos="fade-up">
             <h2>Kelola Bingkai (Frames)</h2>
             <div id="frames-grid" class="asset-grid">
-                <!-- Frame cards will be loaded here -->
-            </div>
+                </div>
             <form id="add-frame-form" class="add-asset-form">
                 <h3>Tambah Bingkai Baru</h3>
                 <div class="form-grid">
@@ -403,12 +435,10 @@
             </form>
         </section>
 
-        <!-- Stickers Management -->
         <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
             <h2>Kelola Stiker (Stickers)</h2>
             <div id="stickers-grid" class="asset-grid">
-                <!-- Sticker cards will be loaded here -->
-            </div>
+                </div>
              <form id="add-sticker-form" class="add-asset-form">
                 <h3>Unggah Stiker Baru</h3>
                  <div class="form-grid">
@@ -431,12 +461,10 @@
             </form>
         </section>
 
-        <!-- Logos Management -->
         <section id="logos-management" class="asset-section" data-aos="fade-up" data-aos-delay="200">
             <h2>Kelola Logo (Englogo)</h2>
             <div id="logos-grid" class="asset-grid">
-                <!-- Logo cards will be loaded here -->
-            </div>
+                </div>
              <form id="add-logo-form" class="add-asset-form">
                 <h3>Tambah Logo Baru</h3>
                 <div class="form-grid">
@@ -455,7 +483,6 @@
             </form>
         </section>
 
-        <!-- Custom Link Management -->
         <section id="custom-link-management" class="asset-section" data-aos="fade-up" data-aos-delay="250">
             <h2>Kelola Link Kustom (7 Hari)</h2>
             <div class="form-group" style="max-width: 400px; margin-bottom: 2rem;">
@@ -473,14 +500,12 @@
                         </tr>
                     </thead>
                     <tbody id="custom-link-table-body">
-                        <!-- Rows will be dynamically inserted here -->
                         <tr><td colspan="4" class="loader-container"><div class="loader"></div></td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Testimonial Management -->
         <section class="profile-settings" data-aos="fade-up" data-aos-delay="300">
             <h2>Profil Author Testimoni</h2>
             <form id="profile-form" class="profile-form">
@@ -506,11 +531,9 @@
         <section id="testimonial-management" class="asset-section" data-aos="fade-up" data-aos-delay="400">
             <h2>Kelola Testimoni</h2>
             <div id="admin-testimonial-grid">
-                <!-- Testimonials will be loaded here -->
-            </div>
+                </div>
         </section>
 
-        <!-- Popup Management -->
         <section id="popup-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
             <h2>Kelola Popup Iklan</h2>
             <form id="popup-form">
@@ -529,11 +552,15 @@
                 </div>
                 <div class="form-group">
                     <label for="popup-image-upload" class="form-label">Gambar Popup</label>
-                    <div class="avatar-upload-wrapper">
-                         <img id="popup-image-preview" src="https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR" alt="Popup Image Preview" style="width: 150px; height: 150px; border-radius: var(--border-radius-inner); object-fit: cover; border: 3px solid var(--surface-border);">
-                         <input type="file" id="popup-image-upload" accept="image/png, image/jpeg, image/gif" style="display: none;">
-                         <label for="popup-image-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
-                         <button type="button" id="delete-popup-image-btn" class="btn-danger" style="width: auto; padding: 0 15px; border-radius: var(--border-radius-inner); display: none;"><i class="fas fa-trash"></i> Hapus Gambar</button>
+                    <div class="popup-image-wrapper">
+                         <div class="popup-image-preview-container">
+                             <img id="popup-image-preview" src="https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR" alt="Popup Image Preview">
+                         </div>
+                         <div class="popup-buttons-container">
+                            <input type="file" id="popup-image-upload" accept="image/png, image/jpeg, image/gif" style="display: none;">
+                            <label for="popup-image-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
+                            <button type="button" id="delete-popup-image-btn" class="btn-danger popup-delete-btn"><i class="fas fa-trash"></i> Hapus Gambar</button>
+                         </div>
                     </div>
                 </div>
                 <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; margin-top: 3rem;">
@@ -546,7 +573,6 @@
     
     <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
 
-    <!-- Confirmation Modal -->
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>Konfirmasi Tindakan</h3>
@@ -558,19 +584,14 @@
         </div>
     </div>
 
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-database-compat.js"></script>
     
-    <!-- AOS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
-    <!-- GitHub Image Config -->
     <script src="api.git.js"></script>
 
-    <!-- Firebase Config -->
     <script src="fire.js"></script>
-    <!-- Link Management Script -->
     <script src="link.js" defer></script>
     
     <script>
