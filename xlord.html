@@ -255,6 +255,34 @@
             transform: translateY(0);
         }
 
+        /* Custom Link Table Styles */
+        .table-responsive { overflow-x: auto; }
+        .custom-link-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+        .custom-link-table th, .custom-link-table td { padding: 1.5rem 2rem; text-align: left; border-bottom: 1px solid var(--surface-border); }
+        .custom-link-table th { font-size: 1.4rem; font-weight: 600; text-transform: uppercase; color: var(--text-light); }
+        .custom-link-table td { font-size: 1.5rem; vertical-align: middle; }
+        .custom-link-table .link-preview-img {
+            width: 40px;
+            height: 95px; /* Aspect ratio similar to the photostrip */
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: var(--bg-start);
+            border: 1px solid var(--surface-border);
+            display: block;
+        }
+        .custom-link-table tr:last-child td { border-bottom: none; }
+        .custom-link-table .action-buttons { display: flex; gap: 1rem; }
+        .action-buttons .btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+        .action-buttons .btn-view:hover { color: var(--primary); background-color: var(--surface-border); }
+        .action-buttons .btn-edit:hover { color: #FBBF24; background-color: var(--surface-border); } /* Amber 400 */
+        .action-buttons .btn-delete:hover { color: var(--danger); background-color: var(--surface-border); }
+
 
     </style>
 </head>
@@ -376,6 +404,31 @@
             </form>
         </section>
 
+        <!-- Custom Link Management -->
+        <section id="custom-link-management" class="asset-section" data-aos="fade-up" data-aos-delay="250">
+            <h2>Kelola Link Kustom (7 Hari)</h2>
+            <div class="form-group" style="max-width: 400px; margin-bottom: 2rem;">
+                <input type="search" id="link-search-input" class="form-input" placeholder="Cari berdasarkan ID...">
+                <i class="form-icon fas fa-search"></i>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-link-table">
+                    <thead>
+                        <tr>
+                            <th>Pratinjau</th>
+                            <th>ID</th>
+                            <th>Kadaluarsa Pada</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="custom-link-table-body">
+                        <!-- Rows will be dynamically inserted here -->
+                        <tr><td colspan="4" class="loader-container"><div class="loader"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Testimonial Management -->
         <section class="profile-settings" data-aos="fade-up" data-aos-delay="300">
             <h2>Profil Author Testimoni</h2>
@@ -434,6 +487,8 @@
 
     <!-- Firebase Config -->
     <script src="fire.js"></script>
+    <!-- Link Management Script -->
+    <script src="link.js" defer></script>
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -482,6 +537,7 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const testimonialsRef = database.ref('testimonials');
+
 
         // --- MODAL ---
         const showModal = (message, onConfirm) => {
