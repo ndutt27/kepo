@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateCheckbox = document.getElementById('dateCheckbox');
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
     const logoColorPicker = document.getElementById('logoColorPicker');
+    const stickerActionsContainer = document.getElementById('sticker-actions-container');
+    const stickerMirrorBtn = document.getElementById('sticker-mirror-btn');
+    const stickerDeleteBtn = document.getElementById('sticker-delete-btn');
 
     // --- State Variables ---
     let assetsData = null;
@@ -63,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderLogoButtons();
 
             setupEventListeners();
+            setupCanvasEventListeners();
 
             // Initial draw
             await redrawCanvas();
@@ -167,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
         customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
+        stickerMirrorBtn.addEventListener('click', handleStickerMirror);
+        stickerDeleteBtn.addEventListener('click', handleStickerDelete);
+
 
         dateCheckbox.addEventListener('change', redrawCanvas);
         dateTimeCheckbox.addEventListener('change', redrawCanvas);
@@ -175,6 +182,32 @@ document.addEventListener('DOMContentLoaded', function() {
             redrawCanvas();
         });
     };
+
+    const setupCanvasEventListeners = () => {
+        if (!fabricCanvas) return;
+        fabricCanvas.on('selection:created', () => {
+            stickerActionsContainer.style.display = 'block';
+        });
+        fabricCanvas.on('selection:cleared', () => {
+            stickerActionsContainer.style.display = 'none';
+        });
+    };
+
+    function handleStickerMirror() {
+        const activeObject = fabricCanvas.getActiveObject();
+        if (activeObject) {
+            activeObject.set('flipX', !activeObject.flipX);
+            fabricCanvas.renderAll();
+        }
+    }
+
+    function handleStickerDelete() {
+        const activeObject = fabricCanvas.getActiveObject();
+        if (activeObject) {
+            fabricCanvas.remove(activeObject);
+            stickerActionsContainer.style.display = 'none';
+        }
+    }
 
     function handleCustomStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
@@ -430,18 +463,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Expose the drawing function to the global window object ---
     window.drawFinalImage = async () => {
         if (!fabricCanvas) return null;
-        // The toDataURL method of fabric canvas now includes the background
+
+        // Deselect any active object to hide controls before exporting
+        fabricCanvas.discardActiveObject().renderAll();
+
+        const zoom = fabricCanvas.getZoom();
         const dataURL = fabricCanvas.toDataURL({
             format: 'png',
-            quality: 1.0
+            quality: 1.0,
+            multiplier: 1 / zoom
         });
-        // Since the preview in the modal expects a canvas element in some parts of the original code,
-        // let's return a canvas with the final image drawn on it.
+
+        // The modal requires a canvas element to be returned, so we draw the full-size image onto a new canvas
         const finalCanvas = document.createElement('canvas');
         finalCanvas.width = canvasWidth;
         finalCanvas.height = canvasHeight;
         const ctx = finalCanvas.getContext('2d');
         const img = new Image();
+
         return new Promise(resolve => {
             img.onload = () => {
                 ctx.drawImage(img, 0, 0);
