@@ -490,33 +490,39 @@
         </section>
 
         <!-- Popup Management -->
-        <section id="popup-management" class="asset-section" data-aos="fade-up" data-aos-delay="250">
+        <section id="popup-management" class="profile-settings" data-aos="fade-up" data-aos-delay="250">
             <h2>Kelola Popup</h2>
-            <form id="popup-form" class="add-asset-form">
-                <div class="form-grid">
-                    <div class="form-group">
+            <form id="popup-form" class="profile-form">
+                <!-- Column 1: Text and Toggle -->
+                <div class="form-group">
+                    <label for="popup-text" class="form-label">Teks Popup</label>
+                    <textarea id="popup-text" class="form-input" rows="5" placeholder="Masukkan pesan popup..." style="min-height: 150px;"></textarea>
+                    
+                    <div style="margin-top: 2rem;">
                         <label for="popup-enabled" class="form-label">Aktifkan Popup</label>
                         <label class="switch">
                             <input type="checkbox" id="popup-enabled">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="form-group full-width">
-                        <label for="popup-text" class="form-label">Teks Popup</label>
-                        <textarea id="popup-text" class="form-input" rows="3" placeholder="Masukkan pesan popup..."></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="popup-image-upload" class="form-label">Gambar Popup</label>
-                        <div class="avatar-upload-wrapper">
-                            <img id="popup-image-preview" src="https://placehold.co/150x150/2c2f36/e4e6eb?text=PREVIEW" alt="Popup Image Preview" style="width: 150px; height: 150px; object-fit: cover; border-radius: var(--border-radius-inner);">
+                </div>
+
+                <!-- Column 2: Image Upload -->
+                <div class="form-group">
+                    <label for="popup-image-upload" class="form-label">Gambar Popup</label>
+                    <div class="avatar-upload-wrapper" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+                        <img id="popup-image-preview" src="https://placehold.co/200x150/2c2f36/e4e6eb?text=PREVIEW" alt="Popup Image Preview" style="width: 100%; height: auto; max-height: 160px; object-fit: contain; border-radius: var(--border-radius-inner);">
+                        <div>
                             <input type="file" id="popup-image-upload" accept="image/png, image/jpeg, image/gif" style="display: none;">
                             <label for="popup-image-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
                             <button type="button" id="delete-popup-image-btn" class="delete-image-btn" title="Hapus Gambar Popup"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
-                    <div class="form-group full-width align-right">
-                         <button type="submit" class="btn btn-primary">Simpan Popup</button>
-                    </div>
+                </div>
+                
+                <!-- Full-width Save Button -->
+                <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center;">
+                    <button type="submit" class="btn btn-primary btn-save-profile">Simpan Popup</button>
                 </div>
             </form>
         </section>
@@ -1522,7 +1528,7 @@
 
             const { owner, repo } = githubConfig;
             const fileName = `popup-image-${Date.now()}.${file.name.split('.').pop()}`;
-            const filePath = `assets/popup/${fileName}`;
+            const filePath = `profil/${fileName}`;
             const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
             await githubApiRequest(apiUrl, {
