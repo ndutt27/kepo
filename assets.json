@@ -1669,22 +1669,5 @@
       }
     ]
   },
-  "customStickers": [
-    {
-      "id": "custom-sticker-1755958761661",
-      "src": "assets/stickers/custom/IMG_2689.png"
-    },
-    {
-      "id": "custom-sticker-1755958763515",
-      "src": "assets/stickers/custom/IMG_2688.png"
-    },
-    {
-      "id": "custom-sticker-1755958765383",
-      "src": "assets/stickers/custom/IMG_2687.png"
-    },
-    {
-      "id": "custom-sticker-1755958766650",
-      "src": "assets/stickers/custom/IMG_2686.png"
-    }
-  ]
+  "customStickers": []
 }
