@@ -20,32 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
-
-    let fabricCanvas = null; // Will hold the fabric.js canvas instance
+    let fabricCanvas = null;
     const canvasWidth = 592;
     const canvasHeight = 1352;
 
     // --- Custom Fabric.js Controls ---
-    const deleteIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3CsvG version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='0 0 595.275 595.275' enable-background='new 0 0 595.275 595.275' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M355.067,297.641l215.59-215.59c15.025-15.025,15.025-39.384,0-54.409c-15.025-15.025-39.384-15.025-54.409,0L300.658,243.232L85.067,27.641c-15.025-15.025-39.384-15.025-54.409,0c-15.025,15.025-15.025,39.384,0,54.409l215.59,215.59l-215.59,215.59c-15.025,15.025-15.025,39.384,0,54.409c15.025,15.025,39.384,15.025,54.409,0l215.59-215.59l215.59,215.59c15.025,15.025,39.384,15.025,54.409,0c15.025-15.025,15.025-39.384,0-54.409L355.067,297.641z'/%3E%3C/g%3E%3C/svg%3E";
-    const mirrorIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='490.655px' height='490.655px' viewBox='0 0 490.655 490.655' style='enable-background:new 0 0 490.655 490.655;' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M487.524,232.051c-2.3-3.2-5.4-5.2-9.2-5.2h-220.3c-3.8,0-7,2-9.2,5.2c-2.3,3.2-2.8,7.2-1.5,10.8l105.7,309.9c2.3,6.7,8.8,11.1,15.9,11.1c7.1,0,13.6-4.4,15.9-11.1l105.7-309.9C490.324,239.251,489.824,235.251,487.524,232.051z'/%3E%3Cpath d='M245.324,0.051c-7.1,0-13.6,4.4-15.9,11.1L123.724,321.05c-1.3,3.6-0.8,7.6,1.5,10.8c2.3,3.2,5.4,5.2,9.2,5.2h220.3c3.8,0,7-2,9.2-5.2c2.3-3.2,2.8-7.2,1.5-10.8L261.224,11.151C258.924,4.451,252.424,0.051,245.324,0.051z M245.324,277.851l-44.2-129.5h88.3L245.324,277.851z'/%3E%3C/g%3E%3C/svg%3E%0A";
-
-    const deleteImg = document.createElement('img');
-    deleteImg.src = deleteIcon;
-
-    const mirrorImg = document.createElement('img');
-    mirrorImg.src = mirrorIcon;
-
-    function renderIcon(icon) {
-        return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-            const size = this.cornerSize;
-            ctx.save();
-            ctx.translate(left, top);
-            ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-            ctx.drawImage(icon, -size / 2, -size / 2, size, size);
-            ctx.restore();
-        }
-    }
-
     function deleteObject(eventData, transform) {
         const target = transform.target;
         const canvas = target.canvas;
@@ -59,6 +38,43 @@ document.addEventListener('DOMContentLoaded', function() {
         target.canvas.requestRenderAll();
     }
 
+    function renderDeleteIcon(ctx, left, top, styleOverride, fabricObject) {
+        const size = 24;
+        ctx.save();
+        ctx.translate(left, top);
+        ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+        ctx.fillStyle = 'rgba(239, 83, 80, 0.8)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-size/4, -size/4);
+        ctx.lineTo(size/4, size/4);
+        ctx.moveTo(size/4, -size/4);
+        ctx.lineTo(-size/4, size/4);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function renderMirrorIcon(ctx, left, top, styleOverride, fabricObject) {
+        const size = 24;
+        ctx.save();
+        ctx.translate(left, top);
+        ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+        ctx.fillStyle = 'rgba(66, 133, 244, 0.8)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('⟷', 0, 1);
+        ctx.restore();
+    }
+
     // --- Main Initialization ---
     const init = async () => {
         try {
@@ -66,21 +82,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) throw new Error('Failed to load assets.json');
             assetsData = await response.json();
 
-            // Create the canvas element
             const canvasEl = document.createElement('canvas');
             canvasEl.id = 'photo-canvas';
-            // Set logical size
             canvasEl.width = canvasWidth;
             canvasEl.height = canvasHeight;
 
-            // Append to DOM
-            photoCustomPreview.innerHTML = ''; // Clear previous content
+            photoCustomPreview.innerHTML = '';
             photoCustomPreview.appendChild(canvasEl);
 
-            // Initialize Fabric.js canvas
             fabricCanvas = new fabric.Canvas('photo-canvas');
 
-            // Set display size
             const previewWidth = (window.innerWidth <= 768) ? 150 : 230;
             const scale = previewWidth / canvasWidth;
             fabricCanvas.setDimensions({
@@ -89,16 +100,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             fabricCanvas.setZoom(scale);
 
-
             renderFrameButtons();
             renderShapeButtons();
             renderStickerButtons();
             renderCustomStickerButtons();
             renderLogoButtons();
-
             setupEventListeners();
-
-            // Initial draw
             await redrawCanvas();
 
         } catch (error) {
@@ -110,8 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Rendering Functions ---
     const renderFrameButtons = () => {
         if (!assetsData.frames || !frameButtonsContainer) return;
-
-        // Color Picker
+        frameButtonsContainer.innerHTML = '';
         const colorPickerBtn = document.createElement('button');
         colorPickerBtn.id = 'colorPickerBtn';
         colorPickerBtn.className = 'neumorphic-btn buttonFrames';
@@ -124,8 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
             onDone: (color) => { colorPickerBtn.style.backgroundColor = color.hex; }
         });
         colorPickerBtn.addEventListener('click', () => picker.show());
-
-        // Color Buttons
         assetsData.frames.colors.forEach(color => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonFrames';
@@ -134,8 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.dataset.value = color.value;
             frameButtonsContainer.appendChild(btn);
         });
-
-        // Image Buttons
         assetsData.frames.images.forEach(frame => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonBgFrames';
@@ -148,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const renderShapeButtons = () => {
         if (!assetsData.shapes || !shapeButtonsContainer) return;
+        shapeButtonsContainer.innerHTML = '';
         assetsData.shapes.forEach(shape => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonShapes';
@@ -165,17 +168,18 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.className = 'neumorphic-btn buttonStickers';
             btn.dataset.sticker = sticker.layout;
             btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
-            if(sticker.layout === null) btn.classList.add('active'); // Activate 'none' sticker
+            if(sticker.layout === null) btn.classList.add('active');
             stickerButtonsContainer.appendChild(btn);
         });
     };
     
     const renderLogoButtons = () => {
         if (!assetsData.logos || !logoButtonsContainer) return;
+        logoButtonsContainer.innerHTML = '';
         assetsData.logos.forEach((logo, index) => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn logoCustomBtn';
-            if(index === 0) btn.classList.add('active'); // Activate first logo by default
+            if(index === 0) btn.classList.add('active');
             btn.dataset.text = logo.value;
             btn.textContent = logo.name;
             logoButtonsContainer.appendChild(btn);
@@ -201,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
         customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
-
         dateCheckbox.addEventListener('change', redrawCanvas);
         dateTimeCheckbox.addEventListener('change', redrawCanvas);
         logoColorPicker.addEventListener('input', (e) => {
@@ -213,38 +216,20 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleCustomStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-
         const stickerSrc = btn.dataset.src;
         fabric.Image.fromURL(stickerSrc, (img) => {
-            img.scaleToWidth(150); // Initial size
+            img.scaleToWidth(150);
             img.set({
                 left: (canvasWidth - img.getScaledWidth()) / 2,
                 top: (canvasHeight - img.getScaledHeight()) / 2,
                 borderColor: '#E28585',
                 cornerColor: '#E28585',
-                cornerSize: 12,
-                transparentCorners: false
+                cornerSize: 24,
+                transparentCorners: false,
+                cornerStyle: 'circle'
             });
-            img.controls.deleteControl = new fabric.Control({
-                x: 0.5,
-                y: -0.5,
-                offsetY: -16,
-                offsetX: 16,
-                cursorStyle: 'pointer',
-                mouseUpHandler: deleteObject,
-                render: renderIcon(deleteImg),
-                cornerSize: 24
-            });
-            img.controls.mirrorControl = new fabric.Control({
-                x: -0.5,
-                y: -0.5,
-                offsetY: -16,
-                offsetX: -16,
-                cursorStyle: 'pointer',
-                mouseUpHandler: flipObject,
-                render: renderIcon(mirrorImg),
-                cornerSize: 24
-            });
+            img.controls.deleteControl = new fabric.Control({ x: 0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: deleteObject, render: renderDeleteIcon, cornerSize: 24 });
+            img.controls.mirrorControl = new fabric.Control({ x: -0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: flipObject, render: renderMirrorIcon, cornerSize: 24 });
             fabricCanvas.add(img);
             fabricCanvas.setActiveObject(img);
             fabricCanvas.renderAll();
@@ -254,14 +239,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleFrameClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn || btn.id === 'colorPickerBtn') return;
-
         const type = btn.dataset.type;
-        if (type === 'color') {
-            setBackground({ type: 'color', value: btn.dataset.value });
-        } else if (type === 'image') {
-            setBackground({ type: 'image', src: btn.dataset.src });
-        }
-
+        if (type === 'color') setBackground({ type: 'color', value: btn.dataset.value });
+        else if (type === 'image') setBackground({ type: 'image', src: btn.dataset.src });
         frameButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
@@ -278,25 +258,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-
         const clickedStickerLayout = btn.dataset.sticker === 'null' ? null : btn.dataset.sticker;
-
-        if (selectedStickerLayout === clickedStickerLayout) {
-            selectedStickerLayout = null;
-        } else {
-            selectedStickerLayout = clickedStickerLayout;
-        }
-
+        if (selectedStickerLayout === clickedStickerLayout) selectedStickerLayout = null;
+        else selectedStickerLayout = clickedStickerLayout;
         stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => {
             const layout = b.dataset.sticker === 'null' ? null : b.dataset.sticker;
             b.classList.toggle('active', selectedStickerLayout === layout);
         });
-        
         if (selectedStickerLayout === null) {
              const noneBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
              if(noneBtn) noneBtn.classList.add('active');
         }
-
         redrawCanvas();
     }
 
@@ -309,7 +281,6 @@ document.addEventListener('DOMContentLoaded', function() {
         redrawCanvas();
     }
 
-    // --- State Update Functions ---
     function setBackground(option) {
         if (option.type === 'color') {
             backgroundType = 'color';
@@ -325,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Canvas Drawing ---
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
         console.error("No valid images found in sessionStorage.");
@@ -334,25 +304,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function drawSticker(ctx) {
-        if (!selectedStickerLayout || !assetsData.stickerLayouts) {
-            return;
-        }
-    
+        if (!selectedStickerLayout || !assetsData.stickerLayouts) return;
         const layout = assetsData.stickerLayouts[selectedStickerLayout];
         if (!layout) return;
-
         await Promise.all(layout.map(({ src, x, y, size }) => {
             return new Promise((resolve) => {
                 const stickerImg = new Image();
                 stickerImg.src = src;
-                stickerImg.onload = () => {
-                    ctx.drawImage(stickerImg, x, y, size, size);
-                    resolve();
-                };
-                stickerImg.onerror = () => {
-                    console.error(`Failed to load sticker: ${src}`);
-                    resolve();
-                };
+                stickerImg.onload = () => { ctx.drawImage(stickerImg, x, y, size, size); resolve(); };
+                stickerImg.onerror = () => { console.error(`Failed to load sticker: ${src}`); resolve(); };
             });
         }));
     }
@@ -362,16 +322,15 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.beginPath();
         const centerX = dx + dWidth / 2;
         const centerY = dy + dHeight / 2;
-    
         if (shapeType === 'circle') {
             const radius = Math.min(dWidth, dHeight) / 2;
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         } else if (shapeType === 'rounded') {
             const radius = 30;
             ctx.moveTo(dx + radius, dy);
-            ctx.lineTo(dx + dWidth - radius, dy);
-            ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + radius);
-            ctx.lineTo(dx + dWidth, dy + dHeight - radius);
+            ctx.lineTo(dx + dWidth - r, dy);
+            ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
+            ctx.lineTo(dx + dWidth, dy + dHeight - r);
             ctx.quadraticCurveTo(dx + dWidth, dy + dHeight, dx + dWidth - r, dy + dHeight);
             ctx.lineTo(dx + radius, dy + dHeight);
             ctx.quadraticCurveTo(dx, dy + dHeight, dx, dy + dHeight - r);
@@ -382,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
             ctx.bezierCurveTo(dx + dWidth * 0.1, dy - dHeight * 0.1, dx - dWidth * 0.25, dy + dHeight * 0.7, dx + dWidth / 2, dy + dHeight);
         } else {
-            ctx.rect(dx, dy, dWidth, dHeight); // default rectangle
+            ctx.rect(dx, dy, dWidth, dHeight);
         }
         ctx.closePath();
         ctx.clip();
@@ -392,23 +351,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function redrawCanvas() {
         if (!storedImages || !fabricCanvas) return null;
-
-        // Create a temporary canvas for the background
         const bgCanvas = document.createElement('canvas');
         const bgCtx = bgCanvas.getContext('2d');
         bgCanvas.width = canvasWidth;
         bgCanvas.height = canvasHeight;
-
         const imageArrayLength = storedImages.length;
         const borderWidth = 30;
         const spacing = 12;
         const bottomPadding = 100;
-
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (imageArrayLength - 1)) - bottomPadding;
         const photoHeight = availableHeight / imageArrayLength;
         const photoWidth = canvasWidth - (borderWidth * 2);
 
-        // 1. Draw Background on temp canvas
         if (backgroundType === 'color') {
             bgCtx.fillStyle = backgroundColor;
             bgCtx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -416,13 +370,11 @@ document.addEventListener('DOMContentLoaded', function() {
             bgCtx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         }
         
-        // 2. Draw Logo Text on temp canvas
         bgCtx.fillStyle = textColor;
         bgCtx.font = 'bold 32px Arial, Roboto, sans-serif';
         bgCtx.textAlign = 'center';
         bgCtx.fillText(selectedText, canvasWidth / 2, canvasHeight - 55);
 
-        // 3. Draw Date and Time Text on temp canvas
         if (dateCheckbox.checked || dateTimeCheckbox.checked) {
             const currentDate = new Date();
             let displayText = '';
@@ -436,7 +388,6 @@ document.addEventListener('DOMContentLoaded', function() {
             bgCtx.fillText(displayText, canvasWidth / 2, canvasHeight - 30);
         }
 
-        // 4. Draw Photos on temp canvas
         const imageElements = await Promise.all(storedImages.map(imgData => {
             return new Promise(resolve => {
                 const img = new Image();
@@ -450,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!img) return;
             const imgAspect = img.width / img.height;
             const targetAspect = photoWidth / photoHeight;
-            let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+            let sx, sy, sWidth, sHeight;
             if (imgAspect > targetAspect) {
                 sHeight = img.height;
                 sWidth = img.height * targetAspect;
@@ -467,41 +418,24 @@ document.addEventListener('DOMContentLoaded', function() {
             clipAndDrawImage(bgCtx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
         });
 
-        // 5. Draw Original Stickers on temp canvas
         await drawSticker(bgCtx);
-        
-        // 6. Set the temp canvas as the background of the fabric canvas
         fabricCanvas.setBackgroundImage(new fabric.Image(bgCanvas), fabricCanvas.renderAll.bind(fabricCanvas));
-
-        // 7. Return the fabric canvas element
-        return fabricCanvas.getElement();
     }
     
-    function updatePreview() {
-        // This function is now handled by the fabric.js setup in init()
-    }
-
-    // --- Expose the drawing function to the global window object ---
     window.drawFinalImage = async () => {
         if (!fabricCanvas) return null;
-
-        // Deselect any active object to hide controls before exporting
         fabricCanvas.discardActiveObject().renderAll();
-
         const zoom = fabricCanvas.getZoom();
         const dataURL = fabricCanvas.toDataURL({
             format: 'png',
             quality: 1.0,
             multiplier: 1 / zoom
         });
-
-        // The modal requires a canvas element to be returned, so we draw the full-size image onto a new canvas
         const finalCanvas = document.createElement('canvas');
         finalCanvas.width = canvasWidth;
         finalCanvas.height = canvasHeight;
         const ctx = finalCanvas.getContext('2d');
         const img = new Image();
-
         return new Promise(resolve => {
             img.onload = () => {
                 ctx.drawImage(img, 0, 0);
@@ -511,6 +445,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // --- Start the app ---
     init();
 });

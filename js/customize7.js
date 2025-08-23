@@ -25,26 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvasHeight = 1352;
 
     // --- Custom Fabric.js Controls ---
-    const deleteIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3CsvG version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='0 0 595.275 595.275' enable-background='new 0 0 595.275 595.275' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M355.067,297.641l215.59-215.59c15.025-15.025,15.025-39.384,0-54.409c-15.025-15.025-39.384-15.025-54.409,0L300.658,243.232L85.067,27.641c-15.025-15.025-39.384-15.025-54.409,0c-15.025,15.025-15.025,39.384,0,54.409l215.59,215.59l-215.59,215.59c-15.025,15.025-15.025,39.384,0,54.409c15.025,15.025,39.384,15.025,54.409,0l215.59-215.59l215.59,215.59c15.025,15.025,39.384,15.025,54.409,0c15.025-15.025,15.025-39.384,0-54.409L355.067,297.641z'/%3E%3C/g%3E%3C/svg%3E";
-    const mirrorIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='490.655px' height='490.655px' viewBox='0 0 490.655 490.655' style='enable-background:new 0 0 490.655 490.655;' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M487.524,232.051c-2.3-3.2-5.4-5.2-9.2-5.2h-220.3c-3.8,0-7,2-9.2,5.2c-2.3,3.2-2.8,7.2-1.5,10.8l105.7,309.9c2.3,6.7,8.8,11.1,15.9,11.1c7.1,0,13.6-4.4,15.9-11.1l105.7-309.9C490.324,239.251,489.824,235.251,487.524,232.051z'/%3E%3Cpath d='M245.324,0.051c-7.1,0-13.6,4.4-15.9,11.1L123.724,321.05c-1.3,3.6-0.8,7.6,1.5,10.8c2.3,3.2,5.4,5.2,9.2,5.2h220.3c3.8,0,7-2,9.2-5.2c-2.3-3.2-2.8-7.2-1.5-10.8L261.224,11.151C258.924,4.451,252.424,0.051,245.324,0.051z M245.324,277.851l-44.2-129.5h88.3L245.324,277.851z'/%3E%3C/g%3E%3C/svg%3E%0A";
-
-    const deleteImg = document.createElement('img');
-    deleteImg.src = deleteIcon;
-
-    const mirrorImg = document.createElement('img');
-    mirrorImg.src = mirrorIcon;
-
-    function renderIcon(icon) {
-        return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-            const size = this.cornerSize;
-            ctx.save();
-            ctx.translate(left, top);
-            ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-            ctx.drawImage(icon, -size / 2, -size / 2, size, size);
-            ctx.restore();
-        }
-    }
-
     function deleteObject(eventData, transform) {
         const target = transform.target;
         const canvas = target.canvas;
@@ -56,6 +36,43 @@ document.addEventListener('DOMContentLoaded', function() {
         const target = transform.target;
         target.toggle('flipX');
         target.canvas.requestRenderAll();
+    }
+
+    function renderDeleteIcon(ctx, left, top, styleOverride, fabricObject) {
+        const size = 24;
+        ctx.save();
+        ctx.translate(left, top);
+        ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+        ctx.fillStyle = 'rgba(239, 83, 80, 0.8)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-size/4, -size/4);
+        ctx.lineTo(size/4, size/4);
+        ctx.moveTo(size/4, -size/4);
+        ctx.lineTo(-size/4, size/4);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function renderMirrorIcon(ctx, left, top, styleOverride, fabricObject) {
+        const size = 24;
+        ctx.save();
+        ctx.translate(left, top);
+        ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+        ctx.fillStyle = 'rgba(66, 133, 244, 0.8)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('⟷', 0, 1);
+        ctx.restore();
     }
 
     // --- Main Initialization ---
@@ -208,38 +225,20 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleCustomStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-
         const stickerSrc = btn.dataset.src;
         fabric.Image.fromURL(stickerSrc, (img) => {
-            img.scaleToWidth(150); // Initial size
+            img.scaleToWidth(150);
             img.set({
                 left: (canvasWidth - img.getScaledWidth()) / 2,
                 top: (canvasHeight - img.getScaledHeight()) / 2,
                 borderColor: '#E28585',
                 cornerColor: '#E28585',
-                cornerSize: 12,
-                transparentCorners: false
+                cornerSize: 24,
+                transparentCorners: false,
+                cornerStyle: 'circle'
             });
-            img.controls.deleteControl = new fabric.Control({
-                x: 0.5,
-                y: -0.5,
-                offsetY: -16,
-                offsetX: 16,
-                cursorStyle: 'pointer',
-                mouseUpHandler: deleteObject,
-                render: renderIcon(deleteImg),
-                cornerSize: 24
-            });
-            img.controls.mirrorControl = new fabric.Control({
-                x: -0.5,
-                y: -0.5,
-                offsetY: -16,
-                offsetX: -16,
-                cursorStyle: 'pointer',
-                mouseUpHandler: flipObject,
-                render: renderIcon(mirrorImg),
-                cornerSize: 24
-            });
+            img.controls.deleteControl = new fabric.Control({ x: 0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: deleteObject, render: renderDeleteIcon, cornerSize: 24 });
+            img.controls.mirrorControl = new fabric.Control({ x: -0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: flipObject, render: renderMirrorIcon, cornerSize: 24 });
             fabricCanvas.add(img);
             fabricCanvas.setActiveObject(img);
             fabricCanvas.renderAll();
@@ -249,14 +248,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleFrameClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn || btn.id === 'colorPickerBtn') return;
-
         const type = btn.dataset.type;
-        if (type === 'color') {
-            setBackground({ type: 'color', value: btn.dataset.value });
-        } else if (type === 'image') {
-            setBackground({ type: 'image', src: btn.dataset.src });
-        }
-
+        if (type === 'color') setBackground({ type: 'color', value: btn.dataset.value });
+        else if (type === 'image') setBackground({ type: 'image', src: btn.dataset.src });
         frameButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
@@ -273,11 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-
         const stickerLayout = btn.dataset.sticker;
-
         stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-
         if (selectedStickerLayout === stickerLayout || stickerLayout === 'null') {
             selectedStickerLayout = null;
             const noneStickerBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
@@ -286,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedStickerLayout = stickerLayout;
             btn.classList.add('active');
         }
-
         redrawCanvas();
     }
 
@@ -299,7 +289,6 @@ document.addEventListener('DOMContentLoaded', function() {
         redrawCanvas();
     }
 
-    // --- State Update Functions ---
     function setBackground(option) {
         if (option.type === 'color') {
             backgroundType = 'color';
@@ -315,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Canvas Drawing ---
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
         console.error("No valid images found in sessionStorage.");
@@ -325,27 +313,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function drawSticker(ctx, stackedCanvas) {
         if (!selectedStickerLayout) return;
-
         const stickerLayouts = assetsData.stickerLayouts;
         const layout = stickerLayouts[selectedStickerLayout];
         if (!layout) return;
-
         await Promise.all(layout.map(({ src, x, y, size }) => {
             return new Promise((resolve) => {
                 const stickerImg = new Image();
                 stickerImg.src = `../${src}`;
-                stickerImg.onload = () => {
-                    ctx.drawImage(stickerImg, x, y, size, size);
-                    resolve();
-                };
-                stickerImg.onerror = () => {
-                    console.error(`Failed to load sticker: ../${src}`);
-                    resolve();
-                };
+                stickerImg.onload = () => { ctx.drawImage(stickerImg, x, y, size, size); resolve(); };
+                stickerImg.onerror = () => { console.error(`Failed to load sticker: ../${src}`); resolve(); };
             });
         }));
     }
-
 
     function clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, shapeType) {
         ctx.save();
@@ -378,16 +357,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function redrawCanvas() {
         if (!storedImages || !fabricCanvas) return;
-
         const bgCanvas = document.createElement('canvas');
         const bgCtx = bgCanvas.getContext('2d');
         bgCanvas.width = canvasWidth;
         bgCanvas.height = canvasHeight;
-
         const columns = 2, rows = 2;
         const imageGridSize = rows * columns;
         const borderWidth = 30, spacing = 12, bottomPadding = 100;
-
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
         const photoWidth = availableWidth / columns;
@@ -407,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.onload = () => resolve(img);
                 img.onerror = reject;
             }));
-
             try {
                 const images = await Promise.all(imagePromises);
                 images.forEach((img, index) => {
@@ -443,35 +418,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         await drawSticker(bgCtx, bgCanvas);
-
         fabricCanvas.setBackgroundImage(new fabric.Image(bgCanvas), fabricCanvas.renderAll.bind(fabricCanvas));
     }
 
-    function updatePreview() {
-        // This function is now handled by the fabric.js setup in init()
-    }
-
-    // --- Expose the drawing function to the global window object ---
     window.drawFinalImage = async () => {
         if (!fabricCanvas) return null;
-
-        // Deselect any active object to hide controls before exporting
         fabricCanvas.discardActiveObject().renderAll();
-
         const zoom = fabricCanvas.getZoom();
         const dataURL = fabricCanvas.toDataURL({
             format: 'png',
             quality: 1.0,
             multiplier: 1 / zoom
         });
-
-        // The modal requires a canvas element to be returned, so we draw the full-size image onto a new canvas
         const finalCanvas = document.createElement('canvas');
         finalCanvas.width = canvasWidth;
         finalCanvas.height = canvasHeight;
         const ctx = finalCanvas.getContext('2d');
         const img = new Image();
-
         return new Promise(resolve => {
             img.onload = () => {
                 ctx.drawImage(img, 0, 0);
