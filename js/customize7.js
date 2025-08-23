@@ -10,9 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateCheckbox = document.getElementById('dateCheckbox');
     const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
     const logoColorPicker = document.getElementById('logoColorPicker');
-    const stickerActionsContainer = document.getElementById('sticker-actions-container');
-    const stickerMirrorBtn = document.getElementById('sticker-mirror-btn');
-    const stickerDeleteBtn = document.getElementById('sticker-delete-btn');
 
     // --- State Variables ---
     let assetsData = null;
@@ -26,6 +23,40 @@ document.addEventListener('DOMContentLoaded', function() {
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
     const canvasHeight = 1352;
+
+    // --- Custom Fabric.js Controls ---
+    const deleteIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3CsvG version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='0 0 595.275 595.275' enable-background='new 0 0 595.275 595.275' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M355.067,297.641l215.59-215.59c15.025-15.025,15.025-39.384,0-54.409c-15.025-15.025-39.384-15.025-54.409,0L300.658,243.232L85.067,27.641c-15.025-15.025-39.384-15.025-54.409,0c-15.025,15.025-15.025,39.384,0,54.409l215.59,215.59l-215.59,215.59c-15.025,15.025-15.025,39.384,0,54.409c15.025,15.025,39.384,15.025,54.409,0l215.59-215.59l215.59,215.59c15.025,15.025,39.384,15.025,54.409,0c15.025-15.025,15.025-39.384,0-54.409L355.067,297.641z'/%3E%3C/g%3E%3C/svg%3E";
+    const mirrorIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='490.655px' height='490.655px' viewBox='0 0 490.655 490.655' style='enable-background:new 0 0 490.655 490.655;' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M487.524,232.051c-2.3-3.2-5.4-5.2-9.2-5.2h-220.3c-3.8,0-7,2-9.2,5.2c-2.3,3.2-2.8,7.2-1.5,10.8l105.7,309.9c2.3,6.7,8.8,11.1,15.9,11.1c7.1,0,13.6-4.4,15.9-11.1l105.7-309.9C490.324,239.251,489.824,235.251,487.524,232.051z'/%3E%3Cpath d='M245.324,0.051c-7.1,0-13.6,4.4-15.9,11.1L123.724,321.05c-1.3,3.6-0.8,7.6,1.5,10.8c2.3,3.2,5.4,5.2,9.2,5.2h220.3c3.8,0,7-2,9.2-5.2c-2.3-3.2-2.8-7.2-1.5-10.8L261.224,11.151C258.924,4.451,252.424,0.051,245.324,0.051z M245.324,277.851l-44.2-129.5h88.3L245.324,277.851z'/%3E%3C/g%3E%3C/svg%3E%0A";
+
+    const deleteImg = document.createElement('img');
+    deleteImg.src = deleteIcon;
+
+    const mirrorImg = document.createElement('img');
+    mirrorImg.src = mirrorIcon;
+
+    function renderIcon(icon) {
+        return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+            const size = this.cornerSize;
+            ctx.save();
+            ctx.translate(left, top);
+            ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+            ctx.drawImage(icon, -size / 2, -size / 2, size, size);
+            ctx.restore();
+        }
+    }
+
+    function deleteObject(eventData, transform) {
+        const target = transform.target;
+        const canvas = target.canvas;
+        canvas.remove(target);
+        canvas.requestRenderAll();
+    }
+
+    function flipObject(eventData, transform) {
+        const target = transform.target;
+        target.toggle('flipX');
+        target.canvas.requestRenderAll();
+    }
 
     // --- Main Initialization ---
     const init = async () => {
@@ -62,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
             renderLogoButtons();
 
             setupEventListeners();
-            setupCanvasEventListeners();
 
             await redrawCanvas();
 
@@ -166,8 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
         customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
-        stickerMirrorBtn.addEventListener('click', handleStickerMirror);
-        stickerDeleteBtn.addEventListener('click', handleStickerDelete);
 
         dateCheckbox.addEventListener('change', redrawCanvas);
         dateTimeCheckbox.addEventListener('change', redrawCanvas);
@@ -176,32 +204,6 @@ document.addEventListener('DOMContentLoaded', function() {
             redrawCanvas();
         });
     };
-
-    const setupCanvasEventListeners = () => {
-        if (!fabricCanvas) return;
-        fabricCanvas.on('selection:created', () => {
-            stickerActionsContainer.style.display = 'block';
-        });
-        fabricCanvas.on('selection:cleared', () => {
-            stickerActionsContainer.style.display = 'none';
-        });
-    };
-
-    function handleStickerMirror() {
-        const activeObject = fabricCanvas.getActiveObject();
-        if (activeObject) {
-            activeObject.set('flipX', !activeObject.flipX);
-            fabricCanvas.renderAll();
-        }
-    }
-
-    function handleStickerDelete() {
-        const activeObject = fabricCanvas.getActiveObject();
-        if (activeObject) {
-            fabricCanvas.remove(activeObject);
-            stickerActionsContainer.style.display = 'none';
-        }
-    }
 
     function handleCustomStickerClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
@@ -217,6 +219,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 cornerColor: '#E28585',
                 cornerSize: 12,
                 transparentCorners: false
+            });
+            img.controls.deleteControl = new fabric.Control({
+                x: 0.5,
+                y: -0.5,
+                offsetY: -16,
+                offsetX: 16,
+                cursorStyle: 'pointer',
+                mouseUpHandler: deleteObject,
+                render: renderIcon(deleteImg),
+                cornerSize: 24
+            });
+            img.controls.mirrorControl = new fabric.Control({
+                x: -0.5,
+                y: -0.5,
+                offsetY: -16,
+                offsetX: -16,
+                cursorStyle: 'pointer',
+                mouseUpHandler: flipObject,
+                render: renderIcon(mirrorImg),
+                cornerSize: 24
             });
             fabricCanvas.add(img);
             fabricCanvas.setActiveObject(img);
