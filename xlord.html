@@ -243,16 +243,78 @@
         .delete-asset-btn { position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3); transition: var(--transition-smooth); }
         .delete-asset-btn:hover { transform: scale(1.1); background: var(--danger-light); }
         
-        /* --- REVISED: Link Management Styles --- */
+        /* --- NEW: Links Management Section --- */
+        #link-search-input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            margin-bottom: 2.5rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a8b3cf' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 15px center;
+            background-size: 16px;
+        }
+
+        #link-management-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            #link-management-layout {
+                grid-template-columns: 200px 1fr; /* 200px for ID list, remaining for cards */
+            }
+        }
+
+        #links-id-list-container h3 {
+            font-size: 1.6rem;
+            font-family: var(--font-secondary);
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        #links-id-list {
+            background-color: var(--bg-end);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--border-radius-inner);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .id-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            font-family: monospace;
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--surface-border);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .id-list-item:last-child { border-bottom: none; }
+        .id-list-item:hover { background-color: var(--surface-color); }
+        .id-list-item .copy-id-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.4rem;
+            opacity: 0.5;
+            transition: var(--transition-smooth);
+        }
+        .id-list-item:hover .copy-id-btn { opacity: 1; }
+        .id-list-item .copy-id-btn:hover { color: var(--primary); }
+
+
         #links-grid {
             display: flex;
             flex-direction: column;
-            gap: 2.5rem; /* Increased gap for better separation */
-            margin-bottom: 2.5rem;
+            gap: 2.5rem;
         }
         .link-card-item {
             display: flex;
-            flex-direction: column; /* Main axis is vertical */
+            flex-direction: column;
             background: var(--bg-end);
             border: 1px solid var(--surface-border);
             border-radius: var(--border-radius-inner);
@@ -269,7 +331,7 @@
             display: flex;
             align-items: center;
             gap: 2rem;
-            padding-bottom: 1.5rem; /* Space between header and actions */
+            padding-bottom: 1.5rem;
         }
         .link-card-preview img {
             width: 80px;
@@ -279,9 +341,7 @@
             flex-shrink: 0;
             border: 2px solid var(--surface-border);
         }
-        .link-card-details {
-            flex-grow: 1;
-        }
+        .link-card-details { flex-grow: 1; }
         .link-card-details p {
             font-size: 1.5rem;
             color: var(--text-light);
@@ -289,13 +349,11 @@
             display: flex;
             align-items: center;
         }
-        .link-card-details p:last-child {
-            margin-bottom: 0;
-        }
+        .link-card-details p:last-child { margin-bottom: 0; }
         .link-card-details strong {
             color: var(--text-color);
             font-weight: 600;
-            min-width: 110px; /* Aligns the values */
+            min-width: 110px;
             display: inline-block;
             font-size: 1.5rem;
         }
@@ -312,12 +370,13 @@
             gap: 1.5rem;
             border-top: 1px solid var(--surface-border);
             padding-top: 1.5rem;
+            margin-top: 1.5rem;
         }
         .link-card-btn {
             width: auto;
-            padding: 10px 20px; /* Slightly larger buttons */
+            padding: 10px 20px;
             font-size: 1.4rem;
-            font-weight: 600; /* Bolder text */
+            font-weight: 600;
             border-radius: var(--border-radius-inner);
             text-decoration: none;
         }
@@ -343,9 +402,7 @@
             opacity: 0.7;
             background-image: linear-gradient(45deg, rgba(0,0,0,0.03), transparent);
         }
-        .link-card-item.expired .link-card-preview img {
-            filter: grayscale(1);
-        }
+        .link-card-item.expired .link-card-preview img { filter: grayscale(1); }
 
 
         .add-asset-form { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--surface-border); }
@@ -516,7 +573,18 @@
         <!-- Links Management -->
         <section id="links-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
             <h2>Kelola Tautan (Links)</h2>
-            <div id="links-grid"></div>
+            <input type="search" id="link-search-input" class="form-input" placeholder="Cari berdasarkan ID...">
+            <div id="link-management-layout">
+                <div id="links-id-list-container">
+                    <h3>Daftar ID</h3>
+                    <div id="links-id-list">
+                        <!-- ID list will be populated by JS -->
+                    </div>
+                </div>
+                <div id="links-grid">
+                    <!-- Link cards will be populated by JS -->
+                </div>
+            </div>
         </section>
 
     </div>
@@ -564,7 +632,6 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         // PENTING: Ganti dengan konfigurasi Firebase Anda dari project settings
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
           apiKey: "AIzaSyD3xoMfpgP-NpReXRtNde1iLYFTscS5MrI",
           authDomain: "pictlord-c5d89.firebaseapp.com",
@@ -615,6 +682,8 @@
         const avatarPreview = document.getElementById('avatar-preview');
         const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
         const linksGrid = document.getElementById('links-grid');
+        const linksIdList = document.getElementById('links-id-list');
+        const linkSearchInput = document.getElementById('link-search-input');
         const editLinkModal = document.getElementById('edit-link-modal');
         const editLinkIdDisplay = document.getElementById('edit-link-id-display');
         const expiresAtInput = document.getElementById('expires-at-input');
@@ -626,7 +695,6 @@
 
         function initializeFirebase() {
             try {
-                // Validasi konfigurasi dasar
                 if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("AIzaSy")) {
                     console.warn("Firebase config might be using placeholder keys.");
                 }
@@ -1329,6 +1397,8 @@
             const card = document.createElement('div');
             const isExpired = Date.now() > linkData.expiresAt;
             card.className = `link-card-item ${isExpired ? 'expired' : ''}`;
+            card.id = `link-card-${key}`;
+            card.dataset.id = key;
             card.innerHTML = `
                 <div class="link-card-header">
                     <div class="link-card-preview">
@@ -1347,30 +1417,86 @@
             return card;
         };
         
+        const renderLinksDashboard = (links) => {
+            linksGrid.innerHTML = '';
+            linksIdList.innerHTML = '';
+            if (links.length === 0) {
+                linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada tautan.</p>';
+                linksIdList.innerHTML = '<div class="id-list-item" style="justify-content: center;">Kosong</div>';
+                return;
+            }
+            links.forEach(link => {
+                // Render main card
+                linksGrid.appendChild(createLinkCard(link.key, link.val));
+                
+                // Render ID list item
+                const idItem = document.createElement('div');
+                idItem.className = 'id-list-item';
+                idItem.dataset.id = link.key;
+                idItem.innerHTML = `
+                    <span>${link.key}</span>
+                    <button class="copy-id-btn" title="Salin ID"><i class="fas fa-copy"></i></button>
+                `;
+                linksIdList.appendChild(idItem);
+            });
+        };
+
         const loadLinks = () => {
             if (!linksRef) return;
-            linksGrid.innerHTML = `
-                <div class="modern-loader-container">
-                    <svg class="modern-loader" viewBox="0 0 50 50">
-                        <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                    </svg>
-                </div>`;
+            linksGrid.innerHTML = `<div class="modern-loader-container"><svg class="modern-loader" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg></div>`;
+            linksIdList.innerHTML = '';
+
             linksRef.on('value', (snapshot) => {
-                linksGrid.innerHTML = '';
                 if (!snapshot.exists()) {
-                    linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada tautan.</p>';
+                    renderLinksDashboard([]);
                     return;
                 }
                 const links = [];
                 snapshot.forEach(child => links.push({ key: child.key, val: child.val() }));
                 links.sort((a, b) => (b.val.expiresAt || 0) - (a.val.expiresAt || 0));
-                links.forEach(link => linksGrid.appendChild(createLinkCard(link.key, link.val)));
+                renderLinksDashboard(links);
             }, (error) => {
                 console.error("Firebase links read failed:", error);
                 linksGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Gagal memuat data tautan.</p>`;
             });
         };
         
+        linkSearchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const allCards = linksGrid.querySelectorAll('.link-card-item');
+            allCards.forEach(card => {
+                const id = card.dataset.id.toLowerCase();
+                if (id.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        linksIdList.addEventListener('click', (e) => {
+            const item = e.target.closest('.id-list-item');
+            if (!item) return;
+
+            const id = item.dataset.id;
+            if (e.target.closest('.copy-id-btn')) {
+                navigator.clipboard.writeText(id).then(() => {
+                    const copyBtn = item.querySelector('.copy-id-btn');
+                    const originalIcon = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => { copyBtn.innerHTML = originalIcon; }, 1500);
+                });
+            } else {
+                const targetCard = document.getElementById(`link-card-${id}`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetCard.style.transition = 'none';
+                    targetCard.style.borderColor = 'var(--primary-light)';
+                    setTimeout(() => { targetCard.style.borderColor = '' }, 1500);
+                }
+            }
+        });
+
         editLinkCancelBtn.addEventListener('click', () => editLinkModal.classList.remove('active'));
         editLinkModal.addEventListener('click', (e) => { if(e.target === editLinkModal) editLinkModal.classList.remove('active'); });
 
