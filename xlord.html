@@ -243,7 +243,7 @@
         .delete-asset-btn { position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3); transition: var(--transition-smooth); }
         .delete-asset-btn:hover { transform: scale(1.1); background: var(--danger-light); }
         
-        /* --- NEW: Links Management Section --- */
+        /* --- REVISED: Links Management Section --- */
         #link-search-input {
             width: 100%;
             padding: 12px 16px 12px 40px;
@@ -1421,15 +1421,12 @@
             linksGrid.innerHTML = '';
             linksIdList.innerHTML = '';
             if (links.length === 0) {
-                linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada tautan.</p>';
+                linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Tidak ada tautan yang cocok.</p>';
                 linksIdList.innerHTML = '<div class="id-list-item" style="justify-content: center;">Kosong</div>';
                 return;
             }
             links.forEach(link => {
-                // Render main card
                 linksGrid.appendChild(createLinkCard(link.key, link.val));
-                
-                // Render ID list item
                 const idItem = document.createElement('div');
                 idItem.className = 'id-list-item';
                 idItem.dataset.id = link.key;
@@ -1441,20 +1438,21 @@
             });
         };
 
+        let allLinks = []; // Cache for all links
+
         const loadLinks = () => {
             if (!linksRef) return;
             linksGrid.innerHTML = `<div class="modern-loader-container"><svg class="modern-loader" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg></div>`;
             linksIdList.innerHTML = '';
 
             linksRef.on('value', (snapshot) => {
-                if (!snapshot.exists()) {
-                    renderLinksDashboard([]);
-                    return;
+                allLinks = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => allLinks.push({ key: child.key, val: child.val() }));
+                    allLinks.sort((a, b) => (b.val.expiresAt || 0) - (a.val.expiresAt || 0));
                 }
-                const links = [];
-                snapshot.forEach(child => links.push({ key: child.key, val: child.val() }));
-                links.sort((a, b) => (b.val.expiresAt || 0) - (a.val.expiresAt || 0));
-                renderLinksDashboard(links);
+                renderLinksDashboard(allLinks);
+                linkSearchInput.value = ''; // Reset search on new data
             }, (error) => {
                 console.error("Firebase links read failed:", error);
                 linksGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Gagal memuat data tautan.</p>`;
@@ -1463,15 +1461,8 @@
         
         linkSearchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const allCards = linksGrid.querySelectorAll('.link-card-item');
-            allCards.forEach(card => {
-                const id = card.dataset.id.toLowerCase();
-                if (id.includes(searchTerm)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            const filteredLinks = allLinks.filter(link => link.key.toLowerCase().includes(searchTerm));
+            renderLinksDashboard(filteredLinks);
         });
 
         linksIdList.addEventListener('click', (e) => {
