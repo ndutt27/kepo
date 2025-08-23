@@ -550,16 +550,6 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="info-popup-modal">
-    <div class="modal-content">
-        <button class="modal-close-btn">&times;</button>
-        <div id="info-popup-content">
-            <img src="" alt="Popup Image" id="info-popup-image" style="max-width: 100%; border-radius: var(--border-radius-inner); margin-bottom: 1.5rem; display: none;">
-            <p id="info-popup-text" style="font-size: 1.6rem;"></p>
-        </div>
-    </div>
-</div>
-
 <div id="toast-container"></div>
 
 
@@ -1066,88 +1056,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-        // --- POPUP LOGIC ---
-        const infoPopupModal = document.getElementById('info-popup-modal');
-
-        const openInfoPopup = () => {
-            if (!infoPopupModal) return;
-            infoPopupModal.classList.add('is-visible');
-            const content = infoPopupModal.querySelector('.modal-content');
-            setTimeout(() => {
-                if (content) {
-                    content.style.transform = 'scale(1)';
-                    content.style.opacity = '1';
-                }
-            }, 10);
-            body.style.overflow = 'hidden';
-        };
-
-        const closeInfoPopup = () => {
-            if (!infoPopupModal) return;
-            const content = infoPopupModal.querySelector('.modal-content');
-            if (content) {
-                content.style.transform = 'scale(0.95)';
-                content.style.opacity = '0';
-            }
-            setTimeout(() => {
-                infoPopupModal.classList.remove('is-visible');
-                body.style.overflow = 'auto';
-            }, 400);
-        };
-        
-        if (infoPopupModal) {
-            const closeBtn = infoPopupModal.querySelector('.modal-close-btn');
-            closeBtn?.addEventListener('click', closeInfoPopup);
-            infoPopupModal.addEventListener('click', e => {
-                if (e.target === infoPopupModal) closeInfoPopup();
-            });
-        }
-
-
-        const loadAndShowPopup = async () => {
-            // Cek sessionStorage untuk memastikan popup hanya tampil sekali per sesi
-            if (sessionStorage.getItem('infoPopupShown')) {
-                return;
-            }
-
-            try {
-                const response = await fetch('popup.json?v=' + Date.now()); // Cache-bust
-                if (!response.ok) {
-                    // Jika file tidak ada (404) atau ada error lain, jangan tampilkan popup
-                    console.log("popup.json not found or could not be loaded. Popup will not be shown.");
-                    return;
-                }
-                
-                const popupData = await response.json();
-                
-                if (popupData.isEnabled) {
-                    const popupText = document.getElementById('info-popup-text');
-                    const popupImage = document.getElementById('info-popup-image');
-                    
-                    if (popupText) {
-                        popupText.textContent = popupData.text || '';
-                    }
-                    
-                    if (popupImage && popupData.imageUrl) {
-                        popupImage.src = popupData.imageUrl;
-                        popupImage.style.display = 'block';
-                    } else if (popupImage) {
-                        popupImage.style.display = 'none';
-                    }
-                    
-                    openInfoPopup();
-
-                    // Tandai bahwa popup sudah ditampilkan di sesi ini
-                    sessionStorage.setItem('infoPopupShown', 'true');
-                }
-            } catch (error) {
-                console.error("Gagal memuat atau menampilkan popup:", error);
-            }
-        };
-
-        // Panggil fungsi untuk memuat dan menampilkan popup
-        loadAndShowPopup();
-
     testimonialForm?.addEventListener('submit', e => {
         e.preventDefault();
         const name = document.getElementById('testimonial-name').value.trim();
