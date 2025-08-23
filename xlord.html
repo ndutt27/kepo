@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id" data-theme="white">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -144,23 +144,6 @@
         #delete-avatar-btn:hover { background-color: var(--danger); color: white; transform: scale(1.1); }
         #delete-avatar-btn.visible { display: flex; }
 
-        .delete-image-btn {
-            background-color: var(--surface-color);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            width: 4.2rem;
-            height: 4.2rem;
-            border-radius: 50%;
-            font-size: 1.6rem;
-            cursor: pointer;
-            display: none; /* Hidden by default */
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-smooth);
-        }
-        .delete-image-btn:hover { background-color: var(--danger); color: white; transform: scale(1.1); }
-        .delete-image-btn.visible { display: flex; }
-
         #admin-testimonial-grid { display: flex; flex-direction: column; gap: 4rem; }
         .admin-post-card { background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: var(--border-radius-main); box-shadow: 0 8px 25px var(--shadow-color); padding: 2.5rem 3rem; transition: var(--transition-smooth); }
         .admin-post-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px var(--shadow-color); }
@@ -300,49 +283,6 @@
         .action-buttons .btn-edit:hover { color: #FBBF24; background-color: var(--surface-border); } /* Amber 400 */
         .action-buttons .btn-delete:hover { color: var(--danger); background-color: var(--surface-border); }
 
-        /* Toggle Switch Styles */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-        .switch input { 
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--surface-border);
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--primary);
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
 
     </style>
 </head>
@@ -489,44 +429,6 @@
             </div>
         </section>
 
-        <!-- Popup Management -->
-        <section id="popup-management" class="profile-settings" data-aos="fade-up" data-aos-delay="250">
-            <h2>Kelola Popup</h2>
-            <form id="popup-form" class="profile-form">
-                <!-- Column 1: Text and Toggle -->
-                <div class="form-group">
-                    <label for="popup-text" class="form-label">Teks Popup</label>
-                    <textarea id="popup-text" class="form-input" rows="5" placeholder="Masukkan pesan popup..." style="min-height: 150px;"></textarea>
-                    
-                    <div style="margin-top: 2rem;">
-                        <label for="popup-enabled" class="form-label">Aktifkan Popup</label>
-                        <label class="switch">
-                            <input type="checkbox" id="popup-enabled">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Column 2: Image Upload -->
-                <div class="form-group">
-                    <label for="popup-image-upload" class="form-label">Gambar Popup</label>
-                    <div class="avatar-upload-wrapper" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
-                        <img id="popup-image-preview" src="https://placehold.co/200x150/2c2f36/e4e6eb?text=PREVIEW" alt="Popup Image Preview" style="width: 100%; height: auto; max-height: 160px; object-fit: contain; border-radius: var(--border-radius-inner);">
-                        <div>
-                            <input type="file" id="popup-image-upload" accept="image/png, image/jpeg, image/gif" style="display: none;">
-                            <label for="popup-image-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
-                            <button type="button" id="delete-popup-image-btn" class="delete-image-btn" title="Hapus Gambar Popup"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Full-width Save Button -->
-                <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center;">
-                    <button type="submit" class="btn btn-primary btn-save-profile">Simpan Popup</button>
-                </div>
-            </form>
-        </section>
-
         <!-- Testimonial Management -->
         <section class="profile-settings" data-aos="fade-up" data-aos-delay="300">
             <h2>Profil Author Testimoni</h2>
@@ -581,7 +483,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <!-- GitHub Image Config -->
-    <script src="image.github.js"></script>
+    <script src="api.git.js"></script>
 
     <!-- Firebase Config -->
     <script src="fire.js"></script>
@@ -630,17 +532,6 @@
         const authorAvatarUpload = document.getElementById('author-avatar-upload');
         const avatarPreview = document.getElementById('avatar-preview');
         const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
-        
-        // Popup Management DOM
-        const popupForm = document.getElementById('popup-form');
-        const popupEnabled = document.getElementById('popup-enabled');
-        const popupText = document.getElementById('popup-text');
-        const popupImageUpload = document.getElementById('popup-image-upload');
-        const popupImagePreview = document.getElementById('popup-image-preview');
-        const deletePopupImageBtn = document.getElementById('delete-popup-image-btn');
-        let newPopupImageFile = null;
-        let shouldDeletePopupImage = false;
-
 
         // --- Firebase Refs ---
         firebase.initializeApp(firebaseConfig);
@@ -1286,9 +1177,9 @@
                 reader.readAsDataURL(newAvatarFile);
                 const base64content = await fileReadPromise;
 
-                const { owner, repo } = githubConfig;
+                const { owner, repo, adminAvatarPath } = githubConfig;
                 const fileName = `avatar-${Date.now()}.${newAvatarFile.name.split('.').pop()}`;
-                const filePath = `upload/avatar/${fileName}`;
+                const filePath = `${adminAvatarPath}/${fileName}`;
                 const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
                 await githubApiRequest(apiUrl, {
@@ -1480,171 +1371,6 @@
             }
         });
 
-        // --- POPUP MANAGEMENT ---
-        const loadPopupConfig = async () => {
-            try {
-                const response = await fetch('popup.json?v=' + Date.now()); // Cache-bust
-                if (!response.ok) {
-                    if(response.status === 404) {
-                        console.log("popup.json not found, using default values.");
-                        popupEnabled.checked = false;
-                        popupText.value = '';
-                        popupImage.value = '';
-                        return;
-                    }
-                    throw new Error('Network response was not ok');
-                }
-                const popupData = await response.json();
-                popupEnabled.checked = popupData.isEnabled || false;
-                popupText.value = popupData.text || '';
-                
-                if (popupData.imageUrl) {
-                    popupImagePreview.src = popupData.imageUrl;
-                    deletePopupImageBtn.classList.add('visible');
-                } else {
-                    popupImagePreview.src = 'https://placehold.co/150x150/2c2f36/e4e6eb?text=PREVIEW';
-                    deletePopupImageBtn.classList.remove('visible');
-                }
-
-                // Reset state on load
-                newPopupImageFile = null;
-                shouldDeletePopupImage = false;
-                popupImageUpload.value = '';
-
-            } catch (error) {
-                console.error("Gagal memuat popup.json:", error);
-                alert("Error: Tidak dapat memuat data popup. Periksa konsol untuk detail.");
-            }
-        };
-
-        const uploadPopupImageToGithub = async (file) => {
-            const reader = new FileReader();
-            const fileReadPromise = new Promise((resolve, reject) => {
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = reject;
-            });
-            reader.readAsDataURL(file);
-            const base64content = await fileReadPromise;
-
-            const { owner, repo } = githubConfig;
-            const fileName = `popup-image-${Date.now()}.${file.name.split('.').pop()}`;
-            const filePath = `upload/popup/${fileName}`;
-            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-            await githubApiRequest(apiUrl, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    message: `feat: upload popup image ${fileName}`,
-                    content: base64content,
-                }),
-            });
-
-            return `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
-        };
-
-        const savePopupConfigToGithub = async () => {
-            const { owner, repo } = githubConfig;
-            const filePath = 'popup.json';
-            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-            let currentSha;
-            let currentData = {};
-            try {
-                const fileResponse = await githubApiRequest(apiUrl, { method: 'GET' });
-                const fileData = await fileResponse.json();
-                currentSha = fileData.sha;
-                // Decode content to get current data, especially the imageUrl
-                const decodedContent = atob(fileData.content);
-                currentData = JSON.parse(decodeURIComponent(escape(decodedContent)));
-            } catch (error) {
-                if (error.message.includes("404")) { // File doesn't exist yet
-                    currentSha = null;
-                } else {
-                    throw error; // Other errors
-                }
-            }
-
-            let finalImageUrl = currentData.imageUrl || null;
-
-            // Case 1: A new image is uploaded
-            if (newPopupImageFile) {
-                // If there was an old image, delete it from GitHub
-                if (currentData.imageUrl) {
-                    await deleteImageFromGithub(currentData.imageUrl);
-                }
-                finalImageUrl = await uploadPopupImageToGithub(newPopupImageFile);
-            }
-            // Case 2: The existing image should be deleted
-            else if (shouldDeletePopupImage && currentData.imageUrl) {
-                await deleteImageFromGithub(currentData.imageUrl);
-                finalImageUrl = null;
-            }
-            // Case 3: No change to the image, finalImageUrl remains as it was
-
-            const newPopupData = {
-                isEnabled: popupEnabled.checked,
-                text: popupText.value,
-                imageUrl: finalImageUrl
-            };
-
-            const content = JSON.stringify(newPopupData, null, 2);
-            const encodedContent = btoa(unescape(encodeURIComponent(content)));
-
-            await githubApiRequest(apiUrl, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: 'feat: update popup.json from admin panel',
-                    content: encodedContent,
-                    sha: currentSha,
-                }),
-            });
-        };
-
-        popupImageUpload.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                newPopupImageFile = file;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    popupImagePreview.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-                deletePopupImageBtn.classList.add('visible');
-                shouldDeletePopupImage = false;
-            }
-        });
-
-        deletePopupImageBtn.addEventListener('click', () => {
-            shouldDeletePopupImage = true;
-            newPopupImageFile = null;
-            popupImageUpload.value = ''; // Clear the file input
-            popupImagePreview.src = 'https://placehold.co/150x150/2c2f36/e4e6eb?text=PREVIEW';
-            deletePopupImageBtn.classList.remove('visible');
-        });
-
-        popupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = popupForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-
-            try {
-                await savePopupConfigToGithub();
-                alert('Konfigurasi popup berhasil disimpan!');
-            } catch (error) {
-                console.error("Gagal menyimpan konfigurasi popup:", error);
-                alert(`Gagal menyimpan konfigurasi popup: ${error.message}`);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Simpan Popup';
-                // Reset state after saving
-                newPopupImageFile = null;
-                shouldDeletePopupImage = false;
-            }
-        });
-
-
         // --- AUTH ---
         const checkLogin = () => {
             if (sessionStorage.getItem('pictlord_admin_auth') === 'true') {
@@ -1653,7 +1379,6 @@
                 loadAssets();
                 loadAuthorProfile();
                 loadAdminTestimonials();
-                loadPopupConfig();
             } else {
                 loginSection.style.display = 'flex';
                 adminPanel.style.display = 'none';
