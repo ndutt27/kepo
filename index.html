@@ -1149,7 +1149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (popupData.text) {
-                    adPopupText.textContent = popupData.text;
+                    adPopupText.innerHTML = popupData.text;
                     adPopupText.style.display = 'block';
                 } else {
                     adPopupText.style.display = 'none';
