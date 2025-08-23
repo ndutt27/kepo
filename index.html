@@ -318,6 +318,17 @@
             z-index: 1002; /* Di atas gambar */
         }
 
+        /* Ad Popup Modal Styles */
+        #ad-popup-modal .modal-content {
+            padding: 2rem;
+            text-align: center;
+        }
+        #ad-popup-modal .modal-close-btn {
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 2.5rem;
+        }
+
 
         @media (max-width: 1024px) {
             .navbar-menu { position: absolute; top: calc(100% + 1rem); left: 0; right: 0; width: 90%; margin: auto; flex-direction: column; align-items: stretch; padding: 1.5rem; background: var(--navbar-mobile-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius-main); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 1px solid var(--shadow-light); transform: translateY(-20px) scale(0.95); opacity: 0; pointer-events: none; transform-origin: top center; transition: transform 0.3s ease, opacity 0.3s ease; }
@@ -547,6 +558,14 @@
     <button class="modal-close-btn" style="color: white; text-shadow: 0 0 8px rgba(0,0,0,0.8);">&times;</button>
     <div class="modal-content-image-viewer">
         <img src="" alt="Testimonial Full View" id="full-view-image">
+    </div>
+</div>
+
+<div class="modal-overlay" id="ad-popup-modal">
+    <div class="modal-content" style="max-width: 550px;">
+        <button class="modal-close-btn">&times;</button>
+        <img src="" alt="Popup Image" id="ad-popup-image" style="max-width: 100%; border-radius: var(--border-radius-inner); margin-bottom: 2rem; display: none;">
+        <p id="ad-popup-text" style="font-size: 1.6rem; color: var(--text-light); margin: 0;"></p>
     </div>
 </div>
 
@@ -1106,6 +1125,75 @@ document.addEventListener('DOMContentLoaded', () => {
             postToFirebase(postData);
         }
     });
+
+    const loadAndShowPopup = async () => {
+        try {
+            const response = await fetch('popup.json?v=' + Date.now());
+            if (!response.ok) {
+                console.log('popup.json not found or failed to load.');
+                return;
+            }
+            const popupData = await response.json();
+
+            if (popupData.isEnabled) {
+                const adPopupModal = document.getElementById('ad-popup-modal');
+                const adPopupImage = document.getElementById('ad-popup-image');
+                const adPopupText = document.getElementById('ad-popup-text');
+                const closeBtn = adPopupModal.querySelector('.modal-close-btn');
+
+                if (popupData.imageUrl) {
+                    adPopupImage.src = popupData.imageUrl;
+                    adPopupImage.style.display = 'block';
+                } else {
+                    adPopupImage.style.display = 'none';
+                }
+
+                if (popupData.text) {
+                    adPopupText.textContent = popupData.text;
+                    adPopupText.style.display = 'block';
+                } else {
+                    adPopupText.style.display = 'none';
+                }
+                
+                if (!popupData.imageUrl && !popupData.text) {
+                    return;
+                }
+
+                adPopupModal.classList.add('is-visible');
+                setTimeout(() => {
+                    const content = adPopupModal.querySelector('.modal-content');
+                    if (content) {
+                        content.style.transform = 'scale(1)';
+                        content.style.opacity = '1';
+                    }
+                }, 10);
+                body.style.overflow = 'hidden';
+
+                const closePopup = () => {
+                    const content = adPopupModal.querySelector('.modal-content');
+                    if (content) {
+                        content.style.transform = 'scale(0.95)';
+                        content.style.opacity = '0';
+                    }
+                    setTimeout(() => {
+                        adPopupModal.classList.remove('is-visible');
+                        body.style.overflow = 'auto';
+                    }, 400);
+                };
+
+                closeBtn.addEventListener('click', closePopup);
+                adPopupModal.addEventListener('click', (e) => {
+                    if (e.target === adPopupModal) {
+                        closePopup();
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Error loading popup config:", error);
+        }
+    };
+
+    loadAndShowPopup();
 });
 </script>
 </body>
