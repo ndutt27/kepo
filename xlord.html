@@ -283,6 +283,57 @@
         .action-buttons .btn-edit:hover { color: #FBBF24; background-color: var(--surface-border); } /* Amber 400 */
         .action-buttons .btn-delete:hover { color: var(--danger); background-color: var(--surface-border); }
 
+        /* Switch styles */
+        .switch-container {
+            display: flex;
+            align-items: center;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+        }
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: var(--surface-border);
+          transition: .4s;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+        }
+        input:checked + .slider {
+          background-color: var(--primary);
+        }
+        input:focus + .slider {
+          box-shadow: 0 0 1px var(--primary);
+        }
+        input:checked + .slider:before {
+          transform: translateX(26px);
+        }
+        .slider.round {
+          border-radius: 34px;
+        }
+        .slider.round:before {
+          border-radius: 50%;
+        }
 
     </style>
 </head>
@@ -459,6 +510,37 @@
             </div>
         </section>
 
+        <!-- Popup Management -->
+        <section id="popup-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
+            <h2>Kelola Popup Iklan</h2>
+            <form id="popup-form">
+                <div class="form-group">
+                    <label class="form-label" style="margin-bottom: 1rem;">Aktifkan Popup</label>
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="popup-enabled">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="popup-text" class="form-label">Teks Popup (Kosongkan jika hanya gambar)</label>
+                    <textarea id="popup-text" class="form-input" rows="4" style="padding: 14px;" placeholder="Masukkan teks untuk popup..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="popup-image-upload" class="form-label">Gambar Popup</label>
+                    <div class="avatar-upload-wrapper">
+                         <img id="popup-image-preview" src="https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR" alt="Popup Image Preview" style="width: 150px; height: 150px; border-radius: var(--border-radius-inner); object-fit: cover; border: 3px solid var(--surface-border);">
+                         <input type="file" id="popup-image-upload" accept="image/png, image/jpeg, image/gif" style="display: none;">
+                         <label for="popup-image-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
+                    </div>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; margin-top: 3rem;">
+                    <button type="submit" class="btn btn-primary">Simpan Pengaturan Popup</button>
+                </div>
+            </form>
+        </section>
+
     </div>
     
     <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
@@ -528,6 +610,12 @@
         // Testimonial Management DOM
         const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
         const profileForm = document.getElementById('profile-form');
+        const popupForm = document.getElementById('popup-form');
+        const popupEnabled = document.getElementById('popup-enabled');
+        const popupText = document.getElementById('popup-text');
+        const popupImageUpload = document.getElementById('popup-image-upload');
+        const popupImagePreview = document.getElementById('popup-image-preview');
+        let newPopupImageFile = null;
         const authorNameInput = document.getElementById('author-name');
         const authorAvatarUpload = document.getElementById('author-avatar-upload');
         const avatarPreview = document.getElementById('avatar-preview');
@@ -941,6 +1029,111 @@
             });
         };
 
+        // --- POPUP MANAGEMENT ---
+        const loadPopupConfig = async () => {
+            try {
+                const response = await fetch('popup.json?v=' + Date.now()); // Cache-bust
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log('popup.json not found, using default values.');
+                        popupEnabled.checked = false;
+                        popupText.value = '';
+                        popupImagePreview.src = 'https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR';
+                        return;
+                    }
+                    throw new Error('Network response was not ok');
+                }
+                const popupData = await response.json();
+                popupEnabled.checked = popupData.isEnabled;
+                popupText.value = popupData.text;
+                popupImagePreview.src = popupData.imageUrl || 'https://placehold.co/150x150/2c2f36/e4e6eb?text=GAMBAR';
+            } catch (error) {
+                console.error("Gagal memuat popup.json:", error);
+                alert("Error: Tidak dapat memuat konfigurasi popup.");
+            }
+        };
+
+        const savePopupConfig = async () => {
+            const submitBtn = popupForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+
+            try {
+                let imageUrl = popupImagePreview.src;
+
+                if (newPopupImageFile) {
+                    const reader = new FileReader();
+                    const fileReadPromise = new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = reject;
+                    });
+                    reader.readAsDataURL(newPopupImageFile);
+                    const base64content = await fileReadPromise;
+
+                    const { owner, repo } = githubConfig;
+                    const fileName = `popup-image-${Date.now()}.${newPopupImageFile.name.split('.').pop()}`;
+                    const filePath = `assets/popup/${fileName}`;
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                    const response = await githubApiRequest(apiUrl, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            message: `feat: upload popup image ${fileName}`,
+                            content: base64content,
+                        }),
+                    });
+                    const responseData = await response.json();
+                    imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+                    newPopupImageFile = null;
+                }
+
+                const newPopupData = {
+                    isEnabled: popupEnabled.checked,
+                    text: popupText.value,
+                    imageUrl: imageUrl
+                };
+
+                const { owner, repo } = githubConfig;
+                const jsonFilePath = 'popup.json';
+                const jsonApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${jsonFilePath}`;
+
+                let currentSha;
+                try {
+                    const fileResponse = await githubApiRequest(jsonApiUrl, { method: 'GET' });
+                    const fileData = await fileResponse.json();
+                    currentSha = fileData.sha;
+                } catch (error) {
+                    if (error.message.includes("404")) {
+                        currentSha = null;
+                    } else {
+                        throw error;
+                    }
+                }
+
+                const content = JSON.stringify(newPopupData, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+                await githubApiRequest(jsonApiUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: 'feat: update popup.json from admin panel',
+                        content: encodedContent,
+                        sha: currentSha,
+                    }),
+                });
+
+                alert('Pengaturan popup berhasil disimpan!');
+
+            } catch (error) {
+                console.error("Gagal menyimpan pengaturan popup:", error);
+                alert(`Gagal menyimpan pengaturan popup: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Simpan Pengaturan Popup';
+            }
+        };
+
 
         // --- GITHUB IMAGE DELETION (for Testimonial Avatars) ---
         const deleteImageFromGithub = async (imageUrl) => {
@@ -1271,6 +1464,25 @@
             }
         });
 
+        // --- EVENT LISTENERS (POPUP) ---
+        popupImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                newPopupImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    popupImagePreview.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        popupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            savePopupConfig();
+        });
+
+
         // --- EVENT LISTENERS (TESTIMONIALS) ---
         adminTestimonialGrid.addEventListener('click', (e) => {
             const deletePostBtn = e.target.closest('.delete-post-btn');
@@ -1386,6 +1598,7 @@
                 loadAssets();
                 loadAuthorProfile();
                 loadAdminTestimonials();
+                loadPopupConfig();
             } else {
                 loginSection.style.display = 'flex';
                 adminPanel.style.display = 'none';
