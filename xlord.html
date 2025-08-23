@@ -817,8 +817,8 @@
                         reader.onload = () => resolve(reader.result.split(',')[1]);
                         reader.onerror = reject;
                     });
+                    reader.readAsDataURL(file); // FIX: Call readAsDataURL before awaiting the promise
                     const base64content = await fileReadPromise;
-                    reader.readAsDataURL(file);
 
                     const { owner, repo } = githubConfig;
                     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
@@ -1182,7 +1182,8 @@
                 const filePath = `${adminAvatarPath}/${fileName}`;
                 const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
-                await githubApiRequest(apiUrl, {
+                // FIX: Capture the response from the API call
+                const response = await githubApiRequest(apiUrl, {
                     method: 'PUT',
                     body: JSON.stringify({
                         message: `feat: upload admin avatar ${fileName}`,
@@ -1190,7 +1191,13 @@
                     }),
                 });
 
-                newAvatarUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+                // FIX: Parse the response and use the download_url
+                const responseData = await response.json();
+                newAvatarUrl = responseData.content.download_url;
+
+                if (!newAvatarUrl) {
+                    throw new Error("Gagal mendapatkan URL unduhan dari respons GitHub.");
+                }
             }
 
             authorProfile.name = newName;
@@ -1408,4 +1415,4 @@
     });
     </script>
 </body>
-</html>
+</html
