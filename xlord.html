@@ -1083,7 +1083,11 @@
                         }),
                     });
                     const responseData = await response.json();
-                    imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+                    imageUrl = responseData.content.download_url;
+                    if (!imageUrl) {
+                        // Fallback for enterprise or other environments that might not have download_url
+                        imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+                    }
                     newPopupImageFile = null;
                 }
 
