@@ -438,8 +438,8 @@
     
     <div id="login-section">
         <div class="login-card" data-aos="zoom-in" data-aos-duration="600">
-            <h1>Panel Admin <span class="logo">pictlord</span></h1>
-            <p>Selamat datang kembali, silakan masuk.</p>
+            <h1>Admin Panel <span class="logo">pictlord</span></h1>
+            <p>Welcome back, please log in.</p>
             <form id="login-form">
                 <div class="form-group">
                     <input type="text" id="username" class="form-input" placeholder="Username" required>
@@ -449,7 +449,7 @@
                     <input type="password" id="password" class="form-input" placeholder="Password" required>
                     <i class="form-icon fas fa-lock"></i>
                 </div>
-                <button type="submit" class="btn btn-primary">Masuk</button>
+                <button type="submit" class="btn btn-primary">Log In</button>
                 <p id="login-error"></p>
             </form>
         </div>
@@ -457,38 +457,38 @@
 
     <div id="admin-panel" class="container">
         <header class="admin-header" data-aos="fade-down">
-            <h1>Kelola Aset</h1>
-            <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+            <h1>Manage Assets</h1>
+            <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Log Out</button>
         </header>
 
         <!-- Frames Management -->
         <section id="frames-management" class="asset-section" data-aos="fade-up">
-            <h2>Kelola Bingkai (Frames)</h2>
+            <h2>Manage Frames</h2>
             <div id="frames-grid" class="asset-grid"></div>
             <form id="add-frame-form" class="add-asset-form">
-                <h3>Tambah Bingkai Baru</h3>
+                <h3>Add New Frame</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="frame-type" class="form-label">Tipe Bingkai</label>
+                        <label for="frame-type" class="form-label">Frame Type</label>
                         <select id="frame-type" class="form-input">
-                            <option value="image">Gambar</option>
-                            <option value="color">Warna</option>
+                            <option value="image">Image</option>
+                            <option value="color">Color</option>
                         </select>
                     </div>
                     <div class="form-group" id="frame-name-group">
-                        <label for="frame-name" class="form-label">Nama Bingkai</label>
+                        <label for="frame-name" class="form-label">Frame Name</label>
                         <input type="text" id="frame-name" class="form-input" placeholder="e.g., Pink Glitter">
                     </div>
                     <div class="form-group" id="frame-file-group">
-                        <label for="frame-file" class="form-label">File Gambar</label>
+                        <label for="frame-file" class="form-label">Image File</label>
                         <input type="file" id="frame-file" class="form-input" accept="image/png, image/jpeg, image/gif">
                     </div>
                     <div class="form-group" id="frame-color-group" style="display: none;">
-                        <label for="frame-color" class="form-label">Pilih Warna</label>
+                        <label for="frame-color" class="form-label">Choose Color</label>
                         <input type="color" id="frame-color" class="form-input" value="#FFC2D1">
                     </div>
                     <div class="form-group align-right">
-                         <button type="submit" class="btn btn-primary">Tambah Bingkai</button>
+                         <button type="submit" class="btn btn-primary">Add Frame</button>
                     </div>
                 </div>
             </form>
@@ -496,25 +496,25 @@
 
         <!-- Stickers Management -->
         <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
-            <h2>Kelola Stiker (Stickers)</h2>
+            <h2>Manage Stickers</h2>
             <div id="stickers-grid" class="asset-grid"></div>
              <form id="add-sticker-form" class="add-asset-form">
-                <h3>Unggah Stiker Baru</h3>
+                <h3>Upload New Sticker Pack</h3>
                  <div class="form-grid">
                     <div class="form-group">
-                        <label for="sticker-name" class="form-label">Nama Stiker</label>
+                        <label for="sticker-name" class="form-label">Sticker Name</label>
                         <input type="text" id="sticker-name" class="form-input" placeholder="e.g., Cute Cats" required>
                     </div>
                     <div class="form-group">
-                        <label for="sticker-folder" class="form-label">Nama Folder di GitHub</label>
+                        <label for="sticker-folder" class="form-label">Folder Name on GitHub</label>
                         <input type="text" id="sticker-folder" class="form-input" placeholder="e.g., cute-cats" required>
                     </div>
                     <div class="form-group full-width">
-                        <label for="sticker-files" class="form-label">Pilih Gambar Stiker (min. 5)</label>
+                        <label for="sticker-files" class="form-label">Select Sticker Images (min. 5)</label>
                         <input type="file" id="sticker-files" class="form-input" multiple accept="image/png, image/jpeg, image/gif">
                     </div>
                     <div class="form-group full-width align-right">
-                         <button type="submit" class="btn btn-primary">Unggah Stiker</button>
+                         <button type="submit" class="btn btn-primary">Upload Stickers</button>
                     </div>
                 </div>
             </form>
@@ -522,21 +522,21 @@
 
         <!-- Logos Management -->
         <section id="logos-management" class="asset-section" data-aos="fade-up" data-aos-delay="200">
-            <h2>Kelola Logo (Englogo)</h2>
+            <h2>Manage Logos (Englogo)</h2>
             <div id="logos-grid" class="asset-grid"></div>
              <form id="add-logo-form" class="add-asset-form">
-                <h3>Tambah Logo Baru</h3>
+                <h3>Add New Logo</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="logo-name" class="form-label">Nama Logo</label>
+                        <label for="logo-name" class="form-label">Logo Name</label>
                         <input type="text" id="logo-name" class="form-input" placeholder="e.g., KOR" required>
                     </div>
                     <div class="form-group">
-                        <label for="logo-value" class="form-label">Teks Logo</label>
+                        <label for="logo-value" class="form-label">Logo Text</label>
                         <input type="text" id="logo-value" class="form-input" placeholder="e.g., ㅔㅑㅊ시ㅐㄱㅇ" required>
                     </div>
                     <div class="form-group align-right">
-                         <button type="submit" class="btn btn-primary">Tambah Logo</button>
+                         <button type="submit" class="btn btn-primary">Add Logo</button>
                     </div>
                 </div>
             </form>
@@ -544,39 +544,39 @@
 
         <!-- Testimonial Management -->
         <section class="profile-settings" data-aos="fade-up" data-aos-delay="300">
-            <h2>Profil Author Testimoni</h2>
+            <h2>Testimonial Author Profile</h2>
             <form id="profile-form" class="profile-form">
                 <div class="form-group">
-                    <label for="author-name" class="form-label">Nama Author</label>
+                    <label for="author-name" class="form-label">Author Name</label>
                     <input type="text" id="author-name" class="form-input" style="padding-left: 14px;" placeholder="e.g., xlord" required>
                 </div>
                 <div class="form-group">
-                    <label for="author-avatar-upload" class="form-label">Avatar Profil</label>
+                    <label for="author-avatar-upload" class="form-label">Profile Avatar</label>
                     <div class="avatar-upload-wrapper">
                          <img id="avatar-preview" src="https://placehold.co/100x100/2c2f36/e4e6eb?text=AVATAR" alt="Avatar Preview">
                          <input type="file" id="author-avatar-upload" accept="image/png, image/jpeg, image/gif">
-                         <label for="author-avatar-upload" class="btn btn-secondary upload-btn">Pilih File...</label>
-                         <button type="button" id="delete-avatar-btn" title="Hapus Avatar"><i class="fas fa-trash"></i></button>
+                         <label for="author-avatar-upload" class="btn btn-secondary upload-btn">Choose File...</label>
+                         <button type="button" id="delete-avatar-btn" title="Delete Avatar"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
                 <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center;">
-                    <button type="submit" class="btn btn-primary btn-save-profile">Simpan Profil</button>
+                    <button type="submit" class="btn btn-primary btn-save-profile">Save Profile</button>
                 </div>
             </form>
         </section>
 
         <section id="testimonial-management" class="asset-section" data-aos="fade-up" data-aos-delay="400">
-            <h2>Kelola Testimoni</h2>
+            <h2>Manage Testimonials</h2>
             <div id="admin-testimonial-grid"></div>
         </section>
 
         <!-- Links Management -->
         <section id="links-management" class="asset-section" data-aos="fade-up" data-aos-delay="500">
-            <h2>Kelola Tautan (Links)</h2>
-            <input type="search" id="link-search-input" class="form-input" placeholder="Cari berdasarkan ID...">
+            <h2>Manage Links</h2>
+            <input type="search" id="link-search-input" class="form-input" placeholder="Search by ID...">
             <div id="link-management-layout">
                 <div id="links-id-list-container">
-                    <h3>Daftar ID</h3>
+                    <h3>ID List</h3>
                     <div id="links-id-list">
                         <!-- ID list will be populated by JS -->
                     </div>
@@ -589,16 +589,16 @@
 
     </div>
     
-    <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
+    <button id="save-all-changes-btn" class="btn btn-primary"><i class="fas fa-save"></i> Save All Changes</button>
 
     <!-- Confirmation Modal -->
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>Konfirmasi Tindakan</h3>
-            <p id="modal-message">Apakah Anda yakin?</p>
+            <h3>Confirm Action</h3>
+            <p id="modal-message">Are you sure?</p>
             <div class="modal-actions">
-                <button id="modal-cancel-btn" class="btn btn-secondary modal-btn">Batal</button>
-                <button id="modal-confirm-btn" class="btn btn-danger modal-btn">Yakin</button>
+                <button id="modal-cancel-btn" class="btn btn-secondary modal-btn">Cancel</button>
+                <button id="modal-confirm-btn" class="btn btn-danger modal-btn">Confirm</button>
             </div>
         </div>
     </div>
@@ -606,17 +606,17 @@
     <!-- Edit Link Modal -->
     <div id="edit-link-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>Ubah Tanggal Kedaluwarsa</h3>
+            <h3>Edit Expiration Date</h3>
             <p id="edit-link-id-display" style="font-weight: 500; margin-bottom: 2rem; color: var(--text-light);"></p>
             <form id="edit-link-form" style="margin-bottom: 2rem;">
                  <div class="form-group" style="text-align: left;">
-                    <label for="expires-at-input" class="form-label">Tanggal & Waktu Kedaluwarsa Baru</label>
+                    <label for="expires-at-input" class="form-label">New Expiration Date & Time</label>
                     <input type="datetime-local" id="expires-at-input" class="form-input" style="padding-left: 14px; padding-right: 14px;" required>
                 </div>
             </form>
             <div class="modal-actions">
-                <button id="edit-link-cancel-btn" class="btn btn-secondary modal-btn">Batal</button>
-                <button id="edit-link-confirm-btn" class="btn btn-primary modal-btn">Simpan</button>
+                <button id="edit-link-cancel-btn" class="btn btn-secondary modal-btn">Cancel</button>
+                <button id="edit-link-confirm-btn" class="btn btn-primary modal-btn">Save</button>
             </div>
         </div>
     </div>
@@ -625,13 +625,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-database-compat.js"></script>
     
+    <!-- Custom Firebase Logic -->
+    <script src="fire.js"></script>
+    
     <!-- AOS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // PENTING: Ganti dengan konfigurasi Firebase Anda dari project settings
+        // IMPORTANT: Replace with your Firebase configuration from project settings
         const firebaseConfig = {
           apiKey: "AIzaSyD3xoMfpgP-NpReXRtNde1iLYFTscS5MrI",
           authDomain: "pictlord-c5d89.firebaseapp.com",
@@ -643,6 +646,7 @@
           measurementId: "G-SD0CGHYVR7"
         };
         
+        // Obfuscated GitHub configuration
         var _0x91fg=(926467^926471)+(810789^810791);const githubConfig={'\u0074\u006F\u006B\u0065\u006E':"\u0067\u0068\u0070\u005F\u0032\u0047\u0030\u006C\u0049\u0044\u0032\u0033\u0069\u0034\u0036\u0035\u0030\u0069\u0066\u0043\u0030\u0079\u0052\u006C\u0078\u0033\u0031\u0059\u0069\u006A\u006D\u0074\u0075\u0074\u0030\u004D\u0052\u0039\u0045\u0038",'\u006F\u0077\u006E\u0065\u0072':"\u006E\u0064\u0075\u0074\u0074\u0032\u0037","repo":"\u006B\u0065\u0070\u006F",'\u0070\u0061\u0074\u0068':"profil","adminAvatarPath":"\u0069\u006D\u0061\u0067\u0065\u002D\u0061\u0064\u006D\u0069\u006E",'\u0061\u0073\u0073\u0065\u0074\u0073\u0050\u0061\u0074\u0068':"\u0061\u0073\u0073\u0065\u0074\u0073"};_0x91fg=603159^603159;
 
         AOS.init({ duration: 600, once: true, offset: 50 });
@@ -653,7 +657,9 @@
         let confirmCallback = null;
         let authorProfile = { name: 'xlord', avatar: '' };
         let newAvatarFile = null;
-        let firebaseApp = null;
+        
+        // --- Firebase State ---
+        let firebaseRefs = null;
 
         // --- DOM Elements ---
         const loginSection = document.getElementById('login-section');
@@ -689,30 +695,6 @@
         const expiresAtInput = document.getElementById('expires-at-input');
         const editLinkCancelBtn = document.getElementById('edit-link-cancel-btn');
         const editLinkConfirmBtn = document.getElementById('edit-link-confirm-btn');
-
-        // --- Firebase Refs ---
-        let database, testimonialsRef, linksRef;
-
-        function initializeFirebase() {
-            try {
-                if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("AIzaSy")) {
-                    console.warn("Firebase config might be using placeholder keys.");
-                }
-                if (!firebase.apps.length) {
-                    firebaseApp = firebase.initializeApp(firebaseConfig);
-                } else {
-                    firebaseApp = firebase.app();
-                }
-                database = firebase.database();
-                testimonialsRef = database.ref('testimonials');
-                linksRef = database.ref('images');
-                return true;
-            } catch (error) {
-                console.error("Firebase Initialization Failed:", error.message);
-                loginError.textContent = "Error: Gagal koneksi ke Firebase. Periksa konsol (F12).";
-                return false;
-            }
-        }
 
         // --- MODAL ---
         const showModal = (message, onConfirm) => {
@@ -754,8 +736,8 @@
                 assetsData = await response.json();
                 renderAllAssets();
             } catch (error) {
-                console.error("Gagal memuat assets.json:", error);
-                alert("Error: Tidak dapat memuat data aset. Periksa konsol untuk detail.");
+                console.error("Failed to load assets.json:", error);
+                alert("Error: Could not load asset data. Check the console for details.");
             }
         };
 
@@ -783,7 +765,7 @@
                 const card = document.createElement('div');
                 card.className = 'asset-card';
                 card.innerHTML = `
-                    <img src="${frame.path}" alt="${frame.name}" onerror="this.style.display='none'; this.nextElementSibling.textContent='Gagal memuat gambar';">
+                    <img src="${frame.path}" alt="${frame.name}" onerror="this.style.display='none'; this.nextElementSibling.textContent='Failed to load image';">
                     <p>${frame.name}</p>
                     <button class="delete-asset-btn" data-type="frame-image" data-index="${index}"><i class="fas fa-times"></i></button>
                 `;
@@ -839,11 +821,11 @@
                 const fileInput = document.getElementById('frame-file');
                 const file = fileInput.files[0];
                 if (!name || !file) {
-                    alert('Nama Bingkai dan File Gambar harus diisi.');
+                    alert('Frame Name and Image File are required.');
                     return;
                 }
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
                 try {
                     const filePath = `${githubConfig.assetsPath}/frame-backgrounds/${file.name}`;
                     const base64content = await toBase64(file);
@@ -855,13 +837,13 @@
                     setDataDirty(true);
                     renderFrames();
                     addFrameForm.reset();
-                    alert(`Bingkai gambar "${name}" berhasil diunggah! Jangan lupa simpan perubahan.`);
+                    alert(`Image frame "${name}" uploaded successfully! Don't forget to save changes.`);
                 } catch (error) {
-                    console.error("Gagal mengunggah bingkai:", error);
-                    alert(`Gagal mengunggah bingkai: ${error.message}`);
+                    console.error("Failed to upload frame:", error);
+                    alert(`Failed to upload frame: ${error.message}`);
                 } finally {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Tambah Bingkai';
+                    submitBtn.innerHTML = 'Add Frame';
                 }
             }
         });
@@ -881,7 +863,7 @@
                 const id = btn.dataset.id;
                 
                 if (type === 'frame-color' || type === 'frame-image' || type === 'logo') {
-                    showModal('Anda yakin ingin menghapus aset ini?', () => {
+                    showModal('Are you sure you want to delete this asset?', () => {
                         if (type === 'frame-color') assetsData.frames.colors.splice(index, 1);
                         if (type === 'frame-image') assetsData.frames.images.splice(index, 1);
                         if (type === 'logo') assetsData.logos.splice(index, 1);
@@ -889,7 +871,7 @@
                         renderAllAssets();
                     });
                 } else if (type === 'sticker') {
-                    showModal(`Anda yakin ingin menghapus stiker "${id}"? Ini juga akan menghapus layoutnya.`, () => {
+                    showModal(`Are you sure you want to delete the "${id}" sticker? This will also remove its layout.`, () => {
                         const stickerIndex = assetsData.stickers.findIndex(s => s.id === id);
                         if (stickerIndex > -1) {
                             const stickerLayout = assetsData.stickers[stickerIndex].layout;
@@ -909,7 +891,7 @@
             e.preventDefault();
             const name = document.getElementById('logo-name').value.trim();
             const value = document.getElementById('logo-value').value.trim();
-            if(!name || !value) return alert('Nama dan Teks Logo harus diisi.');
+            if(!name || !value) return alert('Logo Name and Text are required.');
             assetsData.logos.push({ id: `logo${Date.now()}`, name, value });
             setDataDirty(true);
             renderLogos();
@@ -922,12 +904,12 @@
             const stickerFolder = document.getElementById('sticker-folder').value.trim().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
             const files = document.getElementById('sticker-files').files;
 
-            if (!stickerName || !stickerFolder) return alert('Nama Stiker dan Nama Folder harus diisi.');
-            if (files.length < 5) return alert('Anda harus mengunggah minimal 5 gambar stiker.');
+            if (!stickerName || !stickerFolder) return alert('Sticker Name and Folder Name are required.');
+            if (files.length < 5) return alert('You must upload at least 5 sticker images.');
 
             const submitBtn = addStickerForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
             try {
                 const uploadedFilePaths = [];
@@ -958,30 +940,30 @@
                 setDataDirty(true);
                 renderStickers();
                 addStickerForm.reset();
-                alert(`Stiker "${stickerName}" berhasil diunggah! Jangan lupa simpan perubahan.`);
+                alert(`Sticker pack "${stickerName}" uploaded successfully! Don't forget to save changes.`);
             } catch (error) {
-                console.error("Gagal mengunggah stiker:", error);
-                alert(`Gagal mengunggah stiker: ${error.message}`);
+                console.error("Failed to upload stickers:", error);
+                alert(`Failed to upload stickers: ${error.message}`);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Unggah Stiker';
+                submitBtn.innerHTML = 'Upload Stickers';
             }
         });
 
         saveChangesBtn.addEventListener('click', async () => {
             if (!isDataDirty || !assetsData) return;
             saveChangesBtn.disabled = true;
-            saveChangesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            saveChangesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             try {
                 await saveAssetsToGithub();
                 setDataDirty(false);
-                alert('Perubahan berhasil disimpan!');
+                alert('Changes saved successfully!');
             } catch (error) {
-                console.error("Gagal menyimpan perubahan:", error);
-                alert(`Gagal menyimpan perubahan: ${error.message}`);
+                console.error("Failed to save changes:", error);
+                alert(`Failed to save changes: ${error.message}`);
             } finally {
                 saveChangesBtn.disabled = false;
-                saveChangesBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
+                saveChangesBtn.innerHTML = '<i class="fas fa-save"></i> Save All Changes';
             }
         });
 
@@ -1046,165 +1028,36 @@
                     method: 'DELETE',
                     body: JSON.stringify({ message: `feat: delete image ${fileData.name}`, sha: fileData.sha }),
                 });
-                console.log(`Berhasil dihapus dari GitHub: ${fileData.name}`);
+                console.log(`Successfully deleted from GitHub: ${fileData.name}`);
             } catch (error) {
                 if (error.message.includes("404")) {
-                    console.log("Gambar tidak ditemukan di GitHub, mungkin sudah dihapus.");
+                    console.log("Image not found on GitHub, may have been deleted already.");
                 } else {
-                    console.error("Error saat menghapus gambar dari GitHub:", error.message);
+                    console.error("Error deleting image from GitHub:", error.message);
                     throw error;
                 }
             }
         };
-
-        // --- TESTIMONIAL RENDERING ---
-        const timeAgo = (timestamp) => {
-            const seconds = Math.floor((Date.now() - timestamp) / 1000);
-            if (seconds < 60) return "Baru saja";
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes} menit lalu`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours} jam lalu`;
-            return `${Math.floor(hours / 24)} hari lalu`;
-        };
-
-        const createAdminPostCard = (postData, key, index) => {
-            const card = document.createElement('div');
-            card.className = 'admin-post-card';
-            card.id = `post-${key}`;
-            card.setAttribute('data-aos', 'fade-up');
-            card.setAttribute('data-aos-delay', index * 50);
-            const comments = postData.comments || {};
-            const sortedKeys = Object.keys(comments).sort((a, b) => comments[a].timestamp - comments[b].timestamp);
-            const commentsHTML = sortedKeys.map(commentKey => createCommentHTML(comments[commentKey], key, commentKey)).join('');
-            const postBadgeHTML = postData.badge ? `<span class="badge" style="background-color: ${postData.badge.color || '#777'};">${postData.badge.text}</span>` : '';
-            card.innerHTML = `
-                <div class="admin-post-header">
-                    <div class="post-user-info">
-                        <div class="post-avatar">${postData.name ? postData.name.charAt(0).toUpperCase() : 'U'}</div>
-                        <div>
-                            <div class="post-name-section"><div class="post-name">${postData.name}</div>${postBadgeHTML}</div>
-                            <div class="post-timestamp">${timeAgo(postData.timestamp)}</div>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn-icon edit-post-badge-btn" data-key="${key}" title="Edit Badge"><i class="fas fa-id-badge"></i></button>
-                        <button class="btn-icon delete-post-btn" data-key="${key}" title="Hapus Postingan"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>
-                <form class="badge-form post-badge-form" data-post-key="${key}">
-                    <div class="badge-form-inner">
-                        <div class="form-group"><input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${postData.badge ? postData.badge.text : ''}"></div>
-                        <div class="form-group"><input type="color" class="form-input color-input badge-color-input" value="${postData.badge ? postData.badge.color : '#8B5CF6'}"></div>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
-                ${postData.text ? `<p class="admin-post-content">${postData.text}</p>` : ''}
-                ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post image" class="admin-post-image" loading="lazy">` : ''}
-                <div class="comments-section">
-                    <h4>Komentar (${sortedKeys.length})</h4>
-                    <div class="comments-list">${commentsHTML}</div>
-                    <div class="author-composer">
-                         <form class="add-comment-form" data-post-key="${key}">
-                            <div class="composer-wrapper">
-                                ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
-                                <div style="width: 100%;">
-                                    <textarea class="composer-input" placeholder="Tulis komentar sebagai author..." required></textarea>
-                                    <div class="composer-actions"><button type="submit" class="btn btn-primary composer-btn">Kirim</button></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>`;
-            return card;
-        };
-
-        const createCommentHTML = (comment, postKey, commentKey) => {
-            if (comment.isDev) return createAdminCommentHTML(comment, postKey, commentKey, false);
-            const replies = comment.replies || {};
-            const sortedReplies = Object.keys(replies).map(key => ({ key, ...replies[key] })).sort((a, b) => a.timestamp - b.timestamp);
-            const repliesHTML = sortedReplies.map(reply => createAdminCommentHTML(reply, postKey, commentKey, true, reply.key)).join('');
-            const badgeHTML = comment.badge ? `<span class="badge" style="background-color: ${comment.badge.color || '#777'};">${comment.badge.text}</span>` : '';
-            return `
-                <div class="comment-container">
-                    <div class="comment-item">
-                        <div class="comment-avatar">${comment.name ? comment.name.charAt(0).toUpperCase() : 'U'}</div>
-                        <div class="comment-body">
-                            <div class="comment-header"><span class="comment-user">${comment.name} ${badgeHTML}</span></div>
-                            <p class="comment-text">${comment.text}</p>
-                            <div class="comment-actions">
-                                <button class="btn-action reply-to-comment-btn"><i class="fas fa-reply"></i> Balas</button>
-                                <button class="btn-action badge-comment-btn"><i class="fas fa-id-badge"></i> Badge</button>
-                                <button class="btn-action delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}"><i class="fas fa-trash"></i> Hapus</button>
-                            </div>
-                            <form class="comment-reply-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
-                                <div class="composer-wrapper">
-                                    ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
-                                    <div style="width: 100%;">
-                                        <textarea class="composer-input" placeholder="Balas komentar ${comment.name}..." required></textarea>
-                                        <div class="composer-actions"><button type="submit" class="btn btn-primary composer-btn">Kirim</button></div>
-                                    </div>
-                                </div>
-                            </form>
-                            <form class="badge-form comment-badge-form" data-post-key="${postKey}" data-comment-key="${commentKey}">
-                                <div class="badge-form-inner">
-                                    <div class="form-group"><input type="text" class="form-input badge-text-input" placeholder="Teks Badge" value="${comment.badge ? comment.badge.text : ''}"></div>
-                                    <div class="form-group"><input type="color" class="form-input color-input badge-color-input" value="${comment.badge ? comment.badge.color : '#8B5CF6'}"></div>
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="replies-container">${repliesHTML}</div>
-                </div>`;
-        };
-
-        const createAvatarHTML = (name, avatarUrl, cssClass = 'comment-avatar') => {
-            return avatarUrl ? `<img src="${avatarUrl}" alt="${name}" class="${cssClass}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=ERR'">`
-                             : `<div class="${cssClass}" style="background-color: var(--author-color); color: white;">${name ? name.charAt(0).toUpperCase() : 'A'}</div>`;
-        };
-
-        const createAdminCommentHTML = (comment, postKey, commentKey, isReply = false, replyKey = null) => {
-            const deleteButton = isReply
-                ? `<button class="btn-icon delete-reply-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" data-reply-key="${replyKey}" title="Hapus Balasan"><i class="fas fa-trash"></i></button>`
-                : `<button class="btn-icon delete-comment-btn" data-post-key="${postKey}" data-comment-key="${commentKey}" title="Hapus Komentar"><i class="fas fa-trash"></i></button>`;
-            return `
-                <div class="admin-comment">
-                    <div class="comment-item">
-                        ${createAvatarHTML(authorProfile.name, authorProfile.avatar)}
-                        <div class="comment-body">
-                            <div class="comment-header">
-                                <span class="comment-user admin-user">
-                                    <span>${authorProfile.name}</span>
-                                    <img src="https://i.postimg.cc/hGJjPYW5/verified.png" alt="Verified Admin" class="verified-img">
-                                    <span class="badge" style="background-color: var(--author-color);">Author</span>
-                                </span>
-                                ${deleteButton}
-                            </div>
-                            <p class="comment-text">${comment.text}</p>
-                        </div>
-                    </div>
-                </div>`;
-        };
-
+        
+        // --- TESTIMONIAL LOADING ---
         const loadAdminTestimonials = () => {
-            if (!testimonialsRef) return;
+            if (!firebaseRefs || !firebaseRefs.testimonialsRef) return;
             adminTestimonialGrid.innerHTML = '<div class="loader-container"><div class="loader"></div></div>';
-            testimonialsRef.orderByChild('timestamp').on('value', (snapshot) => {
+            firebaseRefs.testimonialsRef.orderByChild('timestamp').on('value', (snapshot) => {
                 adminTestimonialGrid.innerHTML = '';
                 if (!snapshot.exists()) {
-                    adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Belum ada testimoni.</p>';
+                    adminTestimonialGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">No testimonials yet.</p>';
                     return;
                 }
                 const posts = [];
                 snapshot.forEach(child => posts.push({ key: child.key, val: child.val() }));
                 posts.reverse().forEach((post, index) => {
-                    adminTestimonialGrid.appendChild(createAdminPostCard(post.val, post.key, index));
+                    adminTestimonialGrid.appendChild(createAdminPostCard(post.val, post.key, index, authorProfile));
                 });
                 setTimeout(() => AOS.refresh(true), 100);
             }, (error) => {
                 console.error("Firebase read failed:", error);
-                adminTestimonialGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Gagal memuat data testimoni.</p>`;
+                adminTestimonialGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Failed to load testimonial data.</p>`;
             });
         };
 
@@ -1240,16 +1093,16 @@
 
         deleteAvatarBtn.addEventListener('click', () => {
             if (!authorProfile.avatar) return;
-            showModal('Apakah Anda yakin ingin menghapus avatar ini?', async () => {
+            showModal('Are you sure you want to delete this avatar?', async () => {
                 try {
                     await deleteImageFromGithub(authorProfile.avatar);
                     authorProfile.avatar = '';
                     localStorage.setItem('pictlord_author_profile', JSON.stringify(authorProfile));
                     loadAuthorProfile();
                     loadAdminTestimonials();
-                    alert('Avatar berhasil dihapus.');
+                    alert('Avatar deleted successfully.');
                 } catch (error) {
-                    alert(`Gagal menghapus avatar: ${error.message}`);
+                    alert(`Failed to delete avatar: ${error.message}`);
                 }
             });
         });
@@ -1266,15 +1119,15 @@
             e.preventDefault();
             const saveButton = e.target.querySelector('.btn-save-profile');
             saveButton.disabled = true;
-            saveButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+            saveButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving...`;
             try {
                 await saveAuthorProfile();
-                alert('Profil berhasil disimpan!');
+                alert('Profile saved successfully!');
             } catch (error) {
-                alert(`Gagal menyimpan profil: ${error.message}`);
+                alert(`Failed to save profile: ${error.message}`);
             } finally {
                 saveButton.disabled = false;
-                saveButton.innerHTML = 'Simpan Profil';
+                saveButton.innerHTML = 'Save Profile';
             }
         });
 
@@ -1305,11 +1158,11 @@
             const deletePostBtn = target.closest('.delete-post-btn');
             if (deletePostBtn) {
                 const postKey = deletePostBtn.dataset.key;
-                showModal('Hapus postingan ini? Gambar di GitHub juga akan dihapus.', () => {
-                    testimonialsRef.child(postKey).once('value', async (snapshot) => {
+                showModal('Delete this post? The image on GitHub will also be deleted.', () => {
+                    firebaseRefs.testimonialsRef.child(postKey).once('value', async (snapshot) => {
                         const postData = snapshot.val();
                         if (postData?.imageUrl) await deleteImageFromGithub(postData.imageUrl);
-                        testimonialsRef.child(postKey).remove();
+                        firebaseRefs.testimonialsRef.child(postKey).remove();
                     });
                 });
             }
@@ -1317,16 +1170,16 @@
             const deleteCommentBtn = target.closest('.delete-comment-btn');
             if (deleteCommentBtn) {
                 const { postKey, commentKey } = deleteCommentBtn.dataset;
-                showModal('Hapus komentar ini dan semua balasannya?', () => {
-                    testimonialsRef.child(postKey).child('comments').child(commentKey).remove();
+                showModal('Delete this comment and all its replies?', () => {
+                    firebaseRefs.testimonialsRef.child(postKey).child('comments').child(commentKey).remove();
                 });
             }
             
             const deleteReplyBtn = target.closest('.delete-reply-btn');
             if (deleteReplyBtn) {
                 const { postKey, commentKey, replyKey } = deleteReplyBtn.dataset;
-                showModal('Hapus balasan ini?', () => {
-                    testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').child(replyKey).remove();
+                showModal('Delete this reply?', () => {
+                    firebaseRefs.testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies').child(replyKey).remove();
                 });
             }
 
@@ -1334,27 +1187,27 @@
             const deleteLinkBtn = target.closest('.delete-link-btn');
             if (deleteLinkBtn) {
                 const linkKey = deleteLinkBtn.dataset.key;
-                showModal(`Anda yakin ingin menghapus tautan ID "${linkKey}"?`, () => {
-                    linksRef.child(linkKey).remove().catch(err => alert(`Gagal menghapus: ${err.message}`));
+                showModal(`Are you sure you want to delete the link with ID "${linkKey}"?`, () => {
+                    firebaseRefs.linksRef.child(linkKey).remove().catch(err => alert(`Failed to delete: ${err.message}`));
                 });
             }
 
             const editLinkBtn = target.closest('.edit-link-btn');
             if (editLinkBtn) {
                 const linkKey = editLinkBtn.dataset.key;
-                linksRef.child(linkKey).once('value', (snapshot) => {
-                    if (!snapshot.exists()) return alert('Tautan tidak ditemukan.');
+                firebaseRefs.linksRef.child(linkKey).once('value', (snapshot) => {
+                    if (!snapshot.exists()) return alert('Link not found.');
                     const linkData = snapshot.val();
-                    editLinkIdDisplay.textContent = `Mengubah tautan ID: ${linkKey}`;
+                    editLinkIdDisplay.textContent = `Editing link ID: ${linkKey}`;
                     const date = new Date(linkData.expiresAt);
                     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
                     expiresAtInput.value = date.toISOString().slice(0, 16);
                     editLinkModal.classList.add('active');
                     editLinkConfirmBtn.onclick = () => {
                         const newTimestamp = new Date(expiresAtInput.value).getTime();
-                        linksRef.child(linkKey).child('expiresAt').set(newTimestamp)
+                        firebaseRefs.linksRef.child(linkKey).child('expiresAt').set(newTimestamp)
                             .then(() => editLinkModal.classList.remove('active'))
-                            .catch(err => alert(`Gagal memperbarui: ${err.message}`));
+                            .catch(err => alert(`Update failed: ${err.message}`));
                     };
                 });
             }
@@ -1369,8 +1222,8 @@
                 if (!text) return;
                 const { postKey, commentKey } = form.dataset;
                 const newEntry = { text, timestamp: firebase.database.ServerValue.TIMESTAMP, isDev: true };
-                const ref = commentKey ? testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies')
-                                       : testimonialsRef.child(postKey).child('comments');
+                const ref = commentKey ? firebaseRefs.testimonialsRef.child(postKey).child('comments').child(commentKey).child('replies')
+                                       : firebaseRefs.testimonialsRef.child(postKey).child('comments');
                 ref.push(newEntry).then(() => {
                     input.value = '';
                     form.classList.remove('active');
@@ -1379,8 +1232,8 @@
                 const text = form.querySelector('.badge-text-input').value.trim();
                 const color = form.querySelector('.badge-color-input').value;
                 const { postKey, commentKey } = form.dataset;
-                const ref = commentKey ? testimonialsRef.child(postKey).child('comments').child(commentKey).child('badge')
-                                       : testimonialsRef.child(postKey).child('badge');
+                const ref = commentKey ? firebaseRefs.testimonialsRef.child(postKey).child('comments').child(commentKey).child('badge')
+                                       : firebaseRefs.testimonialsRef.child(postKey).child('badge');
                 if (text) ref.set({ text, color });
                 else ref.remove();
                 form.classList.remove('active');
@@ -1388,41 +1241,12 @@
         });
 
         // --- LINK MANAGEMENT ---
-        const formatLinkDate = (timestamp) => {
-            if (!timestamp) return 'N/A';
-            return new Date(timestamp).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
-        };
-
-        const createLinkCard = (key, linkData) => {
-            const card = document.createElement('div');
-            const isExpired = Date.now() > linkData.expiresAt;
-            card.className = `link-card-item ${isExpired ? 'expired' : ''}`;
-            card.id = `link-card-${key}`;
-            card.dataset.id = key;
-            card.innerHTML = `
-                <div class="link-card-header">
-                    <div class="link-card-preview">
-                        <img src="${linkData.strip}" alt="Strip ${key}" onerror="this.src='https://placehold.co/100x100/2c2f36/e4e6eb?text=preview'">
-                    </div>
-                    <div class="link-card-details">
-                        <p><strong>ID</strong> <span>${key}</span></p>
-                        <p><strong>Kedaluwarsa</strong> <span>${formatLinkDate(linkData.expiresAt)}</span></p>
-                    </div>
-                </div>
-                <div class="link-card-actions">
-                     <a href="https://www.pictlord.me/soft-file?id=${key}" target="_blank" class="btn btn-secondary link-card-btn"><i class="fas fa-eye"></i> Lihat</a>
-                     <button class="btn btn-secondary link-card-btn edit-link-btn" data-key="${key}"><i class="fas fa-calendar-alt"></i> Ubah</button>
-                     <button class="btn btn-danger link-card-btn delete-link-btn" data-key="${key}"><i class="fas fa-trash"></i> Hapus</button>
-                </div>`;
-            return card;
-        };
-        
         const renderLinksDashboard = (links) => {
             linksGrid.innerHTML = '';
             linksIdList.innerHTML = '';
             if (links.length === 0) {
-                linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">Tidak ada tautan yang cocok.</p>';
-                linksIdList.innerHTML = '<div class="id-list-item" style="justify-content: center;">Kosong</div>';
+                linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-light);">No matching links found.</p>';
+                linksIdList.innerHTML = '<div class="id-list-item" style="justify-content: center;">Empty</div>';
                 return;
             }
             links.forEach(link => {
@@ -1432,7 +1256,7 @@
                 idItem.dataset.id = link.key;
                 idItem.innerHTML = `
                     <span>${link.key}</span>
-                    <button class="copy-id-btn" title="Salin ID"><i class="fas fa-copy"></i></button>
+                    <button class="copy-id-btn" title="Copy ID"><i class="fas fa-copy"></i></button>
                 `;
                 linksIdList.appendChild(idItem);
             });
@@ -1441,11 +1265,11 @@
         let allLinks = []; // Cache for all links
 
         const loadLinks = () => {
-            if (!linksRef) return;
+            if (!firebaseRefs || !firebaseRefs.linksRef) return;
             linksGrid.innerHTML = `<div class="modern-loader-container"><svg class="modern-loader" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg></div>`;
             linksIdList.innerHTML = '';
 
-            linksRef.on('value', (snapshot) => {
+            firebaseRefs.linksRef.on('value', (snapshot) => {
                 allLinks = [];
                 if (snapshot.exists()) {
                     snapshot.forEach(child => allLinks.push({ key: child.key, val: child.val() }));
@@ -1455,7 +1279,7 @@
                 linkSearchInput.value = ''; // Reset search on new data
             }, (error) => {
                 console.error("Firebase links read failed:", error);
-                linksGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Gagal memuat data tautan.</p>`;
+                linksGrid.innerHTML = `<p style="text-align: center; color: var(--danger);">Failed to load link data.</p>`;
             });
         };
         
@@ -1493,7 +1317,9 @@
 
         // --- AUTH ---
         function showAdminPanel() {
-            if (initializeFirebase()) {
+            // The initializeFirebase function is now in fire.js
+            firebaseRefs = initializeFirebase(firebaseConfig);
+            if (firebaseRefs) {
                 loginSection.style.display = 'none';
                 adminPanel.style.display = 'block';
                 loadAssets();
@@ -1507,11 +1333,12 @@
             e.preventDefault();
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
+            // Simple authentication check
             if (user === 'xlord' && pass === 'xlord') {
                 sessionStorage.setItem('pictlord_admin_auth', 'true');
                 showAdminPanel();
             } else {
-                loginError.textContent = 'Username atau password salah.';
+                loginError.textContent = 'Incorrect username or password.';
                 setTimeout(() => { loginError.textContent = ''; }, 3000);
             }
         });
