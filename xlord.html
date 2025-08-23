@@ -581,7 +581,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <!-- GitHub Image Config -->
-    <script src="api.git.js"></script>
+    <script src="image.github.js"></script>
 
     <!-- Firebase Config -->
     <script src="fire.js"></script>
@@ -1286,9 +1286,9 @@
                 reader.readAsDataURL(newAvatarFile);
                 const base64content = await fileReadPromise;
 
-                const { owner, repo, adminAvatarPath } = githubConfig;
+                const { owner, repo } = githubConfig;
                 const fileName = `avatar-${Date.now()}.${newAvatarFile.name.split('.').pop()}`;
-                const filePath = `${adminAvatarPath}/${fileName}`;
+                const filePath = `upload/avatar/${fileName}`;
                 const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
                 await githubApiRequest(apiUrl, {
@@ -1528,7 +1528,7 @@
 
             const { owner, repo } = githubConfig;
             const fileName = `popup-image-${Date.now()}.${file.name.split('.').pop()}`;
-            const filePath = `profil/${fileName}`;
+            const filePath = `upload/popup/${fileName}`;
             const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
             await githubApiRequest(apiUrl, {
