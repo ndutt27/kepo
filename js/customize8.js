@@ -1,25 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const photoCustomPreview = document.getElementById('photoPreview');
-    const frameButtonsContainer = document.getElementById('frame-buttons-container');
-    const shapeButtonsContainer = document.getElementById('shape-buttons-container');
-    const stickerButtonsContainer = document.getElementById('sticker-buttons-container');
     const customStickerButtonsContainer = document.getElementById('custom-sticker-buttons-container');
-    const logoButtonsContainer = document.getElementById('logo-buttons-container');
+    const dynamicFrameButtonsContainer = document.getElementById('dynamic-frame-buttons-container');
     const filterButtonsContainer = document.getElementById('filter-buttons-container');
-    const logoColorPicker = document.getElementById('logoColorPicker');
 
     // --- State Variables ---
     let assetsData = null;
-    let selectedShape = 'default';
-    let selectedStickerLayout = null;
     let selectedFilter = 'none';
-    let selectedText = 'pictlord';
     let backgroundType = 'color';
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
-    let textColor = '#E28585';
-    let logoObject = null;
     let fabricCanvas = null;
 
     // --- Pose-dependent variables ---
@@ -120,11 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             fabricCanvas.setZoom(scale);
 
-            renderFrameButtons();
-            renderShapeButtons();
-            renderStickerButtons();
+            renderDynamicFrameButtons();
             renderCustomStickerButtons();
-            renderLogoButtons();
             await renderFilterButtons();
 
             setupEventListeners();
@@ -137,86 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Rendering Functions ---
-    const renderFrameButtons = () => {
-        if (!assetsData.frames || !frameButtonsContainer) return;
-        frameButtonsContainer.innerHTML = '';
-        const colorPickerBtn = document.createElement('button');
-        colorPickerBtn.id = 'colorPickerBtn';
-        colorPickerBtn.className = 'neumorphic-btn buttonFrames';
-        frameButtonsContainer.appendChild(colorPickerBtn);
-        const picker = new Picker({
-            parent: colorPickerBtn,
-            popup: 'bottom',
-            color: '#FFFFFF',
-            onChange: (color) => setBackground({ type: 'color', value: color.hex }),
-            onDone: (color) => { colorPickerBtn.style.backgroundColor = color.hex; }
-        });
-        colorPickerBtn.addEventListener('click', () => picker.show());
-        assetsData.frames.colors.forEach(color => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonFrames';
-            btn.style.backgroundColor = color.value;
-            btn.dataset.type = 'color';
-            btn.dataset.value = color.value;
-            frameButtonsContainer.appendChild(btn);
-        });
-        assetsData.frames.images.forEach(frame => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonBgFrames';
-            btn.style.backgroundImage = `url(${frame.path})`;
-            btn.dataset.type = 'image';
-            btn.dataset.src = frame.path;
-            frameButtonsContainer.appendChild(btn);
-        });
-    };
-
-    const renderShapeButtons = () => {
-        if (!assetsData.shapes || !shapeButtonsContainer) return;
-        shapeButtonsContainer.innerHTML = '';
-        assetsData.shapes.forEach(shape => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonShapes';
-            btn.dataset.shape = shape.value;
-            btn.innerHTML = `<img src="${shape.icon}" alt="${shape.name}" class="btnShapeSize"><span class="tooltip-text">${shape.name}</span>`;
-            shapeButtonsContainer.appendChild(btn);
-        });
-    };
-
-    const renderStickerButtons = () => {
-        if (!assetsData.stickers || !stickerButtonsContainer) return;
-        stickerButtonsContainer.innerHTML = '';
-        assetsData.stickers.forEach(sticker => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn buttonStickers';
-            btn.dataset.sticker = sticker.layout;
-            btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
-            if (sticker.layout === null) btn.classList.add('active');
-            stickerButtonsContainer.appendChild(btn);
-        });
-    };
-
-    const renderLogoButtons = () => {
-        if (!assetsData.logos || !logoButtonsContainer) return;
-        logoButtonsContainer.innerHTML = '';
-
-        const noneBtn = document.createElement('button');
-        noneBtn.className = 'neumorphic-btn logoCustomBtn';
-        noneBtn.dataset.text = 'none';
-        noneBtn.textContent = 'None';
-        logoButtonsContainer.appendChild(noneBtn);
-
-        assetsData.logos.forEach((logo, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'neumorphic-btn logoCustomBtn';
-            if (index === 0) {
-                btn.classList.add('active');
-                setTimeout(() => handleLogoClick({ target: btn }), 0);
-            }
-            btn.dataset.text = logo.value;
-            btn.textContent = logo.name;
-            logoButtonsContainer.appendChild(btn);
-        });
-    };
 
     const renderCustomStickerButtons = () => {
         if (!assetsData.customStickers || !customStickerButtonsContainer) return;
@@ -277,19 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Handling ---
     const setupEventListeners = () => {
-        frameButtonsContainer.addEventListener('click', handleFrameClick);
-        shapeButtonsContainer.addEventListener('click', handleShapeClick);
-        stickerButtonsContainer.addEventListener('click', handleStickerClick);
+        dynamicFrameButtonsContainer.addEventListener('click', handleDynamicFrameClick);
         customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
-        logoButtonsContainer.addEventListener('click', handleLogoClick);
         filterButtonsContainer.addEventListener('click', handleFilterClick);
-        logoColorPicker.addEventListener('input', (e) => {
-            textColor = e.target.value;
-            if (logoObject) {
-                logoObject.set('fill', textColor);
-                fabricCanvas.requestRenderAll();
-            }
-        });
     };
 
     function handleCustomStickerClick(e) {
@@ -307,64 +205,53 @@ document.addEventListener('DOMContentLoaded', () => {
             img.controls.deleteControl = new fabric.Control({ x: 0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: deleteObject, render: renderDeleteIcon, cornerSize: 24 });
             img.controls.mirrorControl = new fabric.Control({ x: -0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: flipObject, render: renderMirrorIcon, cornerSize: 24 });
             fabricCanvas.add(img);
+            img.bringToFront();
             fabricCanvas.setActiveObject(img);
             fabricCanvas.renderAll();
         }, { crossOrigin: 'anonymous' });
     }
 
-    function handleFrameClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn || btn.id === 'colorPickerBtn') return;
-        const type = btn.dataset.type;
-        if (type === 'color') setBackground({ type: 'color', value: btn.dataset.value });
-        else if (type === 'image') setBackground({ type: 'image', src: btn.dataset.src });
-        frameButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function handleShapeClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
-        selectedShape = btn.dataset.shape;
-        shapeButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        redrawCanvas();
-    }
-
-    function handleStickerClick(e) {
-        const btn = e.target.closest('.neumorphic-btn');
-        if (!btn) return;
-        const clickedStickerLayout = btn.dataset.sticker === 'null' ? null : btn.dataset.sticker;
-        selectedStickerLayout = (selectedStickerLayout === clickedStickerLayout) ? null : clickedStickerLayout;
-        stickerButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => {
-            b.classList.toggle('active', selectedStickerLayout === (b.dataset.sticker === 'null' ? null : b.dataset.sticker));
+    const renderDynamicFrameButtons = () => {
+        if (!assetsData.dynamicFrames || !dynamicFrameButtonsContainer) return;
+        dynamicFrameButtonsContainer.innerHTML = '';
+        const pose = `pose${poseCount}`;
+        const filteredFrames = assetsData.dynamicFrames.filter(frame => frame.pose === pose);
+        filteredFrames.forEach(frame => {
+            const btn = document.createElement('button');
+            btn.className = 'neumorphic-btn buttonStickers';
+            btn.dataset.src = frame.src;
+            btn.innerHTML = `<img src="${frame.src}" alt="Dynamic Frame" class="stickerIconSize">`;
+            dynamicFrameButtonsContainer.appendChild(btn);
         });
-        if (selectedStickerLayout === null) {
-            const noneBtn = stickerButtonsContainer.querySelector('[data-sticker="null"]');
-            if (noneBtn) noneBtn.classList.add('active');
-        }
-        redrawCanvas();
-    }
+    };
 
-    function handleLogoClick(e) {
+    function handleDynamicFrameClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
-        if (fabricCanvas && logoObject) fabricCanvas.remove(logoObject);
-        selectedText = btn.dataset.text;
-        if (selectedText !== 'none') {
-            logoObject = new fabric.Text(selectedText, {
-                left: canvasWidth / 2, top: canvasHeight - 65, originX: 'center', originY: 'center',
-                fontFamily: 'Arial, Roboto, sans-serif', fontWeight: 'bold', fontSize: 32, fill: textColor,
-                borderColor: '#E28585', cornerColor: '#E28585', cornerSize: 12, transparentCorners: false
+        const frameSrc = btn.dataset.src;
+        fabric.Image.fromURL(frameSrc, (img) => {
+            img.set({
+                left: 0,
+                top: 0,
+                selectable: false,
+                evented: false,
             });
-            fabricCanvas.add(logoObject);
-            fabricCanvas.setActiveObject(logoObject);
-        } else {
-            logoObject = null;
-        }
-        logoButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        fabricCanvas.requestRenderAll();
+            fabricCanvas.add(img);
+            img.sendToBack();
+            // bring photos to front of frame
+            fabricCanvas.getObjects('image').forEach(obj => {
+                if (obj.isPhoto) {
+                    obj.bringToFront();
+                }
+            });
+            // send stickers to front
+            fabricCanvas.getObjects('image').forEach(obj => {
+                if (!obj.isPhoto && obj.selectable) { // is a sticker
+                    obj.bringToFront();
+                }
+            });
+            fabricCanvas.renderAll();
+        }, { crossOrigin: 'anonymous' });
     }
 
     function handleFilterClick(e) {
@@ -390,113 +277,76 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function drawSticker(ctx) {
-        if (!selectedStickerLayout || !assetsData.stickerLayouts) return;
-        const layout = assetsData.stickerLayouts[selectedStickerLayout];
-        if (!layout) return;
-        await Promise.all(layout.map(({ src, x, y, size }) => {
-            return new Promise((resolve) => {
-                const stickerImg = new Image();
-                stickerImg.src = src;
-                stickerImg.onload = () => { ctx.drawImage(stickerImg, x, y, size, size); resolve(); };
-                stickerImg.onerror = () => { console.error(`Failed to load sticker: ${src}`); resolve(); };
-            });
-        }));
-    }
-
-    function clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, shapeType) {
-        ctx.save();
-        ctx.beginPath();
-        const centerX = dx + dWidth / 2;
-        const centerY = dy + dHeight / 2;
-        if (shapeType === 'circle') {
-            ctx.arc(centerX, centerY, Math.min(dWidth, dHeight) / 2, 0, Math.PI * 2);
-        } else if (shapeType === 'rounded') {
-            ctx.roundRect(dx, dy, dWidth, dHeight, [30]);
-        } else if (shapeType === 'heart') {
-            ctx.moveTo(dx + dWidth / 2, dy + dHeight);
-            ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
-            ctx.bezierCurveTo(dx + dWidth * 0.1, dy - dHeight * 0.1, dx - dWidth * 0.25, dy + dHeight * 0.7, dx + dWidth / 2, dy + dHeight);
-        } else {
-            ctx.rect(dx, dy, dWidth, dHeight);
-        }
-        ctx.closePath();
-        ctx.clip();
-        ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-        ctx.restore();
-    }
 
     async function getFilteredImage(imageElement, filterType) {
         if (filterType === 'none' || !filterType) return imageElement;
-        return new Promise(resolve => {
-            const fabricImage = new fabric.Image(imageElement, { crossOrigin: 'anonymous' });
-            let filter;
-            switch (filterType) {
-                case 'grayscale': filter = new fabric.Image.filters.Grayscale(); break;
-                case 'sepia': filter = new fabric.Image.filters.Sepia(); break;
-                case 'invert': filter = new fabric.Image.filters.Invert(); break;
-                case 'brownie': filter = new fabric.Image.filters.Brownie(); break;
-                case 'vintage': filter = new fabric.Image.filters.Vintage(); break;
-                case 'technicolor': filter = new fabric.Image.filters.Technicolor(); break;
-                case 'polaroid': filter = new fabric.Image.filters.Polaroid(); break;
-                case 'blackwhite': filter = new fabric.Image.filters.BlackWhite(); break;
-                case 'sharpen': filter = new fabric.Image.filters.Convolute({ matrix: [0, -1, 0, -1, 5, -1, 0, -1, 0] }); break;
-                case 'emboss': filter = new fabric.Image.filters.Convolute({ matrix: [1, 1, 1, 1, 0.7, -1, -1, -1, -1] }); break;
-                default: resolve(imageElement); return;
-            }
-            fabricImage.filters.push(filter);
-            fabricImage.applyFilters();
-            resolve(fabricImage.toCanvasElement());
-        });
+
+        const fabricImage = new fabric.Image(imageElement, { crossOrigin: 'anonymous' });
+        let filter;
+        switch (filterType) {
+            case 'grayscale': filter = new fabric.Image.filters.Grayscale(); break;
+            case 'sepia': filter = new fabric.Image.filters.Sepia(); break;
+            case 'invert': filter = new fabric.Image.filters.Invert(); break;
+            case 'brownie': filter = new fabric.Image.filters.Brownie(); break;
+            case 'vintage': filter = new fabric.Image.filters.Vintage(); break;
+            case 'technicolor': filter = new fabric.Image.filters.Technicolor(); break;
+            case 'polaroid': filter = new fabric.Image.filters.Polaroid(); break;
+            case 'blackwhite': filter = new fabric.Image.filters.BlackWhite(); break;
+            case 'sharpen': filter = new fabric.Image.filters.Convolute({ matrix: [0, -1, 0, -1, 5, -1, 0, -1, 0] }); break;
+            case 'emboss': filter = new fabric.Image.filters.Convolute({ matrix: [1, 1, 1, 1, 0.7, -1, -1, -1, -1] }); break;
+            default: return imageElement;
+        }
+        fabricImage.filters.push(filter);
+        fabricImage.applyFilters();
+        return fabricImage.toCanvasElement();
     }
 
     async function redrawCanvas() {
         if (!storedImages || !fabricCanvas) return;
 
-        const bgCanvas = document.createElement('canvas');
-        bgCanvas.width = canvasWidth;
-        bgCanvas.height = canvasHeight;
-        const bgCtx = bgCanvas.getContext('2d');
+        fabricCanvas.clear();
 
         if (backgroundType === 'color') {
-            bgCtx.fillStyle = backgroundColor;
-            bgCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+            fabricCanvas.backgroundColor = backgroundColor;
         } else if (backgroundType === 'image' && backgroundImage && backgroundImage.complete) {
-            bgCtx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+            fabricCanvas.setBackgroundImage(new fabric.Image(backgroundImage), fabricCanvas.renderAll.bind(fabricCanvas), {
+                scaleX: canvasWidth / backgroundImage.width,
+                scaleY: canvasHeight / backgroundImage.height,
+            });
         }
 
         const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = imgData;
-            img.onload = () => resolve(img);
-            img.onerror = () => resolve(null);
+            fabric.Image.fromURL(imgData, (img) => {
+                if (img) {
+                    img.originalImage = img.getElement();
+                    img.isPhoto = true;
+                    resolve(img);
+                } else {
+                    resolve(null);
+                }
+            }, { crossOrigin: 'anonymous' });
         })));
 
         // --- POSE-BASED LAYOUT LOGIC ---
         if (poseCount === 3) {
             const borderWidth = 30, spacing = 12, bottomPadding = 250;
-            const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (storedImages.length - 1)) - bottomPadding;
-            const photoHeight = availableHeight / storedImages.length;
+            const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (imageElements.length - 1)) - bottomPadding;
+            const photoHeight = availableHeight / imageElements.length;
             const photoWidth = canvasWidth - (borderWidth * 2);
 
             for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
                 if (!img) continue;
-                const filteredImage = await getFilteredImage(img, selectedFilter);
-                const imgAspect = img.width / img.height;
-                const targetAspect = photoWidth / photoHeight;
-                let sx, sy, sWidth, sHeight;
-                if (imgAspect > targetAspect) {
-                    sHeight = img.height; sWidth = img.height * targetAspect;
-                    sx = (img.width - sWidth) / 2; sy = 0;
-                } else {
-                    sWidth = img.width; sHeight = img.width / targetAspect;
-                    sx = 0; sy = (img.height - sHeight) / 2;
-                }
-                const x = borderWidth;
-                const y = borderWidth + i * (photoHeight + spacing);
-                clipAndDrawImage(bgCtx, filteredImage, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+                const filteredImage = await getFilteredImage(img.getElement(), selectedFilter);
+                const fImg = new fabric.Image(filteredImage);
+
+                fImg.scaleToWidth(photoWidth);
+                fImg.set({
+                    left: borderWidth,
+                    top: borderWidth + i * (photoHeight + spacing),
+                });
+                fabricCanvas.add(fImg);
+                fImg.sendToBack();
             }
         } else { // For 4 and 6 poses
             const columns = 2;
@@ -510,20 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
                 if (!img) continue;
-                const filteredImage = await getFilteredImage(img, selectedFilter);
-                const imgAspect = img.width / img.height, targetAspect = photoWidth / photoHeight;
-                let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
-                if (imgAspect > targetAspect) { sWidth = img.height * targetAspect; sx = (img.width - sWidth) / 2; }
-                else { sHeight = img.width / targetAspect; sy = (img.height - sHeight) / 2; }
+                const filteredImage = await getFilteredImage(img.getElement(), selectedFilter);
+                const fImg = new fabric.Image(filteredImage);
+
+                fImg.scaleToWidth(photoWidth);
                 const col = i % columns, row = Math.floor(i / columns);
-                const x = borderWidth + col * (photoWidth + spacing);
-                const y = borderWidth + row * (photoHeight + spacing);
-                clipAndDrawImage(bgCtx, filteredImage, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+                fImg.set({
+                    left: borderWidth + col * (photoWidth + spacing),
+                    top: borderWidth + row * (photoHeight + spacing),
+                });
+                fabricCanvas.add(fImg);
+                fImg.sendToBack();
             }
         }
-
-        await drawSticker(bgCtx);
-        fabricCanvas.setBackgroundImage(new fabric.Image(bgCanvas), fabricCanvas.renderAll.bind(fabricCanvas));
+        fabricCanvas.renderAll();
     }
 
     window.drawFinalImage = async () => {

@@ -402,64 +402,33 @@
             <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Keluar</button>
         </header>
 
-        <section id="frames-management" class="asset-section" data-aos="fade-up">
-            <h2>Kelola Bingkai (Frames)</h2>
-            <div id="frames-grid" class="asset-grid">
-                </div>
-            <form id="add-frame-form" class="add-asset-form">
-                <h3>Tambah Bingkai Baru</h3>
+
+        <section id="dynamic-frames-management" class="asset-section" data-aos="fade-up" data-aos-delay="150">
+            <h2>Kelola Bingkai Dinamis</h2>
+            <div id="dynamic-frames-grid" class="asset-grid">
+            </div>
+            <form id="add-dynamic-frame-form" class="add-asset-form">
+                <h3>Unggah Bingkai Dinamis Baru</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="frame-type" class="form-label">Tipe Bingkai</label>
-                        <select id="frame-type" class="form-input">
-                            <option value="image">Gambar</option>
-                            <option value="color">Warna</option>
+                        <label for="dynamic-frame-pose" class="form-label">Pilih Pose</label>
+                        <select id="dynamic-frame-pose" class="form-input">
+                            <option value="pose3">Pose 3</option>
+                            <option value="pose4">Pose 4</option>
+                            <option value="pose6">Pose 6</option>
                         </select>
                     </div>
-                    <div class="form-group" id="frame-name-group">
-                        <label for="frame-name" class="form-label">Nama Bingkai</label>
-                        <input type="text" id="frame-name" class="form-input" placeholder="e.g., Pink Glitter">
-                    </div>
-                    <div class="form-group" id="frame-file-group">
-                        <label for="frame-file" class="form-label">File Gambar</label>
-                        <input type="file" id="frame-file" class="form-input" accept="image/png, image/jpeg, image/gif">
-                    </div>
-                    <div class="form-group" id="frame-color-group" style="display: none;">
-                        <label for="frame-color" class="form-label">Pilih Warna</label>
-                        <input type="color" id="frame-color" class="form-input" value="#FFC2D1">
+                    <div class="form-group">
+                        <label for="dynamic-frame-file" class="form-label">Pilih File Bingkai</label>
+                        <input type="file" id="dynamic-frame-file" class="form-input" accept="image/png">
                     </div>
                     <div class="form-group align-right">
-                         <button type="submit" class="btn btn-primary">Tambah Bingkai</button>
+                        <button type="submit" class="btn btn-primary">Unggah Bingkai</button>
                     </div>
                 </div>
             </form>
         </section>
 
-        <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
-            <h2>Kelola Stiker Ori</h2>
-            <div id="stickers-grid" class="asset-grid">
-                </div>
-             <form id="add-sticker-form" class="add-asset-form">
-                <h3>Unggah Stiker Ori Baru</h3>
-                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="sticker-name" class="form-label">Nama Stiker</label>
-                        <input type="text" id="sticker-name" class="form-input" placeholder="e.g., Cute Cats" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="sticker-folder" class="form-label">Nama Folder di GitHub</label>
-                        <input type="text" id="sticker-folder" class="form-input" placeholder="e.g., cute-cats" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="sticker-files" class="form-label">Pilih Gambar Stiker (min. 5)</label>
-                        <input type="file" id="sticker-files" class="form-input" multiple accept="image/png, image/jpeg, image/gif">
-                    </div>
-                    <div class="form-group full-width align-right">
-                         <button type="submit" class="btn btn-primary">Unggah Stiker</button>
-                    </div>
-                </div>
-            </form>
-        </section>
 
         <section id="custom-stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="150">
             <h2>Kelola Stiker Kustom</h2>
@@ -479,27 +448,6 @@
             </form>
         </section>
 
-        <section id="logos-management" class="asset-section" data-aos="fade-up" data-aos-delay="200">
-            <h2>Kelola Logo (Englogo)</h2>
-            <div id="logos-grid" class="asset-grid">
-                </div>
-             <form id="add-logo-form" class="add-asset-form">
-                <h3>Tambah Logo Baru</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="logo-name" class="form-label">Nama Logo</label>
-                        <input type="text" id="logo-name" class="form-input" placeholder="e.g., KOR" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="logo-value" class="form-label">Teks Logo</label>
-                        <input type="text" id="logo-value" class="form-input" placeholder="e.g., ㅔㅑㅊ시ㅐㄱㅇ" required>
-                    </div>
-                    <div class="form-group align-right">
-                         <button type="submit" class="btn btn-primary">Tambah Logo</button>
-                    </div>
-                </div>
-            </form>
-        </section>
 
         <section id="custom-link-management" class="asset-section" data-aos="fade-up" data-aos-delay="250">
             <h2>Kelola Link Kustom (7 Hari)</h2>
@@ -639,15 +587,10 @@
         const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
         // Asset Management DOM
-        const framesGrid = document.getElementById('frames-grid');
-        const addFrameForm = document.getElementById('add-frame-form');
-        const frameTypeSelect = document.getElementById('frame-type');
-        const logosGrid = document.getElementById('logos-grid');
-        const addLogoForm = document.getElementById('add-logo-form');
-        const stickersGrid = document.getElementById('stickers-grid');
-        const addStickerForm = document.getElementById('add-sticker-form');
         const customStickersGrid = document.getElementById('custom-stickers-grid');
         const addCustomStickerForm = document.getElementById('add-custom-sticker-form');
+        const dynamicFramesGrid = document.getElementById('dynamic-frames-grid');
+        const addDynamicFrameForm = document.getElementById('add-dynamic-frame-form');
 
         // Testimonial Management DOM
         const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
@@ -717,287 +660,102 @@
         };
 
         const renderAllAssets = () => {
-            renderFrames();
-            renderLogos();
-            renderStickers();
             renderCustomStickers();
+            renderDynamicFrames();
         };
 
-        // --- RENDER FUNCTIONS ---
-        const renderFrames = () => {
-            if (!assetsData || !framesGrid) return;
-            framesGrid.innerHTML = '';
-
-            assetsData.frames.colors.forEach((frame, index) => {
-                const card = document.createElement('div');
-                card.className = 'asset-card';
-                card.innerHTML = `
-                    <div class="color-swatch" style="background-color: ${frame.value};"></div>
-                    <p>${frame.value}</p>
-                    <button class="delete-asset-btn" data-type="frame-color" data-index="${index}"><i class="fas fa-times"></i></button>
-                `;
-                framesGrid.appendChild(card);
-            });
-
-            assetsData.frames.images.forEach((frame, index) => {
-                const card = document.createElement('div');
-                card.className = 'asset-card';
-                card.innerHTML = `
-                    <img src="${frame.path}" alt="${frame.name}">
-                    <p>${frame.name}</p>
-                    <button class="delete-asset-btn" data-type="frame-image" data-index="${index}"><i class="fas fa-times"></i></button>
-                `;
-                framesGrid.appendChild(card);
-            });
-        };
-
-        const renderLogos = () => {
-            if (!assetsData || !logosGrid) return;
-            logosGrid.innerHTML = '';
-            assetsData.logos.forEach((logo, index) => {
-                const card = document.createElement('div');
-                card.className = 'asset-card';
-                card.innerHTML = `
-                    <div class="logo-preview">${logo.name}</div>
-                    <p>${logo.value}</p>
-                    <button class="delete-asset-btn" data-type="logo" data-index="${index}"><i class="fas fa-times"></i></button>
-                `;
-                logosGrid.appendChild(card);
-            });
-        };
-
-        const renderStickers = () => {
-            if (!assetsData || !stickersGrid) return;
-            stickersGrid.innerHTML = '';
-            // Filter out the "None" sticker
-            const actualStickers = assetsData.stickers.filter(s => s.id !== 'noneSticker');
-            actualStickers.forEach((sticker, index) => {
-                const card = document.createElement('div');
-                card.className = 'asset-card';
-                card.innerHTML = `
-                    <img src="${sticker.icon}" alt="${sticker.name}" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=err'">
-                    <p>${sticker.name}</p>
-                    <button class="delete-asset-btn" data-type="sticker" data-id="${sticker.id}"><i class="fas fa-times"></i></button>
-                `;
-                stickersGrid.appendChild(card);
-            });
-        };
-
-        // --- EVENT HANDLERS ---
-        addFrameForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const type = frameTypeSelect.value;
-            const submitBtn = addFrameForm.querySelector('button[type="submit"]');
-
-            if (type === 'color') {
-                const colorValue = document.getElementById('frame-color').value;
-                const newFrame = { id: `colorFrame${Date.now()}`, value: colorValue };
-                assetsData.frames.colors.push(newFrame);
-                setDataDirty(true);
-                renderFrames();
-                addFrameForm.reset();
-            } else { // Image upload
-                const name = document.getElementById('frame-name').value.trim();
-                const fileInput = document.getElementById('frame-file');
-                const file = fileInput.files[0];
-
-                if (!name || !file) {
-                    alert('Nama Bingkai dan File Gambar harus diisi.');
-                    return;
-                }
-
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
-
-                try {
-                    const filePath = `${githubConfig.assetsPath}/frame-backgrounds/${file.name}`;
-                    const reader = new FileReader();
-                    const fileReadPromise = new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result.split(',')[1]);
-                        reader.onerror = reject;
-                    });
-                    reader.readAsDataURL(file);
-                    const base64content = await fileReadPromise;
-
-                    const { owner, repo } = githubConfig;
-                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-                    await githubApiRequest(apiUrl, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: `feat: upload frame ${file.name}`,
-                            content: base64content,
-                        }),
-                    });
-
-                    const newFrame = { id: `imageFrame${Date.now()}`, name, path: filePath };
-                    assetsData.frames.images.push(newFrame);
-
-                    setDataDirty(true);
-                    renderFrames();
-                    addFrameForm.reset();
-                    alert(`Bingkai gambar "${name}" berhasil diunggah! Jangan lupa simpan perubahan.`);
-
-                } catch (error) {
-                    console.error("Gagal mengunggah bingkai:", error);
-                    alert(`Gagal mengunggah bingkai: ${error.message}`);
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Tambah Bingkai';
-                }
+        const renderDynamicFrames = () => {
+            if (!assetsData || !dynamicFramesGrid) return;
+            if (!assetsData.dynamicFrames) {
+                assetsData.dynamicFrames = [];
             }
-        });
+            dynamicFramesGrid.innerHTML = '';
+            assetsData.dynamicFrames.forEach((frame) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <img src="${frame.src}" alt="Dynamic Frame" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=err'">
+                    <p>${frame.pose}</p>
+                    <button class="delete-asset-btn" data-type="dynamic-frame" data-id="${frame.id}"><i class="fas fa-times"></i></button>
+                `;
+                dynamicFramesGrid.appendChild(card);
+            });
+        };
 
-        frameTypeSelect.addEventListener('change', () => {
-            const isColor = frameTypeSelect.value === 'color';
-            document.getElementById('frame-name-group').style.display = isColor ? 'none' : 'block';
-            document.getElementById('frame-file-group').style.display = isColor ? 'none' : 'block';
-            document.getElementById('frame-color-group').style.display = isColor ? 'block' : 'none';
-        });
-
-        framesGrid.addEventListener('click', (e) => {
+        dynamicFramesGrid.addEventListener('click', (e) => {
             if (e.target.closest('.delete-asset-btn')) {
                 const btn = e.target.closest('.delete-asset-btn');
-                const type = btn.dataset.type;
-                const index = parseInt(btn.dataset.index, 10);
-                if (confirm('Anda yakin ingin menghapus aset ini?')) {
-                    if (type === 'frame-color') {
-                        assetsData.frames.colors.splice(index, 1);
-                    } else if (type === 'frame-image') {
-                        assetsData.frames.images.splice(index, 1);
-                    }
-                    setDataDirty(true);
-                    renderFrames();
-                }
-            }
-        });
-
-        addLogoForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('logo-name').value.trim();
-            const value = document.getElementById('logo-value').value.trim();
-            if(!name || !value) {
-                alert('Nama dan Teks Logo harus diisi.');
-                return;
-            }
-            const newLogo = { id: `logo${Date.now()}`, name, value };
-            assetsData.logos.push(newLogo);
-            setDataDirty(true);
-            renderLogos();
-            addLogoForm.reset();
-        });
-
-        logosGrid.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-asset-btn')) {
-                const btn = e.target.closest('.delete-asset-btn');
-                const index = parseInt(btn.dataset.index, 10);
-                 if (confirm('Anda yakin ingin menghapus logo ini?')) {
-                    assetsData.logos.splice(index, 1);
-                    setDataDirty(true);
-                    renderLogos();
-                }
-            }
-        });
-
-        stickersGrid.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-asset-btn')) {
-                const btn = e.target.closest('.delete-asset-btn');
-                const stickerId = btn.dataset.id;
-                 if (confirm(`Anda yakin ingin menghapus stiker "${stickerId}"? Ini juga akan menghapus layoutnya.`)) {
-                    const stickerIndex = assetsData.stickers.findIndex(s => s.id === stickerId);
-                    if (stickerIndex > -1) {
-                         const stickerLayout = assetsData.stickers[stickerIndex].layout;
-                        // Hapus stiker dari array stickers
-                        assetsData.stickers.splice(stickerIndex, 1);
-                        // Hapus layout terkait jika ada
-                        if (stickerLayout && assetsData.stickerLayouts[stickerLayout]) {
-                            delete assetsData.stickerLayouts[stickerLayout];
-                        }
+                const frameId = btn.dataset.id;
+                if (confirm(`Anda yakin ingin menghapus bingkai dinamis "${frameId}"?`)) {
+                    const frameIndex = assetsData.dynamicFrames.findIndex(f => f.id === frameId);
+                    if (frameIndex > -1) {
+                        assetsData.dynamicFrames.splice(frameIndex, 1);
                         setDataDirty(true);
-                        renderStickers();
+                        renderDynamicFrames();
                     }
                 }
             }
         });
 
-        addStickerForm.addEventListener('submit', async (e) => {
+        addDynamicFrameForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const stickerName = document.getElementById('sticker-name').value.trim();
-            const stickerFolder = document.getElementById('sticker-folder').value.trim().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
-            const files = document.getElementById('sticker-files').files;
+            const fileInput = document.getElementById('dynamic-frame-file');
+            const file = fileInput.files[0];
+            const pose = document.getElementById('dynamic-frame-pose').value;
+            const submitBtn = addDynamicFrameForm.querySelector('button[type="submit"]');
 
-            if (!stickerName || !stickerFolder) {
-                alert('Nama Stiker dan Nama Folder harus diisi.');
-                return;
-            }
-            if (files.length < 5) {
-                alert('Anda harus mengunggah minimal 5 gambar stiker.');
+            if (!file) {
+                alert('Silakan pilih file bingkai untuk diunggah.');
                 return;
             }
 
-            const submitBtn = addStickerForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
 
             try {
-                // 1. Upload files to GitHub
-                const uploadedFilePaths = [];
-                for (const file of files) {
-                    const filePath = `${githubConfig.assetsPath}/stickers/${stickerFolder}/${file.name}`;
-                    const reader = new FileReader();
-                    const fileReadPromise = new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result.split(',')[1]);
-                        reader.onerror = reject;
-                    });
-                    reader.readAsDataURL(file); // FIX: Call readAsDataURL before awaiting the promise
-                    const base64content = await fileReadPromise;
-
-                    const { owner, repo } = githubConfig;
-                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-
-                    await githubApiRequest(apiUrl, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: `feat: upload sticker ${file.name}`,
-                            content: base64content,
-                        }),
-                    });
-                    uploadedFilePaths.push(filePath);
+                if (!assetsData.dynamicFrames) {
+                    assetsData.dynamicFrames = [];
                 }
 
-                // 2. Add sticker to assets.json data
-                const newStickerId = `${stickerFolder}Sticker`;
-                const newSticker = {
-                    id: newStickerId,
-                    name: stickerName,
-                    icon: uploadedFilePaths[0], // Use the first image as the icon
-                    layout: stickerFolder
-                };
-                assetsData.stickers.push(newSticker);
-
-                // 3. Create a new layout based on ballerinacp
-                const baseLayout = JSON.parse(JSON.stringify(assetsData.stickerLayouts.ballerinacp));
-                const newLayout = baseLayout.map((item, index) => {
-                    // Replace the src with the new uploaded image path, cycling if needed
-                    item.src = uploadedFilePaths[index % uploadedFilePaths.length];
-                    return item;
+                const filePath = `bingkai/${pose}/${file.name}`;
+                const reader = new FileReader();
+                const fileReadPromise = new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
                 });
-                assetsData.stickerLayouts[stickerFolder] = newLayout;
+                reader.readAsDataURL(file);
+                const base64content = await fileReadPromise;
 
-                // 4. Mark data as dirty and re-render
+                const { owner, repo } = githubConfig;
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                await githubApiRequest(apiUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `feat: upload dynamic frame ${file.name}`,
+                        content: base64content,
+                    }),
+                });
+
+                const newFrame = {
+                    id: `dynamic-frame-${Date.now()}`,
+                    src: filePath,
+                    pose: pose
+                };
+                assetsData.dynamicFrames.push(newFrame);
+
                 setDataDirty(true);
-                renderStickers();
-                addStickerForm.reset();
-                alert(`Stiker "${stickerName}" berhasil diunggah! Jangan lupa simpan perubahan.`);
+                renderDynamicFrames();
+                addDynamicFrameForm.reset();
+                alert(`Bingkai dinamis berhasil diunggah! Jangan lupa simpan perubahan.`);
 
             } catch (error) {
-                console.error("Gagal mengunggah stiker:", error);
-                alert(`Gagal mengunggah stiker: ${error.message}`);
+                console.error("Gagal mengunggah bingkai dinamis:", error);
+                alert(`Gagal mengunggah bingkai dinamis: ${error.message}`);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Unggah Stiker';
+                submitBtn.innerHTML = 'Unggah Bingkai';
             }
         });
 
