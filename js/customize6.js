@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        const columns = 2, rows = 2;
+        const columns = 2, rows = 3;
         const imageGridSize = rows * columns;
         const canvasWidth = 900, canvasHeight = 1352;
         const borderWidth = 30, spacing = 12, bottomPadding = 100;
