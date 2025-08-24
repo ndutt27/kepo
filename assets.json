@@ -1669,5 +1669,10 @@
       }
     ]
   },
-  "customStickers": []
+  "customStickers": [
+    {
+      "id": "custom-sticker-1756004353916",
+      "src": "assets/stickers/custom/Desain tanpa judul.png"
+    }
+  ]
 }
