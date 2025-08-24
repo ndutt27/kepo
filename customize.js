@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const stickerButtonsContainer = document.getElementById('sticker-buttons-container');
     const customStickerButtonsContainer = document.getElementById('custom-sticker-buttons-container');
     const logoButtonsContainer = document.getElementById('logo-buttons-container');
-    const dateCheckbox = document.getElementById('dateCheckbox');
-    const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
+    const filterButtonsContainer = document.getElementById('filter-buttons-container');
     const logoColorPicker = document.getElementById('logoColorPicker');
 
     // --- State Variables ---
@@ -217,8 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
         customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
-        dateCheckbox.addEventListener('change', redrawCanvas);
-        dateTimeCheckbox.addEventListener('change', redrawCanvas);
+        filterButtonsContainer.addEventListener('click', handleFilterClick);
         logoColorPicker.addEventListener('input', (e) => {
             textColor = e.target.value;
             if (logoObject) {
@@ -323,6 +321,40 @@ document.addEventListener('DOMContentLoaded', function() {
         fabricCanvas.requestRenderAll();
     }
 
+    function handleFilterClick(e) {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+
+        const filterType = btn.dataset.filter;
+        const bgImage = fabricCanvas.backgroundImage;
+
+        if (!bgImage) return;
+
+        // Remove existing filters
+        bgImage.filters = [];
+
+        // Add the new filter if it's not 'none'
+        switch (filterType) {
+            case 'grayscale':
+                bgImage.filters.push(new fabric.Image.filters.Grayscale());
+                break;
+            case 'sepia':
+                bgImage.filters.push(new fabric.Image.filters.Sepia());
+                break;
+            case 'invert':
+                bgImage.filters.push(new fabric.Image.filters.Invert());
+                break;
+        }
+
+        // Apply filters and re-render
+        bgImage.applyFilters();
+        fabricCanvas.requestRenderAll();
+
+        // Update active button
+        filterButtonsContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
     function setBackground(option) {
         if (option.type === 'color') {
             backgroundType = 'color';
@@ -403,19 +435,6 @@ document.addEventListener('DOMContentLoaded', function() {
             bgCtx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         }
         
-        if (dateCheckbox.checked || dateTimeCheckbox.checked) {
-            const currentDate = new Date();
-            let displayText = '';
-            if (dateCheckbox.checked) displayText += currentDate.toLocaleDateString();
-            if (dateTimeCheckbox.checked) {
-                const timeString = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                displayText += (dateCheckbox.checked ? ' ' : '') + timeString;
-            }
-            bgCtx.fillStyle = textColor;
-            bgCtx.font = '18px "DM Sans", Arial, Roboto, sans-serif';
-            bgCtx.fillText(displayText, canvasWidth / 2, canvasHeight - 30);
-        }
-
         const imageElements = await Promise.all(storedImages.map(imgData => {
             return new Promise(resolve => {
                 const img = new Image();

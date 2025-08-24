@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const stickerButtonsContainer = document.getElementById('sticker-buttons-container');
     const customStickerButtonsContainer = document.getElementById('custom-sticker-buttons-container');
     const logoButtonsContainer = document.getElementById('logo-buttons-container');
-    const dateCheckbox = document.getElementById('dateCheckbox');
-    const dateTimeCheckbox = document.getElementById('dateTimeCheckbox');
+    const filterButtonsContainer = document.getElementById('filter-buttons-container');
     const logoColorPicker = document.getElementById('logoColorPicker');
 
     // --- State Variables ---
@@ -217,8 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stickerButtonsContainer.addEventListener('click', handleStickerClick);
         customStickerButtonsContainer.addEventListener('click', handleCustomStickerClick);
         logoButtonsContainer.addEventListener('click', handleLogoClick);
-        dateCheckbox.addEventListener('change', redrawCanvas);
-        dateTimeCheckbox.addEventListener('change', redrawCanvas);
+        filterButtonsContainer.addEventListener('click', handleFilterClick);
         logoColorPicker.addEventListener('input', (e) => {
             textColor = e.target.value;
             if (logoObject) {
@@ -320,6 +318,40 @@ document.addEventListener('DOMContentLoaded', function() {
         logoButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         fabricCanvas.requestRenderAll();
+    }
+
+    function handleFilterClick(e) {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+
+        const filterType = btn.dataset.filter;
+        const bgImage = fabricCanvas.backgroundImage;
+
+        if (!bgImage) return;
+
+        // Remove existing filters
+        bgImage.filters = [];
+
+        // Add the new filter if it's not 'none'
+        switch (filterType) {
+            case 'grayscale':
+                bgImage.filters.push(new fabric.Image.filters.Grayscale());
+                break;
+            case 'sepia':
+                bgImage.filters.push(new fabric.Image.filters.Sepia());
+                break;
+            case 'invert':
+                bgImage.filters.push(new fabric.Image.filters.Invert());
+                break;
+        }
+
+        // Apply filters and re-render
+        bgImage.applyFilters();
+        fabricCanvas.requestRenderAll();
+
+        // Update active button
+        filterButtonsContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
 
     function setBackground(option) {
@@ -578,19 +610,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error("Gagal memuat gambar:", error);
             }
-        }
-
-        if (dateCheckbox.checked || dateTimeCheckbox.checked) {
-            const currentDate = new Date();
-            let displayText = '';
-            if (dateCheckbox.checked) displayText += currentDate.toLocaleDateString();
-            if (dateTimeCheckbox.checked) {
-                const timeString = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                displayText += (dateCheckbox.checked ? ' ' : '') + timeString;
-            }
-            ctx.fillStyle = textColor;
-            ctx.font = '18px "DM Sans", Arial, Roboto, sans-serif';
-            ctx.fillText(displayText, stackedCanvas.width / 2, stackedCanvas.height - 30);
         }
 
         await drawSticker(ctx, stackedCanvas);
