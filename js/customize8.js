@@ -229,6 +229,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!btn) return;
         const frameSrc = btn.dataset.src;
         fabric.Image.fromURL(frameSrc, (img) => {
+            img.scaleToWidth(canvasWidth);
+            img.scaleToHeight(canvasHeight);
             img.set({
                 left: 0,
                 top: 0,
