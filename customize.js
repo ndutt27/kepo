@@ -326,16 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const radius = Math.min(dWidth, dHeight) / 2;
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         } else if (shapeType === 'rounded') {
-            const radius = 30;
-            ctx.moveTo(dx + radius, dy);
-            ctx.lineTo(dx + dWidth - r, dy);
-            ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
-            ctx.lineTo(dx + dWidth, dy + dHeight - r);
-            ctx.quadraticCurveTo(dx + dWidth, dy + dHeight, dx + dWidth - r, dy + dHeight);
-            ctx.lineTo(dx + radius, dy + dHeight);
-            ctx.quadraticCurveTo(dx, dy + dHeight, dx, dy + dHeight - r);
-            ctx.lineTo(dx, dy + r);
-            ctx.quadraticCurveTo(dx, dy, dx + radius, dy);
+            ctx.roundRect(dx, dy, dWidth, dHeight, [30]);
         } else if (shapeType === 'heart') {
             ctx.moveTo(dx + dWidth / 2, dy + dHeight);
             ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
