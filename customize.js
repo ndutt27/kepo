@@ -471,8 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'technicolor': filter = new fabric.Image.filters.Technicolor(); break;
                 case 'polaroid': filter = new fabric.Image.filters.Polaroid(); break;
                 case 'blackwhite': filter = new fabric.Image.filters.BlackWhite(); break;
-                case 'sharpen': filter = new fabric.Image.filters.Sharpen(); break;
-                case 'emboss': filter = new fabric.Image.filters.Emboss(); break;
+                case 'sharpen': filter = new fabric.Image.filters.Convolute({ matrix: [0, -1, 0, -1, 5, -1, 0, -1, 0] }); break;
+                case 'emboss': filter = new fabric.Image.filters.Convolute({ matrix: [1, 1, 1, 1, 0.7, -1, -1, -1, -1] }); break;
                 default:
                     resolve(imageElement); // No filter found, return original
                     return;
