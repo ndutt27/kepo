@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let assetsData = null;
     let selectedShape = 'default';
     let selectedStickerLayout = null;
+    let selectedFilter = 'none';
     let selectedText = 'pictlord';
     let backgroundType = 'color';
     let backgroundColor = '#FFFFFF';
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderStickerButtons();
             renderCustomStickerButtons();
             renderLogoButtons();
+            await renderFilterButtons();
             setupEventListeners();
             await redrawCanvas();
 
@@ -207,6 +209,63 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.innerHTML = `<img src="${sticker.src}" alt="Custom Sticker" class="stickerIconSize">`;
             customStickerButtonsContainer.appendChild(btn);
         });
+    };
+
+    const renderFilterButtons = async () => {
+        if (!filterButtonsContainer) return;
+        filterButtonsContainer.innerHTML = ''; // Clear existing
+        const firstPhoto = storedImages[0];
+        if (!firstPhoto) return;
+
+        const filters = [
+            { name: 'None', type: 'none' },
+            { name: 'Sepia', type: 'sepia' },
+            { name: 'Grayscale', type: 'grayscale' },
+            { name: 'Invert', type: 'invert' },
+            { name: 'Black & White', type: 'blackwhite' },
+            { name: 'Brownie', type: 'brownie' },
+            { name: 'Vintage', type: 'vintage' },
+            { name: 'Technicolor', type: 'technicolor' },
+            { name: 'Polaroid', type: 'polaroid' },
+            { name: 'Sharpen', type: 'sharpen' },
+            { name: 'Emboss', type: 'emboss' }
+        ];
+
+        const baseImage = new Image();
+        baseImage.crossOrigin = "anonymous";
+        baseImage.src = firstPhoto;
+        await new Promise(r => baseImage.onload = r);
+
+        for (const filter of filters) {
+            const btn = document.createElement('button');
+            btn.className = 'neumorphic-btn buttonStickers filter-btn'; // Use same style as sticker buttons
+            btn.dataset.filter = filter.type;
+
+            const thumbnailCanvas = document.createElement('canvas');
+            thumbnailCanvas.width = 50;
+            thumbnailCanvas.height = 50;
+            const thumbCtx = thumbnailCanvas.getContext('2d');
+            thumbCtx.drawImage(baseImage, 0, 0, 50, 50);
+
+            const filteredThumb = await getFilteredImage(thumbnailCanvas, filter.type);
+
+            const img = new Image();
+            img.src = filteredThumb.toDataURL ? filteredThumb.toDataURL() : filteredThumb.src;
+            img.className = 'stickerIconSize'; // Reuse styling
+            img.alt = filter.name;
+
+            const tooltip = document.createElement('span');
+            tooltip.className = 'tooltip-text';
+            tooltip.textContent = filter.name;
+
+            btn.appendChild(img);
+            btn.appendChild(tooltip);
+
+            if (filter.type === 'none') {
+                btn.classList.add('active');
+            }
+            filterButtonsContainer.appendChild(btn);
+        }
     };
 
     // --- Event Handling ---
@@ -325,34 +384,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = e.target.closest('.filter-btn');
         if (!btn) return;
 
-        const filterType = btn.dataset.filter;
-        const bgImage = fabricCanvas.backgroundImage;
-
-        if (!bgImage) return;
-
-        // Remove existing filters
-        bgImage.filters = [];
-
-        // Add the new filter if it's not 'none'
-        switch (filterType) {
-            case 'grayscale':
-                bgImage.filters.push(new fabric.Image.filters.Grayscale());
-                break;
-            case 'sepia':
-                bgImage.filters.push(new fabric.Image.filters.Sepia());
-                break;
-            case 'invert':
-                bgImage.filters.push(new fabric.Image.filters.Invert());
-                break;
-        }
-
-        // Apply filters and re-render
-        bgImage.applyFilters();
-        fabricCanvas.requestRenderAll();
+        selectedFilter = btn.dataset.filter;
 
         // Update active button
         filterButtonsContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+
+        // Redraw the canvas to apply the filter to individual images
+        redrawCanvas();
     }
 
     function setBackground(option) {
@@ -414,6 +453,38 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.restore();
     }
 
+    async function getFilteredImage(imageElement, filterType) {
+        if (filterType === 'none' || !filterType) {
+            return imageElement;
+        }
+
+        return new Promise(resolve => {
+            const fabricImage = new fabric.Image(imageElement, { crossOrigin: 'anonymous' });
+            let filter = null;
+
+            switch (filterType) {
+                case 'grayscale': filter = new fabric.Image.filters.Grayscale(); break;
+                case 'sepia': filter = new fabric.Image.filters.Sepia(); break;
+                case 'invert': filter = new fabric.Image.filters.Invert(); break;
+                case 'brownie': filter = new fabric.Image.filters.Brownie(); break;
+                case 'vintage': filter = new fabric.Image.filters.Vintage(); break;
+                case 'technicolor': filter = new fabric.Image.filters.Technicolor(); break;
+                case 'polaroid': filter = new fabric.Image.filters.Polaroid(); break;
+                case 'blackwhite': filter = new fabric.Image.filters.BlackWhite(); break;
+                case 'sharpen': filter = new fabric.Image.filters.Sharpen(); break;
+                case 'emboss': filter = new fabric.Image.filters.Emboss(); break;
+                default:
+                    resolve(imageElement); // No filter found, return original
+                    return;
+            }
+
+            fabricImage.filters.push(filter);
+            fabricImage.applyFilters();
+
+            resolve(fabricImage.toCanvasElement());
+        });
+    }
+
     async function redrawCanvas() {
         if (!storedImages || !fabricCanvas) return null;
         const bgCanvas = document.createElement('canvas');
@@ -435,17 +506,22 @@ document.addEventListener('DOMContentLoaded', function() {
             bgCtx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         }
         
-        const imageElements = await Promise.all(storedImages.map(imgData => {
+        const imageElements = await Promise.all(storedImages.map(async (imgData) => {
             return new Promise(resolve => {
                 const img = new Image();
+                img.crossOrigin = "anonymous"; // Important for canvas operations
                 img.src = imgData;
                 img.onload = () => resolve(img);
                 img.onerror = () => resolve(null);
             });
         }));
 
-        imageElements.forEach((img, index) => {
-            if (!img) return;
+        for (let i = 0; i < imageElements.length; i++) {
+            const img = imageElements[i];
+            if (!img) continue;
+
+            const filteredImage = await getFilteredImage(img, selectedFilter);
+
             const imgAspect = img.width / img.height;
             const targetAspect = photoWidth / photoHeight;
             let sx, sy, sWidth, sHeight;
@@ -461,9 +537,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 sy = (img.height - sHeight) / 2;
             }
             const x = borderWidth;
-            const y = borderWidth + index * (photoHeight + spacing);
-            clipAndDrawImage(bgCtx, img, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
-        });
+            const y = borderWidth + i * (photoHeight + spacing);
+            clipAndDrawImage(bgCtx, filteredImage, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
+        }
 
         await drawSticker(bgCtx);
         fabricCanvas.setBackgroundImage(new fabric.Image(bgCanvas), fabricCanvas.renderAll.bind(fabricCanvas));
