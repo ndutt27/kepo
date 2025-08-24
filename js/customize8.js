@@ -205,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.controls.deleteControl = new fabric.Control({ x: 0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: deleteObject, render: renderDeleteIcon, cornerSize: 24 });
             img.controls.mirrorControl = new fabric.Control({ x: -0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: flipObject, render: renderMirrorIcon, cornerSize: 24 });
             fabricCanvas.add(img);
+            img.bringToFront();
             fabricCanvas.setActiveObject(img);
             fabricCanvas.renderAll();
         }, { crossOrigin: 'anonymous' });
@@ -227,6 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleDynamicFrameClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
+
+        // Remove existing frame first
+        fabricCanvas.getObjects().forEach(obj => {
+            if (obj.isFrame) {
+                fabricCanvas.remove(obj);
+            }
+        });
+
         const frameSrc = btn.dataset.src;
         fabric.Image.fromURL(frameSrc, (img) => {
             img.scaleToWidth(canvasWidth);
@@ -236,21 +245,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 top: 0,
                 selectable: false,
                 evented: false,
+                isFrame: true // Add a custom property to identify the frame
             });
             fabricCanvas.add(img);
-            img.sendToBack();
-            // bring photos to front of frame
-            fabricCanvas.getObjects('image').forEach(obj => {
-                if (obj.isPhoto) {
-                    obj.bringToFront();
-                }
-            });
-            // send stickers to front
-            fabricCanvas.getObjects('image').forEach(obj => {
-                if (!obj.isPhoto && obj.selectable) { // is a sticker
-                    obj.bringToFront();
-                }
-            });
+
+            const photoCount = fabricCanvas.getObjects().filter(o => o.isPhoto).length;
+            img.moveTo(photoCount);
+
             fabricCanvas.renderAll();
         }, { crossOrigin: 'anonymous' });
     }
@@ -317,6 +318,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        const otherObjects = fabricCanvas.getObjects().filter(o => !o.isPhoto);
+        fabricCanvas.clear();
+        fabricCanvas.add(...otherObjects);
+
+
         const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
             fabric.Image.fromURL(imgData, (img) => {
                 if (img) {
@@ -346,9 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 fImg.set({
                     left: borderWidth,
                     top: borderWidth + i * (photoHeight + spacing),
+                    isPhoto: true
                 });
                 fabricCanvas.add(fImg);
-                fImg.sendToBack();
             }
         } else { // For 4 and 6 poses
             const columns = 2;
@@ -375,6 +381,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 fImg.sendToBack();
             }
         }
+        fabricCanvas.getObjects().forEach(obj => {
+            if (obj.isPhoto) {
+                obj.sendToBack();
+            }
+        });
+
+        const frame = fabricCanvas.getObjects().find(o => o.isFrame);
+        if (frame) {
+            const photoCount = fabricCanvas.getObjects().filter(o => o.isPhoto).length;
+            frame.moveTo(photoCount);
+        }
+
         fabricCanvas.renderAll();
     }
 
