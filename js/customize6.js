@@ -649,7 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const columns = 2, rows = 3;
         const imageGridSize = rows * columns;
         const canvasWidth = 900, canvasHeight = 1352;
-        const borderWidth = 30, spacing = 12, bottomPadding = 50;
+        const borderWidth = 30, spacing = 12, bottomPadding = 20;
 
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
