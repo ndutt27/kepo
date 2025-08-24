@@ -435,6 +435,32 @@
             </form>
         </section>
 
+        <section id="dynamic-frames-management" class="asset-section" data-aos="fade-up" data-aos-delay="150">
+            <h2>Kelola Bingkai Dinamis</h2>
+            <div id="dynamic-frames-grid" class="asset-grid">
+            </div>
+            <form id="add-dynamic-frame-form" class="add-asset-form">
+                <h3>Unggah Bingkai Dinamis Baru</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dynamic-frame-pose" class="form-label">Pilih Pose</label>
+                        <select id="dynamic-frame-pose" class="form-input">
+                            <option value="pose3">Pose 3</option>
+                            <option value="pose4">Pose 4</option>
+                            <option value="pose6">Pose 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dynamic-frame-file" class="form-label">Pilih File Bingkai</label>
+                        <input type="file" id="dynamic-frame-file" class="form-input" accept="image/png">
+                    </div>
+                    <div class="form-group align-right">
+                        <button type="submit" class="btn btn-primary">Unggah Bingkai</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
         <section id="stickers-management" class="asset-section" data-aos="fade-up" data-aos-delay="100">
             <h2>Kelola Stiker Ori</h2>
             <div id="stickers-grid" class="asset-grid">
@@ -648,6 +674,8 @@
         const addStickerForm = document.getElementById('add-sticker-form');
         const customStickersGrid = document.getElementById('custom-stickers-grid');
         const addCustomStickerForm = document.getElementById('add-custom-sticker-form');
+        const dynamicFramesGrid = document.getElementById('dynamic-frames-grid');
+        const addDynamicFrameForm = document.getElementById('add-dynamic-frame-form');
 
         // Testimonial Management DOM
         const adminTestimonialGrid = document.getElementById('admin-testimonial-grid');
@@ -721,7 +749,103 @@
             renderLogos();
             renderStickers();
             renderCustomStickers();
+            renderDynamicFrames();
         };
+
+        const renderDynamicFrames = () => {
+            if (!assetsData || !dynamicFramesGrid) return;
+            if (!assetsData.dynamicFrames) {
+                assetsData.dynamicFrames = [];
+            }
+            dynamicFramesGrid.innerHTML = '';
+            assetsData.dynamicFrames.forEach((frame) => {
+                const card = document.createElement('div');
+                card.className = 'asset-card';
+                card.innerHTML = `
+                    <img src="${frame.src}" alt="Dynamic Frame" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=err'">
+                    <p>${frame.pose}</p>
+                    <button class="delete-asset-btn" data-type="dynamic-frame" data-id="${frame.id}"><i class="fas fa-times"></i></button>
+                `;
+                dynamicFramesGrid.appendChild(card);
+            });
+        };
+
+        dynamicFramesGrid.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-asset-btn')) {
+                const btn = e.target.closest('.delete-asset-btn');
+                const frameId = btn.dataset.id;
+                if (confirm(`Anda yakin ingin menghapus bingkai dinamis "${frameId}"?`)) {
+                    const frameIndex = assetsData.dynamicFrames.findIndex(f => f.id === frameId);
+                    if (frameIndex > -1) {
+                        assetsData.dynamicFrames.splice(frameIndex, 1);
+                        setDataDirty(true);
+                        renderDynamicFrames();
+                    }
+                }
+            }
+        });
+
+        addDynamicFrameForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('dynamic-frame-file');
+            const file = fileInput.files[0];
+            const pose = document.getElementById('dynamic-frame-pose').value;
+            const submitBtn = addDynamicFrameForm.querySelector('button[type="submit"]');
+
+            if (!file) {
+                alert('Silakan pilih file bingkai untuk diunggah.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah...';
+
+            try {
+                if (!assetsData.dynamicFrames) {
+                    assetsData.dynamicFrames = [];
+                }
+
+                const filePath = `bingkai/${pose}/${file.name}`;
+                const reader = new FileReader();
+                const fileReadPromise = new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                });
+                reader.readAsDataURL(file);
+                const base64content = await fileReadPromise;
+
+                const { owner, repo } = githubConfig;
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                await githubApiRequest(apiUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `feat: upload dynamic frame ${file.name}`,
+                        content: base64content,
+                    }),
+                });
+
+                const newFrame = {
+                    id: `dynamic-frame-${Date.now()}`,
+                    src: filePath,
+                    pose: pose
+                };
+                assetsData.dynamicFrames.push(newFrame);
+
+                setDataDirty(true);
+                renderDynamicFrames();
+                addDynamicFrameForm.reset();
+                alert(`Bingkai dinamis berhasil diunggah! Jangan lupa simpan perubahan.`);
+
+            } catch (error) {
+                console.error("Gagal mengunggah bingkai dinamis:", error);
+                alert(`Gagal mengunggah bingkai dinamis: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Unggah Bingkai';
+            }
+        });
 
         // --- RENDER FUNCTIONS ---
         const renderFrames = () => {
