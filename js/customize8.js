@@ -262,7 +262,16 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedFilter = btn.dataset.filter;
         filterButtonsContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        redrawCanvas();
+
+        const photoObjects = fabricCanvas.getObjects().filter(obj => obj.isPhoto);
+
+        photoObjects.forEach(async (photoObj) => {
+            const originalImageEl = photoObj.originalImage;
+            const filteredCanvasEl = await getFilteredImage(originalImageEl, selectedFilter);
+            photoObj.setSrc(filteredCanvasEl.toDataURL(), () => {
+                fabricCanvas.renderAll();
+            }, { crossOrigin: 'anonymous' });
+        });
     }
 
     function setBackground(option) {
@@ -345,8 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
                 if (!img) continue;
-                const filteredImage = await getFilteredImage(img.getElement(), selectedFilter);
-                const fImg = new fabric.Image(filteredImage);
+                const fImg = new fabric.Image(img.getElement());
 
                 fImg.scaleToWidth(photoWidth);
                 fImg.set({
@@ -368,8 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
                 if (!img) continue;
-                const filteredImage = await getFilteredImage(img.getElement(), selectedFilter);
-                const fImg = new fabric.Image(filteredImage);
+                const fImg = new fabric.Image(img.getElement());
 
                 fImg.scaleToWidth(photoWidth);
                 const col = i % columns, row = Math.floor(i / columns);
