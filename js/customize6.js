@@ -14,13 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- State Variables ---
     let assetsData = null;
     let selectedShape = 'default';
-    let selectedStickerLayout = null;
+    let selectedStickerLayout = null; // Single sticker selection
     let selectedText = 'pictlord';
     let backgroundType = 'color';
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
-    let fabricCanvas = null;
+    let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
     const canvasHeight = 1352;
 
@@ -82,16 +82,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) throw new Error('Failed to load assets.json');
             assetsData = await response.json();
 
+            // Create the canvas element
             const canvasEl = document.createElement('canvas');
             canvasEl.id = 'photo-canvas';
             canvasEl.width = canvasWidth;
             canvasEl.height = canvasHeight;
 
-            photoCustomPreview.innerHTML = '';
+            photoCustomPreview.innerHTML = ''; // Clear previous content
             photoCustomPreview.appendChild(canvasEl);
 
+            // Initialize Fabric.js canvas
             fabricCanvas = new fabric.Canvas('photo-canvas');
 
+            // Set display size
             const previewWidth = (window.innerWidth <= 768) ? 190 : 230;
             const scale = previewWidth / canvasWidth;
             fabricCanvas.setDimensions({
@@ -105,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderStickerButtons();
             renderCustomStickerButtons();
             renderLogoButtons();
+
             setupEventListeners();
             await redrawCanvas();
 

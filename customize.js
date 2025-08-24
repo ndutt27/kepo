@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const imageArrayLength = storedImages.length;
         const borderWidth = 30;
         const spacing = 12;
-        const bottomPadding = 100;
+        const bottomPadding = 250;
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (imageArrayLength - 1)) - bottomPadding;
         const photoHeight = availableHeight / imageArrayLength;
         const photoWidth = canvasWidth - (borderWidth * 2);

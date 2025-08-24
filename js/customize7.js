@@ -474,16 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (shapeType === 'circle') {
             ctx.arc(dx + dWidth / 2, dy + dHeight / 2, Math.min(dWidth, dHeight) / 2, 0, Math.PI * 2);
         } else if (shapeType === 'rounded') {
-            const r = 30;
-            ctx.moveTo(dx + r, dy);
-            ctx.lineTo(dx + dWidth - r, dy);
-            ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
-            ctx.lineTo(dx + dWidth, dy + dHeight - r);
-            ctx.quadraticCurveTo(dx + dWidth, dy + dHeight, dx + dWidth - r, dy + dHeight);
-            ctx.lineTo(dx + r, dy + dHeight);
-            ctx.quadraticCurveTo(dx, dy + dHeight, dx, dy + dHeight - r);
-            ctx.lineTo(dx, dy + r);
-            ctx.quadraticCurveTo(dx, dy, dx + r, dy);
+            ctx.roundRect(dx, dy, dWidth, dHeight, [30]);
         } else if (shapeType === 'heart') {
             ctx.moveTo(dx + dWidth / 2, dy + dHeight);
             ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
@@ -505,8 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const columns = 2, rows = 2;
         const imageGridSize = rows * columns;
-        const canvasWidth = 900, canvasHeight = 1352;
-        const borderWidth = 30, spacing = 12, bottomPadding = 100;
+        const borderWidth = 30, spacing = 12, bottomPadding = 250;
 
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
