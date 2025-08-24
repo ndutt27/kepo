@@ -268,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
         photoObjects.forEach(async (photoObj) => {
             const originalImageEl = photoObj.originalImage;
             const filteredCanvasEl = await getFilteredImage(originalImageEl, selectedFilter);
+            
             photoObj.setSrc(filteredCanvasEl.toDataURL(), () => {
                 fabricCanvas.renderAll();
             }, { crossOrigin: 'anonymous' });
@@ -354,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
                 if (!img) continue;
-                const fImg = new fabric.Image(img.getElement());
+                const fImg = new fabric.Image(img.originalImage);
 
                 fImg.scaleToWidth(photoWidth);
                 fImg.set({
@@ -376,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
                 if (!img) continue;
-                const fImg = new fabric.Image(img.getElement());
+                const fImg = new fabric.Image(img.originalImage);
 
                 fImg.scaleToWidth(photoWidth);
                 const col = i % columns, row = Math.floor(i / columns);
