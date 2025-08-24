@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvasWidth = 592;
     const canvasHeight = 1352;
 
+    const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
+    if (!storedImages || storedImages.length === 0) {
+        console.error("No valid images found in sessionStorage.");
+        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan. Silakan kembali dan ambil foto baru.</p>';
+        return;
+    }
+
     // --- Custom Fabric.js Controls ---
     function deleteObject(eventData, transform) {
         const target = transform.target;
@@ -407,13 +414,6 @@ document.addEventListener('DOMContentLoaded', function() {
             backgroundImage.onload = redrawCanvas;
             backgroundImage.onerror = () => console.error(`Failed to load background image: ${option.src}`);
         }
-    }
-
-    const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
-    if (!storedImages || storedImages.length === 0) {
-        console.error("No valid images found in sessionStorage.");
-        if(photoCustomPreview) photoCustomPreview.innerHTML = '<p>Error: Foto tidak ditemukan. Silakan kembali dan ambil foto baru.</p>';
-        return;
     }
 
     async function drawSticker(ctx) {
