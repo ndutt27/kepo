@@ -205,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
             img.controls.deleteControl = new fabric.Control({ x: 0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: deleteObject, render: renderDeleteIcon, cornerSize: 24 });
             img.controls.mirrorControl = new fabric.Control({ x: -0.5, y: -0.5, cursorStyle: 'pointer', mouseUpHandler: flipObject, render: renderMirrorIcon, cornerSize: 24 });
             fabricCanvas.add(img);
-            img.bringToFront();
             fabricCanvas.setActiveObject(img);
             fabricCanvas.renderAll();
         }, { crossOrigin: 'anonymous' });
@@ -280,25 +279,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function getFilteredImage(imageElement, filterType) {
         if (filterType === 'none' || !filterType) return imageElement;
-
-        const fabricImage = new fabric.Image(imageElement, { crossOrigin: 'anonymous' });
-        let filter;
-        switch (filterType) {
-            case 'grayscale': filter = new fabric.Image.filters.Grayscale(); break;
-            case 'sepia': filter = new fabric.Image.filters.Sepia(); break;
-            case 'invert': filter = new fabric.Image.filters.Invert(); break;
-            case 'brownie': filter = new fabric.Image.filters.Brownie(); break;
-            case 'vintage': filter = new fabric.Image.filters.Vintage(); break;
-            case 'technicolor': filter = new fabric.Image.filters.Technicolor(); break;
-            case 'polaroid': filter = new fabric.Image.filters.Polaroid(); break;
-            case 'blackwhite': filter = new fabric.Image.filters.BlackWhite(); break;
-            case 'sharpen': filter = new fabric.Image.filters.Convolute({ matrix: [0, -1, 0, -1, 5, -1, 0, -1, 0] }); break;
-            case 'emboss': filter = new fabric.Image.filters.Convolute({ matrix: [1, 1, 1, 1, 0.7, -1, -1, -1, -1] }); break;
-            default: return imageElement;
-        }
-        fabricImage.filters.push(filter);
-        fabricImage.applyFilters();
-        return fabricImage.toCanvasElement();
+        return new Promise(resolve => {
+            const fabricImage = new fabric.Image(imageElement, { crossOrigin: 'anonymous' });
+            let filter;
+            switch (filterType) {
+                case 'grayscale': filter = new fabric.Image.filters.Grayscale(); break;
+                case 'sepia': filter = new fabric.Image.filters.Sepia(); break;
+                case 'invert': filter = new fabric.Image.filters.Invert(); break;
+                case 'brownie': filter = new fabric.Image.filters.Brownie(); break;
+                case 'vintage': filter = new fabric.Image.filters.Vintage(); break;
+                case 'technicolor': filter = new fabric.Image.filters.Technicolor(); break;
+                case 'polaroid': filter = new fabric.Image.filters.Polaroid(); break;
+                case 'blackwhite': filter = new fabric.Image.filters.BlackWhite(); break;
+                case 'sharpen': filter = new fabric.Image.filters.Convolute({ matrix: [0, -1, 0, -1, 5, -1, 0, -1, 0] }); break;
+                case 'emboss': filter = new fabric.Image.filters.Convolute({ matrix: [1, 1, 1, 1, 0.7, -1, -1, -1, -1] }); break;
+                default: resolve(imageElement); return;
+            }
+            fabricImage.filters.push(filter);
+            fabricImage.applyFilters();
+            resolve(fabricImage.toCanvasElement());
+        });
     }
 
     async function redrawCanvas() {
