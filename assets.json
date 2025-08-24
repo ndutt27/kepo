@@ -1,4 +1,1679 @@
 {
+  "frames": {
+    "colors": [
+      {
+        "id": "pinkBtnFrame",
+        "value": "#FFC2D1"
+      },
+      {
+        "id": "blueBtnFrame",
+        "value": "#CAF0F8"
+      },
+      {
+        "id": "yellowBtnFrame",
+        "value": "#FFF8A5"
+      },
+      {
+        "id": "matchaBtnFrame",
+        "value": "#90a955"
+      },
+      {
+        "id": "purpleBtnFrame",
+        "value": "#c19ee0"
+      },
+      {
+        "id": "brownBtnFrame",
+        "value": "#DDBEA9"
+      },
+      {
+        "id": "redBtnFrame",
+        "value": "#780000"
+      },
+      {
+        "id": "whiteBtnFrame",
+        "value": "#FFFFFF"
+      },
+      {
+        "id": "blackBtnFrame",
+        "value": "#000000"
+      },
+      {
+        "id": "colorFrame1755309945918",
+        "value": "#a23450"
+      }
+    ],
+    "images": [
+      {
+        "id": "pinkGlitter",
+        "name": "Pink Glitter",
+        "path": "assets/frame-backgrounds/pink-glitter.jpg"
+      },
+      {
+        "id": "pinkPlaid",
+        "name": "Pink Plaid",
+        "path": "assets/frame-backgrounds/pink-plaid.jpg"
+      },
+      {
+        "id": "bluePlaid",
+        "name": "Blue Plaid",
+        "path": "assets/frame-backgrounds/blue-plaid.jpg"
+      },
+      {
+        "id": "black-cq",
+        "name": "Black Coquette",
+        "path": "assets/frame-backgrounds/black-couqutte.jpg"
+      },
+      {
+        "id": "white-cq",
+        "name": "White Coquette",
+        "path": "assets/frame-backgrounds/white-couquette.jpg"
+      },
+      {
+        "id": "pinkLeather",
+        "name": "Pink Leather",
+        "path": "assets/frame-backgrounds/pink-diamond-leather.jpg"
+      },
+      {
+        "id": "brownKnittedFrame",
+        "name": "Brown Knitted",
+        "path": "assets/frame-backgrounds/brown-knitted.jpg"
+      },
+      {
+        "id": "hotPinkKnittedFrame",
+        "name": "Hot Pink Knitted",
+        "path": "assets/frame-backgrounds/hot-pink-knitted.jpg"
+      },
+      {
+        "id": "redKnittedFrame",
+        "name": "Red Knitted",
+        "path": "assets/frame-backgrounds/red-knitted.jpg"
+      },
+      {
+        "id": "pinkKnittedFrame",
+        "name": "Pink Knitted",
+        "path": "assets/frame-backgrounds/pink-knitted.jpg"
+      },
+      {
+        "id": "redStripesFrame",
+        "name": "Red Stripes",
+        "path": "assets/frame-backgrounds/red-stripes.jpg"
+      },
+      {
+        "id": "greenStripesFrame",
+        "name": "Green Stripes",
+        "path": "assets/frame-backgrounds/green-stripes.jpg"
+      },
+      {
+        "id": "blueStripesFrame",
+        "name": "Blue Stripes",
+        "path": "assets/frame-backgrounds/blue-stripes.jpg"
+      },
+      {
+        "id": "vsPinkFrame",
+        "name": "VS Pink",
+        "path": "assets/frame-backgrounds/vs-pink.jpg"
+      },
+      {
+        "id": "vsYellowFrame",
+        "name": "VS Yellow",
+        "path": "assets/frame-backgrounds/vs-yellow.jpg"
+      },
+      {
+        "id": "blueYellowSquares",
+        "name": "Blue Yellow Squares",
+        "path": "assets/frame-backgrounds/blue-yellow-squares.jpg"
+      },
+      {
+        "id": "blueWhiteSquares",
+        "name": "Blue White Squares",
+        "path": "assets/frame-backgrounds/blue-white-squares.jpg"
+      },
+      {
+        "id": "brownLeopard",
+        "name": "Brown Leopard",
+        "path": "assets/frame-backgrounds/brown-leopard.jpg"
+      },
+      {
+        "id": "cowPrint",
+        "name": "Cow Print",
+        "path": "assets/frame-backgrounds/cow-print.jpg"
+      },
+      {
+        "id": "redLeather",
+        "name": "Red Leather",
+        "path": "assets/frame-backgrounds/red-leather.jpg"
+      },
+      {
+        "id": "pinkGumamela",
+        "name": "Pink Gumamela",
+        "path": "assets/frame-backgrounds/pink-gumamela.jpg"
+      },
+      {
+        "id": "pinkLiliesFrame",
+        "name": "Pink Lilies",
+        "path": "assets/frame-backgrounds/pink-lilies.jpg"
+      },
+      {
+        "id": "whiteKnitted",
+        "name": "White Knitted",
+        "path": "assets/frame-backgrounds/white-knitted-cloth.jpg"
+      },
+      {
+        "id": "ribbonSweaterFrame",
+        "name": "Ribbon Sweater",
+        "path": "assets/frame-backgrounds/ribbon-sweater.jpg"
+      },
+      {
+        "id": "ribbonDenim",
+        "name": "Ribbon Denim",
+        "path": "assets/frame-backgrounds/ribbon-denim.jpg"
+      },
+      {
+        "id": "blackPinkRibbon",
+        "name": "Black Pink Ribbon",
+        "path": "assets/frame-backgrounds/black-pink-ribbon.jpg"
+      },
+      {
+        "id": "fourLockers",
+        "name": "4 Lockers",
+        "path": "assets/frame-backgrounds/4-lockers.jpg"
+      },
+      {
+        "id": "gridPaperFrame",
+        "name": "Grid Paper",
+        "path": "assets/frame-backgrounds/grid-paper.jpg"
+      },
+      {
+        "id": "crumpledPaper",
+        "name": "Crumpled Paper",
+        "path": "assets/frame-backgrounds/crumpled-paper.jpg"
+      },
+      {
+        "id": "roughTextureFrame",
+        "name": "Rough Texture",
+        "path": "assets/frame-backgrounds/rough-texture.jpg"
+      },
+      {
+        "id": "blueBackdrop",
+        "name": "Blue Backdrop",
+        "path": "assets/frame-backgrounds/blue-backdrop.jpg"
+      },
+      {
+        "id": "greenHills",
+        "name": "Green Hills",
+        "path": "assets/frame-backgrounds/green-hills.jpg"
+      },
+      {
+        "id": "sandShells",
+        "name": "Sand Shells",
+        "path": "assets/frame-backgrounds/sand-shells.jpg"
+      },
+      {
+        "id": "waterBeach",
+        "name": "Water",
+        "path": "assets/frame-backgrounds/water.jpg"
+      },
+      {
+        "id": "cocoTrees",
+        "name": "Coco Trees",
+        "path": "assets/frame-backgrounds/coco-trees.jpg"
+      },
+      {
+        "id": "stardustFrame",
+        "name": "Stardust",
+        "path": "assets/frame-backgrounds/stardust.jpg"
+      },
+      {
+        "id": "roseCardFrame",
+        "name": "Rose Card",
+        "path": "assets/frame-backgrounds/rose-card.jpg"
+      },
+      {
+        "id": "princessVintageFrame",
+        "name": "Princess Vintage",
+        "path": "assets/frame-backgrounds/princess-vintage.jpg"
+      },
+      {
+        "id": "redRosesPaintFrame",
+        "name": "Red Roses Paint",
+        "path": "assets/frame-backgrounds/red-roses-paint.jpg"
+      },
+      {
+        "id": "grayTrashFrame",
+        "name": "Gray Trash",
+        "path": "assets/frame-backgrounds/gray-trash.jpg"
+      },
+      {
+        "id": "blackTrashFrame",
+        "name": "Black Trash",
+        "path": "assets/frame-backgrounds/black-trash.jpg"
+      },
+      {
+        "id": "whiteTrashFrame",
+        "name": "White Trash",
+        "path": "assets/frame-backgrounds/white-trash.jpg"
+      },
+      {
+        "id": "partyDrapeFrame",
+        "name": "Party Drape",
+        "path": "assets/frame-backgrounds/party-drape.jpg"
+      },
+      {
+        "id": "partyDotsFrame",
+        "name": "Party Dots",
+        "path": "assets/frame-backgrounds/party-dots.jpg"
+      },
+      {
+        "id": "blingDenimFrame",
+        "name": "Bling Denim",
+        "path": "assets/frame-backgrounds/bling-denim.jpg"
+      },
+      {
+        "id": "imageFrame1755343326883",
+        "name": "kuning",
+        "path": "assets/frame-backgrounds/IMG_2205.jpeg"
+      },
+      {
+        "id": "imageFrame1755382076621",
+        "name": "ebi",
+        "path": "assets/frame-backgrounds/1000003878.jpg"
+      },
+      {
+        "id": "imageFrame1755382089589",
+        "name": "lui",
+        "path": "assets/frame-backgrounds/1000003877.jpg"
+      },
+      {
+        "id": "imageFrame1755525947902",
+        "name": "api",
+        "path": "assets/frame-backgrounds/bee2fb23b9611d99c4f4ea45f2f95f0a.jpg"
+      },
+      {
+        "id": "imageFrame1755525964806",
+        "name": "lumut",
+        "path": "assets/frame-backgrounds/c5320c7e31cfb396300074b0a1950052.jpg"
+      },
+      {
+        "id": "imageFrame1755526008426",
+        "name": "sabrut",
+        "path": "assets/frame-backgrounds/2ef8b712a10615c5bf39a7c057ac27e2.jpg"
+      },
+      {
+        "id": "imageFrame1756034912532",
+        "name": "ituhh",
+        "path": "assets/frame-backgrounds/pose3-2.png"
+      }
+    ]
+  },
+  "shapes": [
+    {
+      "id": "noneFrameShape",
+      "name": "None",
+      "icon": "assets/frame-shapes/noneShape.png",
+      "value": "default"
+    },
+    {
+      "id": "softFrameShape",
+      "name": "Square",
+      "icon": "assets/frame-shapes/squareShape.png",
+      "value": "rounded"
+    },
+    {
+      "id": "circleFrameShape",
+      "name": "Circle",
+      "icon": "assets/frame-shapes/circleShape.png",
+      "value": "circle"
+    },
+    {
+      "id": "heartFrameShape",
+      "name": "Heart",
+      "icon": "assets/frame-shapes/heartShape.png",
+      "value": "heart"
+    }
+  ],
+  "stickers": [
+    {
+      "id": "noneSticker",
+      "name": "None",
+      "icon": "assets/frame-shapes/noneShape.png",
+      "layout": null
+    },
+    {
+      "id": "bunnySticker",
+      "name": "Bunny",
+      "icon": "assets/stickers/bunny1.png",
+      "layout": "bunny"
+    },
+    {
+      "id": "luckySticker",
+      "name": "Lucky",
+      "icon": "assets/stickers/lucky1.png",
+      "layout": "lucky"
+    },
+    {
+      "id": "kissSticker",
+      "name": "Kiss",
+      "icon": "assets/stickers/kiss1.png",
+      "layout": "kiss"
+    },
+    {
+      "id": "sweetSticker",
+      "name": "Sweet",
+      "icon": "assets/stickers/sweet1.png",
+      "layout": "sweet"
+    },
+    {
+      "id": "ribbonSticker",
+      "name": "Ribbon",
+      "icon": "assets/stickers/ribbon1.png",
+      "layout": "ribbon"
+    },
+    {
+      "id": "sparkleSticker",
+      "name": "Sparkle",
+      "icon": "assets/stickers/sparkle2.png",
+      "layout": "sparkle"
+    },
+    {
+      "id": "pearlSticker",
+      "name": "Pearl",
+      "icon": "assets/stickers/pearl2.png",
+      "layout": "pearl"
+    },
+    {
+      "id": "softSticker",
+      "name": "Soft",
+      "icon": "assets/stickers/soft5.png",
+      "layout": "soft"
+    },
+    {
+      "id": "confettiSticker",
+      "name": "Confetti",
+      "icon": "assets/stickers/confetti/confetti.png",
+      "layout": "confetti"
+    },
+    {
+      "id": "ribbonCoquetteSticker",
+      "name": "Ribbon Coquette",
+      "icon": "assets/stickers/ribboncq4.png",
+      "layout": "ribboncoquette"
+    },
+    {
+      "id": "blueRibbonCoquetteSticker",
+      "name": "Blue Ribbon",
+      "icon": "assets/stickers/blueRibbon2.png",
+      "layout": "blueribboncoquette"
+    },
+    {
+      "id": "blackStarSticker",
+      "name": "Black Star",
+      "icon": "assets/stickers/blackStar5.png",
+      "layout": "blackstar"
+    },
+    {
+      "id": "yellowChickenSticker",
+      "name": "Yellow Chicken",
+      "icon": "assets/stickers/yellowChicken1.png",
+      "layout": "yellowchicken"
+    },
+    {
+      "id": "brownBearSticker",
+      "name": "Brown Bear",
+      "icon": "assets/stickers/brownyBear6.png",
+      "layout": "brownbear"
+    },
+    {
+      "id": "lotsHeartSticker",
+      "name": "Heart",
+      "icon": "assets/stickers/lotsHeart8.png",
+      "layout": "lotsheart"
+    },
+    {
+      "id": "tabbyCatSticker",
+      "name": "Tabby Cat",
+      "icon": "assets/stickers/tabbyCat6.png",
+      "layout": "tabbycat"
+    },
+    {
+      "id": "ballerinaCappuccinoSticker",
+      "name": "Cat",
+      "icon": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png",
+      "layout": "ballerinacappuccino"
+    },
+    {
+      "id": "doggyWhiteSticker",
+      "name": "Dog",
+      "icon": "assets/stickers/doggyWhite/doggyWhite1.png",
+      "layout": "doggywhite"
+    },
+    {
+      "id": "sakuraBlossomSticker",
+      "name": "Sakura",
+      "icon": "assets/stickers/sakuraBlossom/sakuraBlossom6.png",
+      "layout": "sakurablossom"
+    },
+    {
+      "id": "myGirlsSticker",
+      "name": "Girls",
+      "icon": "assets/stickers/myGirls/myGirls12.png",
+      "layout": "mygirls"
+    },
+    {
+      "id": "classicSticker",
+      "name": "Classic",
+      "icon": "assets/stickers/classic1.png",
+      "layout": "classic"
+    },
+    {
+      "id": "classicBSticker",
+      "name": "Classic B",
+      "icon": "assets/stickers/classic4.png",
+      "layout": "classicB"
+    }
+  ],
+  "logos": [
+    {
+      "id": "engLogo",
+      "name": "ENG",
+      "value": "pictlord"
+    },
+    {
+      "id": "korLogo",
+      "name": "KOR",
+      "value": "ㅔㅑㅊ시ㅐㄱㅇ"
+    },
+    {
+      "id": "cnLogo",
+      "name": "CN",
+      "value": "照相亭"
+    }
+  ],
+  "stickerLayouts": {
+    "kiss": [
+      {
+        "src": "assets/stickers/kiss1.png",
+        "x": 30,
+        "y": 300,
+        "size": 170
+      }
+    ],
+    "sweet": [
+      {
+        "src": "assets/stickers/sweet1.png",
+        "x": 17,
+        "y": 80,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/sweet2.png",
+        "x": 492,
+        "y": 390,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/sweet3.png",
+        "x": 30,
+        "y": 1152,
+        "size": 90
+      }
+    ],
+    "ribbon": [
+      {
+        "src": "assets/stickers/ribbon1.png",
+        "x": 17,
+        "y": 80,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/ribbon3.png",
+        "x": 497,
+        "y": 550,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/ribbon2.png",
+        "x": 15,
+        "y": 972,
+        "size": 90
+      }
+    ],
+    "sparkle": [
+      {
+        "src": "assets/stickers/sparkle1.png",
+        "x": 392,
+        "y": 150,
+        "size": 250
+      },
+      {
+        "src": "assets/stickers/sparkle2.png",
+        "x": 2,
+        "y": 502,
+        "size": 200
+      },
+      {
+        "src": "assets/stickers/sparkle2.png",
+        "x": 442,
+        "y": 1172,
+        "size": 110
+      }
+    ],
+    "pearl": [
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 35,
+        "y": 30,
+        "size": 30
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 25,
+        "y": 50,
+        "size": 25
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 65,
+        "y": 40,
+        "size": 20
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 95,
+        "y": 40,
+        "size": 15
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 75,
+        "y": 26,
+        "size": 15
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 25,
+        "y": 65,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 25,
+        "y": 120,
+        "size": 15
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 525,
+        "y": 732,
+        "size": 15
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 500,
+        "y": 662,
+        "size": 15
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 540,
+        "y": 702,
+        "size": 25
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 530,
+        "y": 652,
+        "size": 45
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 510,
+        "y": 682,
+        "size": 30
+      },
+      {
+        "src": "assets/stickers/pearl1.png",
+        "x": 510,
+        "y": 642,
+        "size": 30
+      },
+      {
+        "src": "assets/stickers/pearl2.png",
+        "x": 22,
+        "y": 1172,
+        "size": 150
+      },
+      {
+        "src": "assets/stickers/pearl2.png",
+        "x": 442,
+        "y": 270,
+        "size": 120
+      }
+    ],
+    "classic": [
+      {
+        "src": "assets/stickers/classic1.png",
+        "x": 1,
+        "y": 50,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/classic1.png",
+        "x": 1,
+        "y": 450,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/classic1.png",
+        "x": 1,
+        "y": 950,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/classic2.png",
+        "x": 4,
+        "y": 80,
+        "size": 20
+      },
+      {
+        "src": "assets/stickers/classic2.png",
+        "x": 4,
+        "y": 980,
+        "size": 20
+      },
+      {
+        "src": "assets/stickers/classic3.png",
+        "x": 517,
+        "y": 70,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/classic3.png",
+        "x": 517,
+        "y": 570,
+        "size": 120
+      }
+    ],
+    "classicB": [
+      {
+        "src": "assets/stickers/classic4.png",
+        "x": 1,
+        "y": 50,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/classic4.png",
+        "x": 1,
+        "y": 450,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/classic4.png",
+        "x": 1,
+        "y": 950,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/classic5.png",
+        "x": 4,
+        "y": 80,
+        "size": 20
+      },
+      {
+        "src": "assets/stickers/classic5.png",
+        "x": 4,
+        "y": 980,
+        "size": 20
+      },
+      {
+        "src": "assets/stickers/classic6.png",
+        "x": 517,
+        "y": 70,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/classic6.png",
+        "x": 517,
+        "y": 570,
+        "size": 120
+      }
+    ],
+    "soft": [
+      {
+        "src": "assets/stickers/soft1.png",
+        "x": 5,
+        "y": 20,
+        "size": 145
+      },
+      {
+        "src": "assets/stickers/soft2.png",
+        "x": 472,
+        "y": 30,
+        "size": 100
+      },
+      {
+        "src": "assets/stickers/soft3.png",
+        "x": 10,
+        "y": 500,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/soft4.png",
+        "x": 15,
+        "y": 1152,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/soft5.png",
+        "x": 462,
+        "y": 1152,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/soft6.png",
+        "x": 462,
+        "y": 430,
+        "size": 120
+      }
+    ],
+    "bunny": [
+      {
+        "src": "assets/stickers/bunny1.png",
+        "x": 422,
+        "y": 10,
+        "size": 150
+      },
+      {
+        "src": "assets/stickers/bunny2.png",
+        "x": 15,
+        "y": 300,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/bunny2.png",
+        "x": 492,
+        "y": 700,
+        "size": 75
+      },
+      {
+        "src": "assets/stickers/bunny3.png",
+        "x": 15,
+        "y": 1152,
+        "size": 135
+      }
+    ],
+    "lucky": [
+      {
+        "src": "assets/stickers/lucky2.png",
+        "x": 422,
+        "y": 20,
+        "size": 150
+      },
+      {
+        "src": "assets/stickers/lucky1.png",
+        "x": 15,
+        "y": 1137,
+        "size": 170
+      },
+      {
+        "src": "assets/stickers/lucky3.png",
+        "x": 472,
+        "y": 420,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/lucky4.png",
+        "x": 472,
+        "y": 495,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/lucky5.png",
+        "x": 464,
+        "y": 560,
+        "size": 110
+      },
+      {
+        "src": "assets/stickers/lucky6.png",
+        "x": 472,
+        "y": 650,
+        "size": 100
+      },
+      {
+        "src": "assets/stickers/lucky7.png",
+        "x": 472,
+        "y": 730,
+        "size": 95
+      }
+    ],
+    "confetti": [
+      {
+        "src": "assets/stickers/confetti/star5.png",
+        "x": 100,
+        "y": 20,
+        "size": 40
+      },
+      {
+        "src": "assets/stickers/confetti/circle2.png",
+        "x": 472,
+        "y": 45,
+        "size": 50
+      },
+      {
+        "src": "assets/stickers/confetti/circle1.png",
+        "x": 30,
+        "y": 150,
+        "size": 35
+      },
+      {
+        "src": "assets/stickers/confetti/circle1.png",
+        "x": 522,
+        "y": 180,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/confetti/star2.png",
+        "x": 492,
+        "y": 320,
+        "size": 40
+      },
+      {
+        "src": "assets/stickers/confetti/star1.png",
+        "x": 100,
+        "y": 450,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/confetti/circle2.png",
+        "x": 562,
+        "y": 530,
+        "size": 27
+      },
+      {
+        "src": "assets/stickers/confetti/star4.png",
+        "x": 522,
+        "y": 580,
+        "size": 27
+      },
+      {
+        "src": "assets/stickers/confetti/star3.png",
+        "x": 22,
+        "y": 690,
+        "size": 47
+      },
+      {
+        "src": "assets/stickers/confetti/circle1.png",
+        "x": 392,
+        "y": 800,
+        "size": 32
+      },
+      {
+        "src": "assets/stickers/confetti/star2.png",
+        "x": 100,
+        "y": 850,
+        "size": 49
+      },
+      {
+        "src": "assets/stickers/confetti/circle2.png",
+        "x": 22,
+        "y": 990,
+        "size": 30
+      },
+      {
+        "src": "assets/stickers/confetti/star1.png",
+        "x": 492,
+        "y": 1152,
+        "size": 35
+      }
+    ],
+    "ribboncoquette": [
+      {
+        "src": "assets/stickers/ribboncq2.png",
+        "x": 1,
+        "y": 0,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/ribboncq3.png",
+        "x": 295,
+        "y": 15,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/ribboncq1.png",
+        "x": 553,
+        "y": 25,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/ribboncq1.png",
+        "x": -22,
+        "y": 290,
+        "size": 75
+      },
+      {
+        "src": "assets/stickers/ribboncq2.png",
+        "x": 492,
+        "y": 240,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/ribboncq3.png",
+        "x": 5,
+        "y": 640,
+        "size": 52
+      },
+      {
+        "src": "assets/stickers/ribboncq3.png",
+        "x": 514,
+        "y": 520,
+        "size": 69
+      },
+      {
+        "src": "assets/stickers/ribboncq1.png",
+        "x": 140,
+        "y": 570,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/ribboncq2.png",
+        "x": 550,
+        "y": 760,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/ribboncq1.png",
+        "x": -15,
+        "y": 890,
+        "size": 72
+      },
+      {
+        "src": "assets/stickers/ribboncq3.png",
+        "x": 522,
+        "y": 1020,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/ribboncq2.png",
+        "x": -8,
+        "y": 1152,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/ribboncq3.png",
+        "x": 522,
+        "y": 1252,
+        "size": 55
+      }
+    ],
+    "blueribboncoquette": [
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 1,
+        "y": 0,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 295,
+        "y": 15,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 553,
+        "y": 25,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": -22,
+        "y": 290,
+        "size": 75
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 492,
+        "y": 240,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 5,
+        "y": 640,
+        "size": 52
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 514,
+        "y": 520,
+        "size": 69
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 140,
+        "y": 570,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 550,
+        "y": 760,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": -15,
+        "y": 890,
+        "size": 72
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 522,
+        "y": 1020,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": -8,
+        "y": 1152,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/blueRibbon.png",
+        "x": 522,
+        "y": 1252,
+        "size": 55
+      }
+    ],
+    "blackstar": [
+      {
+        "src": "assets/stickers/blackStar1.png",
+        "x": 180,
+        "y": -90,
+        "size": 250
+      },
+      {
+        "src": "assets/stickers/blackStar2.png",
+        "x": 502,
+        "y": -30,
+        "size": 110
+      },
+      {
+        "src": "assets/stickers/blackStar3.png",
+        "x": 18,
+        "y": 130,
+        "size": 98
+      },
+      {
+        "src": "assets/stickers/blackStar4.png",
+        "x": 472,
+        "y": 230,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/blackStar2.png",
+        "x": -17,
+        "y": 390,
+        "size": 65
+      },
+      {
+        "src": "assets/stickers/blackStar3.png",
+        "x": 402,
+        "y": 590,
+        "size": 145
+      },
+      {
+        "src": "assets/stickers/blackStar2.png",
+        "x": 15,
+        "y": 750,
+        "size": 45
+      },
+      {
+        "src": "assets/stickers/blackStar2.png",
+        "x": 512,
+        "y": 950,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/blackStar4.png",
+        "x": -50,
+        "y": 1202,
+        "size": 190
+      }
+    ],
+    "yellowchicken": [
+      {
+        "src": "assets/stickers/yellowChicken1.png",
+        "x": 1,
+        "y": 2,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/yellowChicken2.png",
+        "x": 220,
+        "y": -2,
+        "size": 66
+      },
+      {
+        "src": "assets/stickers/yellowChicken1.png",
+        "x": 432,
+        "y": 25,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/yellowChicken2.png",
+        "x": 502,
+        "y": 145,
+        "size": 85
+      },
+      {
+        "src": "assets/stickers/yellowChicken2.png",
+        "x": -20,
+        "y": 245,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/yellowChicken2.png",
+        "x": 140,
+        "y": 360,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/yellowChicken3.png",
+        "x": 522,
+        "y": 490,
+        "size": 85
+      },
+      {
+        "src": "assets/stickers/yellowChicken1.png",
+        "x": -5,
+        "y": 630,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/yellowChicken1.png",
+        "x": 522,
+        "y": 830,
+        "size": 75
+      },
+      {
+        "src": "assets/stickers/yellowChicken2.png",
+        "x": 472,
+        "y": 1162,
+        "size": 65
+      },
+      {
+        "src": "assets/stickers/yellowChicken4.png",
+        "x": 1,
+        "y": 1122,
+        "size": 95
+      }
+    ],
+    "brownbear": [
+      {
+        "src": "assets/stickers/brownyBear1.png",
+        "x": 1,
+        "y": 5,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/brownyBear2.png",
+        "x": 492,
+        "y": 25,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/brownyBear3.png",
+        "x": -8,
+        "y": 315,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/brownyBear4.png",
+        "x": 492,
+        "y": 490,
+        "size": 91
+      },
+      {
+        "src": "assets/stickers/brownyBear5.png",
+        "x": -2,
+        "y": 590,
+        "size": 91
+      },
+      {
+        "src": "assets/stickers/brownyBear2.png",
+        "x": 522,
+        "y": 790,
+        "size": 87
+      },
+      {
+        "src": "assets/stickers/brownyBear3.png",
+        "x": -1,
+        "y": 1032,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/brownyBear6.png",
+        "x": 502,
+        "y": 1152,
+        "size": 92
+      }
+    ],
+    "lotsheart": [
+      {
+        "src": "assets/stickers/lotsHeart1.png",
+        "x": 1,
+        "y": 15,
+        "size": 78
+      },
+      {
+        "src": "assets/stickers/lotsHeart5.png",
+        "x": -18,
+        "y": 450,
+        "size": 78
+      },
+      {
+        "src": "assets/stickers/lotsHeart7.png",
+        "x": -8,
+        "y": 860,
+        "size": 60
+      },
+      {
+        "src": "assets/stickers/lotsHeart6.png",
+        "x": 25,
+        "y": 1182,
+        "size": 70
+      },
+      {
+        "src": "assets/stickers/lotsHeart2.png",
+        "x": 342,
+        "y": 20,
+        "size": 60
+      },
+      {
+        "src": "assets/stickers/lotsHeart4.png",
+        "x": 522,
+        "y": 200,
+        "size": 57
+      },
+      {
+        "src": "assets/stickers/lotsHeart6.png",
+        "x": 512,
+        "y": 650,
+        "size": 60
+      },
+      {
+        "src": "assets/stickers/lotsHeart3.png",
+        "x": 542,
+        "y": 990,
+        "size": 50
+      },
+      {
+        "src": "assets/stickers/lotsHeart8.png",
+        "x": 502,
+        "y": 1212,
+        "size": 70
+      }
+    ],
+    "tabbycat": [
+      {
+        "src": "assets/stickers/tabbyCat1.png",
+        "x": 1,
+        "y": 2,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/tabbyCat2.png",
+        "x": 220,
+        "y": -2,
+        "size": 66
+      },
+      {
+        "src": "assets/stickers/tabbyCat3.png",
+        "x": 432,
+        "y": 25,
+        "size": 60
+      },
+      {
+        "src": "assets/stickers/tabbyCat4.png",
+        "x": 502,
+        "y": 145,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/tabbyCat9.png",
+        "x": -20,
+        "y": 245,
+        "size": 100
+      },
+      {
+        "src": "assets/stickers/tabbyCat2.png",
+        "x": 140,
+        "y": 360,
+        "size": 55
+      },
+      {
+        "src": "assets/stickers/tabbyCat5.png",
+        "x": 502,
+        "y": 490,
+        "size": 95
+      },
+      {
+        "src": "assets/stickers/tabbyCat6.png",
+        "x": -5,
+        "y": 630,
+        "size": 84
+      },
+      {
+        "src": "assets/stickers/tabbyCat9.png",
+        "x": 522,
+        "y": 830,
+        "size": 75
+      },
+      {
+        "src": "assets/stickers/tabbyCat3.png",
+        "x": -5,
+        "y": 830,
+        "size": 75
+      },
+      {
+        "src": "assets/stickers/tabbyCat3.png",
+        "x": 472,
+        "y": 1162,
+        "size": 65
+      },
+      {
+        "src": "assets/stickers/tabbyCat7.png",
+        "x": 1,
+        "y": 1122,
+        "size": 120
+      }
+    ],
+    "ballerinacappuccino": [
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino1.png",
+        "x": 1,
+        "y": 2,
+        "size": 125
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png",
+        "x": 250,
+        "y": -2,
+        "size": 90
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png",
+        "x": 462,
+        "y": 25,
+        "size": 150
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino2.png",
+        "x": 472,
+        "y": 345,
+        "size": 129
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino5.png",
+        "x": -10,
+        "y": 595,
+        "size": 150
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino7.png",
+        "x": -10,
+        "y": 295,
+        "size": 100
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino6.png",
+        "x": 477,
+        "y": 750,
+        "size": 110
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino3.png",
+        "x": -5,
+        "y": 1152,
+        "size": 145
+      },
+      {
+        "src": "assets/stickers/ballerinaCappuccino/ballerinaCappuccino4.png",
+        "x": 502,
+        "y": 1152,
+        "size": 95
+      }
+    ],
+    "doggywhite": [
+      {
+        "src": "assets/stickers/doggyWhite/doggyWhite3.png",
+        "x": 1,
+        "y": 230,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/doggyWhite/doggyWhite1.png",
+        "x": 462,
+        "y": 25,
+        "size": 125
+      },
+      {
+        "src": "assets/stickers/doggyWhite/doggyWhite4.png",
+        "x": 482,
+        "y": 545,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/doggyWhite/doggyWhite2.png",
+        "x": -10,
+        "y": 695,
+        "size": 125
+      },
+      {
+        "src": "assets/stickers/doggyWhite/doggyWhite3.png",
+        "x": -5,
+        "y": 1152,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/doggyWhite/doggyWhite1.png",
+        "x": 462,
+        "y": 1152,
+        "size": 125
+      }
+    ],
+    "mygirls": [
+      {
+        "src": "assets/stickers/myGirls/myGirls4.png",
+        "x": -30,
+        "y": 15,
+        "size": 200
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls7.png",
+        "x": 200,
+        "y": -25,
+        "size": 215
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls8.png",
+        "x": 482,
+        "y": 25,
+        "size": 105
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls10.png",
+        "x": 442,
+        "y": 95,
+        "size": 155
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls11.png",
+        "x": 497,
+        "y": 185,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls6.png",
+        "x": 482,
+        "y": 395,
+        "size": 135
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls4.png",
+        "x": 482,
+        "y": 545,
+        "size": 135
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls1.png",
+        "x": 482,
+        "y": 695,
+        "size": 135
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls2.png",
+        "x": -20,
+        "y": 305,
+        "size": 125
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls4.png",
+        "x": -20,
+        "y": 450,
+        "size": 125
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls6.png",
+        "x": -20,
+        "y": 580,
+        "size": 125
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls10.png",
+        "x": -15,
+        "y": 982,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls11.png",
+        "x": 15,
+        "y": 1052,
+        "size": 155
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls9.png",
+        "x": -5,
+        "y": 1152,
+        "size": 115
+      },
+      {
+        "src": "assets/stickers/myGirls/myGirls5.png",
+        "x": 402,
+        "y": 1062,
+        "size": 222
+      }
+    ],
+    "sakurablossom": [
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom1.png",
+        "x": 1,
+        "y": 5,
+        "size": 120
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom2.png",
+        "x": 492,
+        "y": 25,
+        "size": 80
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom4.png",
+        "x": 472,
+        "y": 95,
+        "size": 40
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom2.png",
+        "x": -8,
+        "y": 315,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom3.png",
+        "x": 35,
+        "y": 390,
+        "size": 50
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom2.png",
+        "x": 492,
+        "y": 490,
+        "size": 91
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom4.png",
+        "x": 452,
+        "y": 430,
+        "size": 35
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom2.png",
+        "x": -2,
+        "y": 590,
+        "size": 91
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom3.png",
+        "x": -15,
+        "y": 700,
+        "size": 45
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom5.png",
+        "x": 50,
+        "y": 900,
+        "size": 45
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom1.png",
+        "x": 522,
+        "y": 790,
+        "size": 87
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom2.png",
+        "x": -1,
+        "y": 1032,
+        "size": 82
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom5.png",
+        "x": 30,
+        "y": 1252,
+        "size": 48
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom5.png",
+        "x": 90,
+        "y": 1312,
+        "size": 44
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom2.png",
+        "x": 502,
+        "y": 1152,
+        "size": 92
+      },
+      {
+        "src": "assets/stickers/sakuraBlossom/sakuraBlossom4.png",
+        "x": 552,
+        "y": 1062,
+        "size": 40
+      }
+    ]
+  },
   "customStickers": [
     {
       "id": "custom-sticker-1756004353916",
@@ -8,6 +1683,5 @@
       "id": "custom-sticker-1756010922189",
       "src": "assets/stickers/custom/IMG_2707.png"
     }
-  ],
-  "dynamicFrames": []
+  ]
 }
