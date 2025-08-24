@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
+    let logoObject = null;
     let fabricCanvas = null;
     const canvasWidth = 592;
     const canvasHeight = 1352;
@@ -176,10 +177,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const renderLogoButtons = () => {
         if (!assetsData.logos || !logoButtonsContainer) return;
         logoButtonsContainer.innerHTML = '';
+
+        const noneBtn = document.createElement('button');
+        noneBtn.className = 'neumorphic-btn logoCustomBtn';
+        noneBtn.dataset.text = 'none';
+        noneBtn.textContent = 'None';
+        logoButtonsContainer.appendChild(noneBtn);
+
         assetsData.logos.forEach((logo, index) => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn logoCustomBtn';
-            if(index === 0) btn.classList.add('active');
+            if(index === 0) {
+                btn.classList.add('active');
+                // Programmatically click the first logo to set the initial state
+                setTimeout(() => handleLogoClick({ target: btn }), 0);
+            }
             btn.dataset.text = logo.value;
             btn.textContent = logo.name;
             logoButtonsContainer.appendChild(btn);
@@ -209,7 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
         dateTimeCheckbox.addEventListener('change', redrawCanvas);
         logoColorPicker.addEventListener('input', (e) => {
             textColor = e.target.value;
-            redrawCanvas();
+            if (logoObject) {
+                logoObject.set('fill', textColor);
+                fabricCanvas.requestRenderAll();
+            }
         });
     };
 
@@ -275,10 +290,37 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleLogoClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
+
+        if (fabricCanvas && logoObject) {
+            fabricCanvas.remove(logoObject);
+        }
+
         selectedText = btn.dataset.text;
+
+        if (selectedText !== 'none') {
+            logoObject = new fabric.Text(selectedText, {
+                left: canvasWidth / 2,
+                top: canvasHeight - 65,
+                originX: 'center',
+                originY: 'center',
+                fontFamily: 'Arial, Roboto, sans-serif',
+                fontWeight: 'bold',
+                fontSize: 32,
+                fill: textColor,
+                borderColor: '#E28585',
+                cornerColor: '#E28585',
+                cornerSize: 12,
+                transparentCorners: false
+            });
+            fabricCanvas.add(logoObject);
+            fabricCanvas.setActiveObject(logoObject);
+        } else {
+            logoObject = null;
+        }
+
         logoButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        redrawCanvas();
+        fabricCanvas.requestRenderAll();
     }
 
     function setBackground(option) {
@@ -361,11 +403,6 @@ document.addEventListener('DOMContentLoaded', function() {
             bgCtx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         }
         
-        bgCtx.fillStyle = textColor;
-        bgCtx.font = 'bold 32px Arial, Roboto, sans-serif';
-        bgCtx.textAlign = 'center';
-        bgCtx.fillText(selectedText, canvasWidth / 2, canvasHeight - 55);
-
         if (dateCheckbox.checked || dateTimeCheckbox.checked) {
             const currentDate = new Date();
             let displayText = '';

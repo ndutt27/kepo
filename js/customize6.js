@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let backgroundColor = '#FFFFFF';
     let backgroundImage = null;
     let textColor = '#E28585';
+    let logoObject = null;
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
     const canvasHeight = 1352;
@@ -180,10 +181,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const renderLogoButtons = () => {
         if (!assetsData.logos || !logoButtonsContainer) return;
         logoButtonsContainer.innerHTML = '';
+
+        const noneBtn = document.createElement('button');
+        noneBtn.className = 'neumorphic-btn logoCustomBtn';
+        noneBtn.dataset.text = 'none';
+        noneBtn.textContent = 'None';
+        logoButtonsContainer.appendChild(noneBtn);
+
         assetsData.logos.forEach((logo, index) => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn logoCustomBtn';
-            if(index === 0) btn.classList.add('active');
+            if(index === 0) {
+                btn.classList.add('active');
+                // Programmatically click the first logo to set the initial state
+                setTimeout(() => handleLogoClick({ target: btn }), 0);
+            }
             btn.dataset.text = logo.value;
             btn.textContent = logo.name;
             logoButtonsContainer.appendChild(btn);
@@ -213,7 +225,10 @@ document.addEventListener('DOMContentLoaded', function() {
         dateTimeCheckbox.addEventListener('change', redrawCanvas);
         logoColorPicker.addEventListener('input', (e) => {
             textColor = e.target.value;
-            redrawCanvas();
+            if (logoObject) {
+                logoObject.set('fill', textColor);
+                fabricCanvas.requestRenderAll();
+            }
         });
     };
 
@@ -278,10 +293,37 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleLogoClick(e) {
         const btn = e.target.closest('.neumorphic-btn');
         if (!btn) return;
+
+        if (fabricCanvas && logoObject) {
+            fabricCanvas.remove(logoObject);
+        }
+
         selectedText = btn.dataset.text;
+
+        if (selectedText !== 'none') {
+            logoObject = new fabric.Text(selectedText, {
+                left: canvasWidth / 2,
+                top: canvasHeight - 65,
+                originX: 'center',
+                originY: 'center',
+                fontFamily: 'Arial, Roboto, sans-serif',
+                fontWeight: 'bold',
+                fontSize: 32,
+                fill: textColor,
+                borderColor: '#E28585',
+                cornerColor: '#E28585',
+                cornerSize: 12,
+                transparentCorners: false
+            });
+            fabricCanvas.add(logoObject);
+            fabricCanvas.setActiveObject(logoObject);
+        } else {
+            logoObject = null;
+        }
+
         logoButtonsContainer.querySelectorAll('.neumorphic-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        redrawCanvas();
+        fabricCanvas.requestRenderAll();
     }
 
     function setBackground(option) {
@@ -475,19 +517,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function clipAndDrawImage(ctx, img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, shapeType) {
         ctx.save();
         ctx.beginPath();
+        const centerX = dx + dWidth / 2;
+        const centerY = dy + dHeight / 2;
         if (shapeType === 'circle') {
-            ctx.arc(dx + dWidth / 2, dy + dHeight / 2, Math.min(dWidth, dHeight) / 2, 0, Math.PI * 2);
+            const radius = Math.min(dWidth, dHeight) / 2;
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         } else if (shapeType === 'rounded') {
-            const r = 30;
-            ctx.moveTo(dx + r, dy);
-            ctx.lineTo(dx + dWidth - r, dy);
-            ctx.quadraticCurveTo(dx + dWidth, dy, dx + dWidth, dy + r);
-            ctx.lineTo(dx + dWidth, dy + dHeight - r);
-            ctx.quadraticCurveTo(dx + dWidth, dy + dHeight, dx + dWidth - r, dy + dHeight);
-            ctx.lineTo(dx + r, dy + dHeight);
-            ctx.quadraticCurveTo(dx, dy + dHeight, dx, dy + dHeight - r);
-            ctx.lineTo(dx, dy + r);
-            ctx.quadraticCurveTo(dx, dy, dx + r, dy);
+            ctx.roundRect(dx, dy, dWidth, dHeight, [30]);
         } else if (shapeType === 'heart') {
             ctx.moveTo(dx + dWidth / 2, dy + dHeight);
             ctx.bezierCurveTo(dx + dWidth * 1.25, dy + dHeight * 0.7, dx + dWidth * 0.9, dy - dHeight * 0.1, dx + dWidth / 2, dy + dHeight * 0.25);
@@ -552,11 +588,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        ctx.fillStyle = textColor;
-        ctx.font = 'bold 32px Arial, Roboto, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(selectedText, stackedCanvas.width / 2, stackedCanvas.height - 55);
-
         if (dateCheckbox.checked || dateTimeCheckbox.checked) {
             const currentDate = new Date();
             let displayText = '';
@@ -572,25 +603,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         await drawSticker(ctx, stackedCanvas);
 
-        updatePreview(stackedCanvas);
-        return stackedCanvas;
+        fabricCanvas.setBackgroundImage(new fabric.Image(stackedCanvas), fabricCanvas.renderAll.bind(fabricCanvas));
     }
 
-    function updatePreview(canvas) {
-        if (!photoCustomPreview) return;
-        photoCustomPreview.innerHTML = '';
-        canvas.style.width = (window.innerWidth <= 768) ? "190px" : "230px";
-        if (backgroundColor === '#FFFFFF' && backgroundType === 'color') {
-            canvas.style.border = '1px solid #ccc';
-        } else {
-            canvas.style.border = 'none';
-        }
-        photoCustomPreview.appendChild(canvas);
-    }
-
-    // --- Expose the drawing function to the global window object ---
-    // This allows the script in customize.html to call it.
-    window.drawFinalImage = redrawCanvas;
+    window.drawFinalImage = async () => {
+        if (!fabricCanvas) return null;
+        fabricCanvas.discardActiveObject().renderAll();
+        const zoom = fabricCanvas.getZoom();
+        const dataURL = fabricCanvas.toDataURL({
+            format: 'png',
+            quality: 1.0,
+            multiplier: 1 / zoom
+        });
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = canvasWidth;
+        finalCanvas.height = canvasHeight;
+        const ctx = finalCanvas.getContext('2d');
+        const img = new Image();
+        return new Promise(resolve => {
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                resolve(finalCanvas);
+            };
+            img.src = dataURL;
+        });
+    };
 
     init();
 });
