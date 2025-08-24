@@ -256,8 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { crossOrigin: 'anonymous' });
     }
 
-    // --- FIXED: Filter handling logic is now more efficient and correct ---
-    async function handleFilterClick(e) {
+    function handleFilterClick(e) {
         const btn = e.target.closest('.filter-btn');
         if (!btn) return;
         selectedFilter = btn.dataset.filter;
@@ -266,30 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const photoObjects = fabricCanvas.getObjects().filter(obj => obj.isPhoto);
 
-        // Create an array of promises for all image updates
-        const updatePromises = photoObjects.map(photoObj => {
-            return new Promise(async (resolve) => {
-                // Ensure originalImage exists before proceeding
-                if (!photoObj.originalImage) {
-                    console.error("Photo object is missing its originalImage property.", photoObj);
-                    resolve(); // Resolve to not block other updates
-                    return;
-                }
-                
-                const originalImageEl = photoObj.originalImage;
-                const filteredCanvasEl = await getFilteredImage(originalImageEl, selectedFilter);
-
-                // Update the source of the photo object
-                photoObj.setSrc(filteredCanvasEl.toDataURL(), () => {
-                    resolve(); // Resolve the promise once the image source is set
-                }, { crossOrigin: 'anonymous' });
-            });
+        photoObjects.forEach(async (photoObj) => {
+            const originalImageEl = photoObj.originalImage;
+            const filteredCanvasEl = await getFilteredImage(originalImageEl, selectedFilter);
+            
+            photoObj.setSrc(filteredCanvasEl.toDataURL(), () => {
+                fabricCanvas.renderAll();
+            }, { crossOrigin: 'anonymous' });
         });
-
-        // Wait for all images to be updated
-        await Promise.all(updatePromises);
-        // Render the canvas only once after all updates are complete
-        fabricCanvas.renderAll();
     }
 
     function setBackground(option) {
@@ -378,16 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 fImg.set({
                     left: borderWidth,
                     top: borderWidth + i * (photoHeight + spacing),
-                    isPhoto: true,
-                    // --- FIXED: Added originalImage property to the canvas object ---
-                    originalImage: img.originalImage
+                    isPhoto: true
                 });
                 fabricCanvas.add(fImg);
             }
         } else { // For 4 and 6 poses
             const columns = 2;
             const rows = (poseCount === 6) ? 3 : 2;
-            const borderWidth = 30, spacing = 12, bottomPadding = (poseCount === 6) ? 100 : 250;
+            const borderWidth = 30, spacing = 12, bottomPadding = (poseCount === 6) ? 50 : 250;
             const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
             const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
             const photoWidth = availableWidth / columns;
@@ -403,9 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 fImg.set({
                     left: borderWidth + col * (photoWidth + spacing),
                     top: borderWidth + row * (photoHeight + spacing),
-                    // --- FIXED: Added missing isPhoto and originalImage properties ---
-                    isPhoto: true,
-                    originalImage: img.originalImage
                 });
                 fabricCanvas.add(fImg);
                 fImg.sendToBack();
