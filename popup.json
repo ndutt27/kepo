@@ -1,35 +1,5 @@
 {
   "isEnabled": true,
-  "text": "<h3>Pembaruan Terbaru: Apa Saja yang Baru?</h3>
-
-<p>Kami telah melakukan beberapa pembaruan dan perbaikan untuk meningkatkan pengalaman Anda. Berikut adalah rinciannya:</p>
-
-<ul>
-    <li>
-        <strong>Kemudahan Mengunduh via Kode QR & Email</strong>
-        <br>Anda kini dapat mengunduh hasil lebih praktis melalui pemindaian Kode QR atau dengan mengirimkannya langsung ke alamat email Anda.
-    </li>
-    <li>
-        <strong>Optimalisasi Desain (UI/UX)</strong>
-        <br>Tampilan antarmuka dan pengalaman pengguna telah kami sempurnakan agar lebih intuitif, responsif, dan nyaman digunakan.
-    </li>
-    <li>
-        <strong>Perbaikan Bug dan Peningkatan Stabilitas</strong>
-        <br>Kami telah mengatasi berbagai <em>bug</em> yang dilaporkan untuk memastikan aplikasi berjalan dengan lebih lancar dan andal.
-    </li>
-    <li>
-        <strong>Penambahan Koleksi Bingkai Keren</strong>
-        <br>Ekspresikan kreativitas Anda dengan beragam pilihan bingkai yang lebih modern dan menarik.
-    </li>
-    <li>
-        <strong>Penambahan Bingkai Dinamis (Dynamic Frame)</strong>
-        <br>Tambahkan sentuhan visual yang unik pada konten Anda dengan bingkai dinamis yang dapat bergerak.
-    </li>
-    <li>
-        <strong>Perpanjangan Masa Aktif Tautan</strong>
-        <br>Masa berlaku tautan unduhan telah diperpanjang dari 1 jam menjadi <strong>24 jam</strong>, memberikan Anda fleksibilitas waktu yang lebih lama.
-    </li>
-</ul>
-",
-  "imageUrl": "https://raw.githubusercontent.com/ndutt27/kepo/update-domain-and-logo/assets/popup/popup-image-1755950130776.jpg"
+  "text": "<h3>Pembaruan Terbaru: Apa Saja yang Baru?</h3>\n\n<p>Kami telah melakukan beberapa pembaruan dan perbaikan untuk meningkatkan pengalaman Anda. Berikut adalah rinciannya:</p>\n\n<ul>\n    <li>\n        <strong>Kemudahan Mengunduh via Kode QR & Email</strong>\n        <br>Anda kini dapat mengunduh hasil lebih praktis melalui pemindaian Kode QR atau dengan mengirimkannya langsung ke alamat email Anda.\n    </li>\n    <li>\n        <strong>Optimalisasi Desain (UI/UX)</strong>\n        <br>Tampilan antarmuka dan pengalaman pengguna telah kami sempurnakan agar lebih intuitif, responsif, dan nyaman digunakan.\n    </li>\n    <li>\n        <strong>Perbaikan Bug dan Peningkatan Stabilitas</strong>\n        <br>Kami telah mengatasi berbagai <em>bug</em> yang dilaporkan untuk memastikan aplikasi berjalan dengan lebih lancar dan andal.\n    </li>\n    <li>\n        <strong>Penambahan Koleksi Bingkai Keren</strong>\n        <br>Ekspresikan kreativitas Anda dengan beragam pilihan bingkai yang lebih modern dan menarik.\n    </li>\n    <li>\n        <strong>Penambahan Bingkai Dinamis (Dynamic Frame)</strong>\n        <br>Tambahkan sentuhan visual yang unik pada konten Anda dengan bingkai dinamis yang dapat bergerak.\n    </li>\n    <li>\n        <strong>Perpanjangan Masa Aktif Tautan</strong>\n        <br>Masa berlaku tautan unduhan telah diperpanjang dari 1 jam menjadi <strong>24 jam</strong>, memberikan Anda fleksibilitas waktu yang lebih lama.\n    </li>\n</ul>\n",
+  "imageUrl": "https://raw.githubusercontent.com/ndutt27/kepo/feat-adsense-integration/assets/popup/popup-image-1756100383419.jpg"
 }
