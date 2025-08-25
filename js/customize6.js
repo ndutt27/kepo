@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoObject = null;
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
-    const canvasHeight = 1402;
+    const canvasHeight = 1552;
 
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
