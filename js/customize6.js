@@ -666,10 +666,9 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
         }
 
-        if (storedImages.length === imageGridSize) {
-            const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
+        const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
                 img.src = imgData;
                 img.onload = () => resolve(img);
                 img.onerror = () => resolve(null);
@@ -689,7 +688,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const x = borderWidth + col * (photoWidth + spacing), y = borderWidth + row * (photoHeight + spacing);
                 clipAndDrawImage(ctx, filteredImage, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
             }
-        }
 
         await drawSticker(ctx, stackedCanvas);
 
