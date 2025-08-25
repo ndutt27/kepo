@@ -1137,7 +1137,7 @@
                 card.className = 'asset-card';
                 card.innerHTML = `
                     <img src="${sticker.src}" alt="Custom Sticker" onerror="this.src='https://placehold.co/100x80/2c2f36/e4e6eb?text=err'">
-                    <p>${sticker.id}</p>
+                    <p>${sticker.id.substring(0, 10)}...</p>
                     <button class="delete-asset-btn" data-type="custom-sticker" data-id="${sticker.id}"><i class="fas fa-times"></i></button>
                 `;
                 customStickersGrid.appendChild(card);
@@ -1198,17 +1198,10 @@
                             content: base64content,
                         }),
                     });
-                    
-                    const responseData = await response.json();
-                    let imageUrl = responseData.content.download_url;
-                    if (!imageUrl) {
-                        imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
-                    }
-
 
                     const newSticker = {
-                        id: `custom-sticker-${Date.now()}`,
-                        src: imageUrl
+                        id: `custom-sticker-${Date.now()}-${file.name}`,
+                        src: filePath // Use the relative path, not a download URL
                     };
                     assetsData.customStickers.push(newSticker);
                 }
@@ -1226,6 +1219,7 @@
                 submitBtn.innerHTML = 'Unggah Stiker Kustom';
             }
         });
+
 
         saveChangesBtn.addEventListener('click', async () => {
             if (!isDataDirty || !assetsData) return;
@@ -1959,4 +1953,4 @@
     });
     </script>
 </body>
-</html
+</html>
