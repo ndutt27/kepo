@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoObject = null;
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
-    const canvasHeight = 1552;
+    const canvasHeight = 1352;
 
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fabricCanvas = new fabric.Canvas('photo-canvas');
 
             // Set display size
-            const previewWidth = (window.innerWidth <= 768) ? 280 : 350;
+            const previewWidth = (window.innerWidth <= 768) ? 190 : 230;
             const scale = previewWidth / canvasWidth;
             fabricCanvas.setDimensions({
                 width: previewWidth,
@@ -646,9 +646,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        const columns = 2, rows = 3;
+        const columns = 2, rows = 2;
         const imageGridSize = rows * columns;
-        const borderWidth = 30, spacing = 12, bottomPadding = 100;
+        const borderWidth = 30, spacing = 12, bottomPadding = 250;
 
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
