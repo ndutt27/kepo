@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fabricCanvas = new fabric.Canvas('photo-canvas');
 
             // Set display size
-            const previewWidth = (window.innerWidth <= 768) ? 190 : 230;
+            const previewWidth = (window.innerWidth <= 768) ? 280 : 350;
             const scale = previewWidth / canvasWidth;
             fabricCanvas.setDimensions({
                 width: previewWidth,
