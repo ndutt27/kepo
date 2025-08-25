@@ -947,7 +947,7 @@
                     const { owner, repo } = githubConfig;
                     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
 
-                    await githubApiRequest(apiUrl, {
+                    const response = await githubApiRequest(apiUrl, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1198,10 +1198,17 @@
                             content: base64content,
                         }),
                     });
+                    
+                    const responseData = await response.json();
+                    let imageUrl = responseData.content.download_url;
+                    if (!imageUrl) {
+                        imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+                    }
+
 
                     const newSticker = {
                         id: `custom-sticker-${Date.now()}`,
-                        src: filePath
+                        src: imageUrl
                     };
                     assetsData.customStickers.push(newSticker);
                 }
