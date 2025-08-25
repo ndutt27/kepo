@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoObject = null;
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
-    const canvasHeight = 1652;
+    const canvasHeight = 1352;
 
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
@@ -646,9 +646,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        const columns = 2, rows = 3;
+        const columns = 2, rows = 2;
         const imageGridSize = rows * columns;
-        const borderWidth = 30, spacing = 12, bottomPadding = 400;
+        const borderWidth = 30, spacing = 12, bottomPadding = 250;
 
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
@@ -666,9 +666,10 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.drawImage(backgroundImage, 0, 0, stackedCanvas.width, stackedCanvas.height);
         }
 
-        const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
+        if (storedImages.length === imageGridSize) {
+            const imageElements = await Promise.all(storedImages.map(imgData => new Promise(resolve => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
                 img.src = imgData;
                 img.onload = () => resolve(img);
                 img.onerror = () => resolve(null);
@@ -688,6 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const x = borderWidth + col * (photoWidth + spacing), y = borderWidth + row * (photoHeight + spacing);
                 clipAndDrawImage(ctx, filteredImage, sx, sy, sWidth, sHeight, x, y, photoWidth, photoHeight, selectedShape);
             }
+        }
 
         await drawSticker(ctx, stackedCanvas);
 
