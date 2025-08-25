@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+Document.addEventListener('DOMContentLoaded', function() {
 
     // --- Element References ---
     const photoCustomPreview = document.getElementById('photoPreview');
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoObject = null;
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
-    const canvasHeight = 1652;
+    const canvasHeight = 1450; // Adjusted canvas height
 
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const columns = 2, rows = 3;
         const imageGridSize = rows * columns;
-        const borderWidth = 30, spacing = 12, bottomPadding = 400;
+        const borderWidth = 30, spacing = 12, bottomPadding = 250; // Adjusted bottom padding
 
         const availableWidth = canvasWidth - (borderWidth * 2) - (spacing * (columns - 1));
         const availableHeight = canvasHeight - (borderWidth * 2) - (spacing * (rows - 1)) - bottomPadding;
