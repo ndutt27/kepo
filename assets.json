@@ -297,11 +297,6 @@
         "id": "imageFrame1755526008426",
         "name": "sabrut",
         "path": "assets/frame-backgrounds/2ef8b712a10615c5bf39a7c057ac27e2.jpg"
-      },
-      {
-        "id": "imageFrame1756034912532",
-        "name": "ituhh",
-        "path": "assets/frame-backgrounds/pose3-2.png"
       }
     ]
   },
@@ -1688,11 +1683,6 @@
     {
       "id": "dynamic-frame-1756073282110",
       "src": "bingkai/pose3/dynamic-frame-1756073278494.png",
-      "pose": "pose3"
-    },
-    {
-      "id": "dynamic-frame-1756080482511",
-      "src": "bingkai/pose3/dynamic-frame-1756080479592.png",
       "pose": "pose3"
     }
   ]
