@@ -1242,8 +1242,10 @@
 
         // --- GITHUB API ---
         const githubApiRequest = async (url, options) => {
-            if (typeof githubConfig === 'undefined' || !githubConfig.token) {
-                 throw new Error("Konfigurasi GitHub tidak lengkap. Periksa api.git.js");
+            if (typeof githubConfig === 'undefined' || !githubConfig.token || githubConfig.token === "YOUR_GITHUB_TOKEN") {
+                 // Check added here to catch all API calls.
+                 // The functions calling this should also have checks to provide a user-friendly alert.
+                 throw new Error("Konfigurasi GitHub tidak lengkap. Harap periksa file api.git.js.");
             }
             const { token } = githubConfig;
             const response = await fetch(url, {
@@ -1262,6 +1264,12 @@
         };
 
         const saveAssetsToGithub = async () => {
+            // --- Configuration Check ---
+            if (!githubConfig || githubConfig.token === "YOUR_GITHUB_TOKEN" || githubConfig.owner === "YOUR_GITHUB_USERNAME" || githubConfig.repo === "YOUR_GITHUB_REPONAME") {
+                alert("Konfigurasi GitHub belum diatur! \n\nHarap edit file 'api.git.js' dan isi dengan token, username, dan nama repository GitHub Anda sebelum menyimpan perubahan.");
+                return; // Stop the function
+            }
+            
             const { owner, repo } = githubConfig;
             const filePath = 'assets.json';
             const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
@@ -1329,6 +1337,12 @@
         };
 
         const savePopupConfig = async () => {
+            // --- Configuration Check ---
+            if (!githubConfig || githubConfig.token === "YOUR_GITHUB_TOKEN" || githubConfig.owner === "YOUR_GITHUB_USERNAME" || githubConfig.repo === "YOUR_GITHUB_REPONAME") {
+                alert("Konfigurasi GitHub belum diatur! \n\nHarap edit file 'api.git.js' dan isi dengan token, username, dan nama repository GitHub Anda sebelum menyimpan perubahan.");
+                return; // Stop the function
+            }
+            
             const submitBtn = popupForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
@@ -1422,6 +1436,14 @@
 
         // --- GITHUB IMAGE DELETION (for Testimonial Avatars) ---
         const deleteImageFromGithub = async (imageUrl) => {
+            // --- Configuration Check ---
+            if (!githubConfig || githubConfig.token === "YOUR_GITHUB_TOKEN" || githubConfig.owner === "YOUR_GITHUB_USERNAME" || githubConfig.repo === "YOUR_GITHUB_REPONAME") {
+                // This is a background task, so an alert might be disruptive.
+                // We'll log an error to the console. The main functions that call this
+                // should have their own checks that show alerts.
+                console.error("GitHub configuration is not set. Cannot delete image.");
+                throw new Error("GitHub configuration is not set.");
+            }
             try {
                 const { owner, repo } = githubConfig;
                 const url = new URL(imageUrl);
@@ -1639,6 +1661,12 @@
 
         // --- AUTH & PROFILE ---
         const saveAuthorProfile = async () => {
+            // --- Configuration Check ---
+            if (!githubConfig || githubConfig.token === "YOUR_GITHUB_TOKEN" || githubConfig.owner === "YOUR_GITHUB_USERNAME" || githubConfig.repo === "YOUR_GITHUB_REPONAME") {
+                alert("Konfigurasi GitHub belum diatur! \n\nHarap edit file 'api.git.js' dan isi dengan token, username, dan nama repository GitHub Anda sebelum menyimpan perubahan.");
+                return; // Stop the function
+            }
+            
             const newName = authorNameInput.value.trim();
             let newAvatarUrl = authorProfile.avatar;
 
