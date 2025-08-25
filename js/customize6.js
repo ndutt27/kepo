@@ -86,7 +86,7 @@ Document.addEventListener('DOMContentLoaded', function() {
     // --- Main Initialization ---
     const init = async () => {
         try {
-            const response = await fetch('../assets.json?v=' + Date.now());
+            const response = await fetch('assets.json?v=' + Date.now());
             if (!response.ok) throw new Error('Failed to load assets.json');
             assetsData = await response.json();
 
@@ -154,9 +154,9 @@ Document.addEventListener('DOMContentLoaded', function() {
         assetsData.frames.images.forEach(frame => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonBgFrames';
-            btn.style.backgroundImage = `url(../${frame.path})`;
+            btn.style.backgroundImage = `url(${frame.path})`;
             btn.dataset.type = 'image';
-            btn.dataset.src = `../${frame.path}`;
+            btn.dataset.src = `${frame.path}`;
             frameButtonsContainer.appendChild(btn);
         });
     };
@@ -168,7 +168,7 @@ Document.addEventListener('DOMContentLoaded', function() {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonShapes';
             btn.dataset.shape = shape.value;
-            btn.innerHTML = `<img src="../${shape.icon}" alt="${shape.name}" class="btnShapeSize"><span class="tooltip-text">${shape.name}</span>`;
+            btn.innerHTML = `<img src="${shape.icon}" alt="${shape.name}" class="btnShapeSize"><span class="tooltip-text">${shape.name}</span>`;
             shapeButtonsContainer.appendChild(btn);
         });
     };
@@ -180,7 +180,7 @@ Document.addEventListener('DOMContentLoaded', function() {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonStickers';
             btn.dataset.sticker = sticker.layout;
-            btn.innerHTML = `<img src="../${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
+            btn.innerHTML = `<img src="${sticker.icon}" alt="${sticker.name}" class="stickerIconSize">`;
             if(sticker.id === 'noneSticker') btn.classList.add('active');
             stickerButtonsContainer.appendChild(btn);
         });
@@ -216,8 +216,8 @@ Document.addEventListener('DOMContentLoaded', function() {
         assetsData.customStickers.forEach(sticker => {
             const btn = document.createElement('button');
             btn.className = 'neumorphic-btn buttonStickers';
-            btn.dataset.src = `../${sticker.src}`;
-            btn.innerHTML = `<img src="../${sticker.src}" alt="Custom Sticker" class="stickerIconSize">`;
+            btn.dataset.src = `${sticker.src}`;
+            btn.innerHTML = `<img src="${sticker.src}" alt="Custom Sticker" class="stickerIconSize">`;
             customStickerButtonsContainer.appendChild(btn);
         });
     };
