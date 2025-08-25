@@ -1684,6 +1684,11 @@
       "id": "dynamic-frame-1756073282110",
       "src": "bingkai/pose3/dynamic-frame-1756073278494.png",
       "pose": "pose3"
+    },
+    {
+      "id": "dynamic-frame-1756081589293",
+      "src": "bingkai/pose3/dynamic-frame-1756081587273.png",
+      "pose": "pose3"
     }
   ]
 }
