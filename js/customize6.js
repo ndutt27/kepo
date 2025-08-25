@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoObject = null;
     let fabricCanvas = null; // Will hold the fabric.js canvas instance
     const canvasWidth = 900;
-    const canvasHeight = 1352;
+    const canvasHeight = 1502;
 
     const storedImages = JSON.parse(sessionStorage.getItem('photoArray'));
     if (!storedImages || storedImages.length === 0) {
@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const stackedCanvas = document.createElement('canvas');
         const ctx = stackedCanvas.getContext('2d');
 
-        const columns = 2, rows = 2;
+        const columns = 2, rows = 3;
         const imageGridSize = rows * columns;
         const borderWidth = 30, spacing = 12, bottomPadding = 250;
 
